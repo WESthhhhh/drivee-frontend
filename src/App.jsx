@@ -1,11 +1,18 @@
-import "./App.css";
+import React from "react";
+import Community from "./pages/community";
+import Payment from "./pages/payment";
+
+// adapte le chemin selon ta structure
+
+
 function App() {
-  return <>
-  <h1 className="text-red">l3ywaaaaaaaa
-  </h1>
-  
-  
-  </>;
+  return (
+    <>
+      {/* <Payment/> */}
+      <Community />
+    </>
+
+  );
 }
 
 export default App;
