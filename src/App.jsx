@@ -5,10 +5,6 @@ import arrow from "./assets/arrow.png"
 import add from "./assets/add.png"
 
 
-
-// adapte le chemin selon ta structure
-
-
 function App() {
   return (
     <>
