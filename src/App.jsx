@@ -3,6 +3,7 @@ import Button from "./components/button";
 import star from "./assets/star.png"
 import arrow from "./assets/arrow.png"
 import add from "./assets/add.png"
+import Inputs from "./components/Inputs";
 
 
 function App() {
@@ -19,6 +20,14 @@ function App() {
       <Button icon={arrow}  type="primary" />
       <Button icon={add}  type="primary" />
       <Button icon={add}  disabled />
+      <div className="container mx-auto p-8">
+      {/* Your existing button code */}
+      
+      <h2 className="text-2xl font-bold mb-6">Form Inputs</h2>
+      <Inputs />
+    </div>
+    
+
     </>
   );
 }
