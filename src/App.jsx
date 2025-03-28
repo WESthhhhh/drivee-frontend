@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "./components/button";
+import Button from "./components/UI/button";
 import star from "./assets/star.png";
 import arrow from "./assets/arrow.png";
 import add from "./assets/add.png";
@@ -9,7 +9,7 @@ import {
   DisableInput,
   TextArea,
   FileInput,
-} from "./components/formInputs";
+} from "./components/UI/formInputs";
 
 function App() {
   return (
