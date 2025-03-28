@@ -19,7 +19,7 @@ const Button = ({ Children, type ,icon, disabled }) => {
   }
 
   if (type === "secondary" && disabled) {
-    className += `border-[1px] border-[#929599] bg-light  text-[#7F8286] `;
+    className += `border-[1px] border-grey bg-light  text-grey `;
   }if (type === "secondary") {
     className += ` border-[1px] border-primary text-primary`;
   }

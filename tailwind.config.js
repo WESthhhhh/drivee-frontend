@@ -19,6 +19,7 @@ export default {
         cayan50:'#F5FBFB',
         lightgrey:'#D9DCE1',
         inputtext:'#7D838B',
+        gre:'#929599',
       },
       borderRadius: {
         'small-sm': '8px',
