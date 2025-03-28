@@ -1,8 +1,10 @@
 import React from "react";
+import { BrowserRouter as Router } from 'react-router-dom';
 import Button from "./components/UI/button";
 import star from "./assets/star.png";
 import arrow from "./assets/arrow.png";
 import add from "./assets/add.png";
+// import Navbar from "./components/layouts/navbar";
 import {
   PrimaryInput,
   SecondaryInput,
@@ -14,6 +16,7 @@ import {
 function App() {
   return (
     <>
+    <Router>
       <Button Children="buttom" type="primary" />
       <Button Children="buttom" type="primary" icon={star} />
       <Button Children="buttom" disabled />
@@ -48,6 +51,7 @@ function App() {
           <Button Children="submit" type="primary" />
         </from>
       </div>
+      </Router>
     </>
   );
 }

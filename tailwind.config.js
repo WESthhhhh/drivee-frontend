@@ -13,6 +13,10 @@ export default {
         warning: '#FFD88A',
         error: '#F16965',
         light: '#FDFDFD',
+        blueB75:'#9DACDE',
+        blueB50:'#E7EBF7',
+        lightgrey:'#D9DCE1',
+        inputtext:'#7D838B',
       },
       borderRadius: {
         'small-sm': '8px',
