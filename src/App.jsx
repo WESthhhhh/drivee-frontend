@@ -27,7 +27,7 @@ function App() {
       <Button icon={add} disabled />
       <div className="container mx-auto p-8">
         
-        <h2 className="text-2xl font-bold mb-6">Form Inputs</h2>
+        <h2 className="text-2xl font-bold mb-6">hellooooooooooooooooo</h2>
         <from className="w-[500px]">
           <PrimaryInput label="Primary Input" placeholder="Enter your name" />
           <SecondaryInput
