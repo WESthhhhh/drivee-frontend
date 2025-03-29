@@ -3,11 +3,15 @@ import heroImage from '../assets/image1.png';
 import feature1Icon from '../assets/icons/add.png';
 import feature2Icon from '../assets/icons/arrow.png';
 import feature3Icon from '../assets/icons/star.png';
+import Button from '../components/UI/button';
+import { PrimaryInput } from '../components/UI/formInputs';
 
 export default function HomePage() {
   return (
     <div className="">
       {/* Hero Section */}
+      <PrimaryInput label="Primary Input" placeholder="Enter your name" />
+      
       <section className="relative h-[80vh] flex items-center">
         <div className="absolute inset-0 bg-black/50 z-10" />
         <img 
@@ -28,6 +32,7 @@ export default function HomePage() {
           >
             Browse Cars
           </Link>
+          <Button Children="Browse Offers" type="primary"/>
         </div>
       </section>
 

@@ -1,7 +1,7 @@
 import React, { Children } from 'react';
 
 const Button = ({ Children, type ,icon, disabled }) => {
-  let className = `text-[14px] md:text-[16px] px-[20px] py-[5px] rounded-small-md hover:shadow-primary-4 transition-all duration-300`;
+  let className = `text-[14px] md:text-[16px] px-[20px] py-[10px] rounded-small-md hover:shadow-primary-4 transition-all duration-300`;
 
   if (icon && !Children) {
     className = `px-[10px] py-[8px]  rounded-small-md hover:shadow-primary-4 transition-all duration-300`;
@@ -36,5 +36,5 @@ const Button = ({ Children, type ,icon, disabled }) => {
     </button>
   );
 };
-
+{/* <Button Children="buttom" type="primary"/> */}
 export default Button;
