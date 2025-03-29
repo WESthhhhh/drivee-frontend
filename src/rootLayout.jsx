@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom';
 
 export default function RootLayout() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col font-poppins max-w-7xl mx-auto">
       {/* 1. Navbar appears on every page */}
       <Navbar />
       

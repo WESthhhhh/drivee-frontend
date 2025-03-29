@@ -6,7 +6,7 @@ import feature3Icon from '../assets/star.png';
 
 export default function HomePage() {
   return (
-    <div className="max-w-7xl mx-auto">
+    <div className="">
       {/* Hero Section */}
       <section className="relative h-[80vh] flex items-center">
         <div className="absolute inset-0 bg-black/50 z-10" />
@@ -24,7 +24,7 @@ export default function HomePage() {
           </p>
           <Link 
             to="/offers" 
-            className="bg-primary hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-medium transition-colors duration-300 inline-block"
+            className="bg-primary hover:bg-b500 text-white px-8 py-3 rounded-lg text-lg font-medium transition-colors duration-300 inline-block"
           >
             Browse Cars
           </Link>
