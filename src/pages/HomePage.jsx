@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import heroImage from '../assets/image1.png';
-import feature1Icon from '../assets/add.png';
-import feature2Icon from '../assets/arrow.png';
-import feature3Icon from '../assets/star.png';
+import feature1Icon from '../assets/icons/add.png';
+import feature2Icon from '../assets/icons/arrow.png';
+import feature3Icon from '../assets/icons/star.png';
 
 export default function HomePage() {
   return (
