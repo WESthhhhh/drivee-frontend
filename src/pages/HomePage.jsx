@@ -19,9 +19,9 @@ const HomePage = () => {
         <img src="/images/home-elli-t.png" className="absolute left-[13%] top-1/5 w-auto h-auto" alt="small decorative element" />
         <img src="/images/home-elli-b.png" className="absolute right-[2%] top-1/2 w-auto h-auto" alt="small decorative element" />
         
-        <div className="relative z-10 w-full px-4 xl:px-40 lg:px-16 md:px-8 sm:px-4 space-y[20px]">
+        <div className="relative z-10 w-full px-4 xl:px-40 lg:px-16 md:px-8 sm:px-4 space-y-[30px]">
           <span className="text-inputtext tracking-widest font-semibold relative z-10">Find. Book. Drive.</span>
-          <h1 className="my-4 text-4xl font-medium relative z-10 sm:text-3xl">
+          <h1 className="my-4 text-4xl font-medium  relative z-10 sm:text-3xl">
             Refine Your Skills with <span className="text-primary font-bold relative z-10">Drivee.</span> <br />
             <b className="font-bold">More Driving,</b> No Theory!
           </h1>
@@ -43,8 +43,8 @@ const HomePage = () => {
           </div>
           
           <div className="mt-24 flex flex-col justify-center items-center gap-6 relative z-10 md:flex-row">
-            <img src="/images/home-1.png" className="lg:max-w-full lg:w-full" alt="driving illustration" />
-            <img src="/images/home-2.png" className="lg:max-w-full lg:w-full" alt="driving illustration" />
+            <img src="/images/home-1.png" className="w-full  md:w-[430px] " alt="driving illustration" />
+            <img src="/images/home-2.png" className="w-full  md:w-[430px]" alt="driving illustration" />
           </div>
         </div>
       </section>
