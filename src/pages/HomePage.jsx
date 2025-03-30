@@ -19,8 +19,8 @@ const HomePage = () => {
         <img src="/images/home-elli-t.png" className="absolute left-[13%] top-1/5 w-auto h-auto" alt="small decorative element" />
         <img src="/images/home-elli-b.png" className="absolute right-[2%] top-1/2 w-auto h-auto" alt="small decorative element" />
         
-        <div className="relative z-10 w-full px-4 xl:px-40 lg:px-16 md:px-8 sm:px-4">
-          <span className="text-[#7D838B] tracking-widest font-semibold relative z-10">Find. Book. Drive.</span>
+        <div className="relative z-10 w-full px-4 xl:px-40 lg:px-16 md:px-8 sm:px-4 space-y[20px]">
+          <span className="text-inputtext tracking-widest font-semibold relative z-10">Find. Book. Drive.</span>
           <h1 className="my-4 text-4xl font-medium relative z-10 sm:text-3xl">
             Refine Your Skills with <span className="text-primary font-bold relative z-10">Drivee.</span> <br />
             <b className="font-bold">More Driving,</b> No Theory!
@@ -33,7 +33,6 @@ const HomePage = () => {
             <Button
                 type="primary"
                 onClick={() => navigate('/offers')}
-                icon='/icons/add.png'
             >Browse Offers
             </Button>
             <Button
