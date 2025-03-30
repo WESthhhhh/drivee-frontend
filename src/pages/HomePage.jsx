@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import heroImage from '../assets/image1.png';
+import heroImage from '/images/image1.png';
 import feature1Icon from '../assets/icons/add.png';
 import feature2Icon from '../assets/icons/arrow.png';
 import feature3Icon from '../assets/icons/star.png';

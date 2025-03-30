@@ -5,8 +5,8 @@ import { IoChevronDown } from 'react-icons/io5';
 import { BiMenu } from 'react-icons/bi';
 import { TbLogout } from 'react-icons/tb';
 
-import logo from '../../assets/logo/Logo.svg';
-import logo2 from '../../assets/logo/Logosm.svg';
+import logo from '/logo/Logo.svg';
+import logo2 from '/logo/Logosm.svg';
 import profile from '../../assets/avatar.png';
 
 const Navbar = () => {
