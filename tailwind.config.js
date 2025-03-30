@@ -42,4 +42,5 @@ export default {
     },
   },
   plugins: [],
+  assetsInclude: ['**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.svg']
 };
