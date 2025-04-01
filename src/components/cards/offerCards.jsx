@@ -24,8 +24,8 @@ const OfferCard = ({ offer }) => {
             className="w-16 h-16 rounded-full object-cover"
           />
           <div className="text-left">
-            <h2 className="text-lg font-semibold text-primary">{offer.school}</h2>
-            <span className="inline-block px-2 py-1  text-primary text-xs font-medium rounded">
+            <h2 className="text-lg font-bold text-primary">{offer.school}</h2>
+            <span className="inline-block px-2 py-1 bg-b50  text-primary text-xs font-medium rounded">
               {offer.title}
             </span>
           </div>

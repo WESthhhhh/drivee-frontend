@@ -61,7 +61,6 @@ const Navbar = () => {
     return () => document.removeEventListener('click', closeMenus);
   }, []);
 
-  // Handle logout
   const handleLogout = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
@@ -70,7 +69,6 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Backdrop overlay - shows when menu is open */}
       {open && (
         <div 
           className="fixed inset-0 bg-b500 bg-opacity-30 z-[999999998] md:hidden"

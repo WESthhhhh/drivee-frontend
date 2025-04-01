@@ -58,7 +58,7 @@ const HomePage = () => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Why Choose Drivee</h2>
-            <p className="text-inputtext max-w-2xl mx-auto">
+            <p className="text-gray-600 max-w-2xl mx-auto">
               We're redefining driving practice with premium service and professional instructors
             </p>
           </div>
@@ -81,10 +81,10 @@ const HomePage = () => {
                 description: "Available 7 days a week from 8AM to 8PM"
               }
             ].map((feature, index) => (
-              <div key={index} className="bg-light p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 text-center">
+              <div key={index} className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 text-center">
                 <img src={feature.icon} alt={feature.title} className="w-16 h-16 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-inputtext">{feature.description}</p>
+                <p className="text-gray-600">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -116,11 +116,11 @@ const HomePage = () => {
                 image: "/images/car3.jpg"
               }
             ].map((car, index) => (
-              <div key={index} className="bg-light rounded-xl overflow-hidden shadow-md hover:scale-[1.02] transition-transform duration-300">
+              <div key={index} className="bg-white rounded-xl overflow-hidden shadow-md hover:scale-[1.02] transition-transform duration-300">
                 <img src={car.image} alt={car.model} className="w-full h-48 object-cover" />
                 <div className="p-6">
                   <h3 className="text-xl font-semibold">{car.model}</h3>
-                  <div className="flex justify-between mt-2 text-inputtext">
+                  <div className="flex justify-between mt-2 text-gray-600">
                     <span>{car.type}</span>
                     <span className="font-medium">{car.price}</span>
                   </div>
@@ -154,8 +154,8 @@ const HomePage = () => {
                 rating: "★★★★☆"
               }
             ].map((testimonial, index) => (
-              <div key={index} className="bg-light p-8 rounded-xl shadow-md">
-                <p className="text-inputtext mb-4 italic">"{testimonial.quote}"</p>
+              <div key={index} className="bg-white p-8 rounded-xl shadow-md">
+                <p className="text-gray-600 mb-4 italic">"{testimonial.quote}"</p>
                 <div className="flex justify-between items-center">
                   <span className="font-medium">{testimonial.name}</span>
                   <span className="text-yellow-400">{testimonial.rating}</span>
@@ -176,13 +176,13 @@ const HomePage = () => {
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <button 
               onClick={() => navigate('/offers')}
-              className="bg-light text-primary hover:bg-gray-100 px-8 py-3 rounded-lg text-lg font-medium transition-colors"
+              className="bg-white text-primary hover:bg-gray-100 px-8 py-3 rounded-lg text-lg font-medium transition-colors"
             >
               Browse Instructors
             </button>
             <button 
               onClick={() => navigate('/contact')}
-              className="border-2 border-light hover:bg-light/10 px-8 py-3 rounded-lg text-lg font-medium transition-colors"
+              className="border-2 border-white hover:bg-white/10 px-8 py-3 rounded-lg text-lg font-medium transition-colors"
             >
               Contact Us
             </button>
