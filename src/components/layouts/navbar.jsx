@@ -8,6 +8,7 @@ import Button from '../UI/button';
 
 import logo from '/logo/Logo.svg';
 import logo2 from '/logo/Logosm.svg';
+import logo3 from '/logo/Logolightsm.svg';
 import profile from '../../assets/avatar.png';
 
 const Navbar = () => {
@@ -22,11 +23,14 @@ const Navbar = () => {
     setOpendrop((prev) => !prev);
   };
 
+  // Prevent scrolling when menu is open
   useEffect(() => {
-    window.onscroll = () => {
-      setOpen(false)
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
     }
-  })
+  }, [open]);
 
   const toggleMenu = (e) => {
     e.stopPropagation();
@@ -50,6 +54,17 @@ const Navbar = () => {
 
   return (
     <>
+      {/* Backdrop overlay - shows when menu is open */}
+      {open && (
+        <div 
+          className="fixed inset-0 bg-b500 bg-opacity-30 z-[999999998] md:hidden"
+          onClick={() => setOpen(false)}
+        />
+      )}
+
+      {/* Blur effect for main content */}
+      <div className={`fixed inset-0 backdrop-blur-sm z-[999999997] pointer-events-none transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}></div>
+
       <header 
         ref={navRef}
         className="w-full max-w-[1200px] fixed top-[50px] left-1/2 transform -translate-x-1/2 bg-light px-5 py-3 shadow-primary-4 rounded-large-md z-[9999999] flex justify-between items-center"
@@ -71,18 +86,16 @@ const Navbar = () => {
           <Link to={'/contact'} className="text-gray-800 text-[1.05rem] no-underline">Contact</Link>
         </nav>
         
-
         <Button
           type='primary'
           icon='icons/login.svg'
         >
           Login
-          </Button>
+        </Button>
 
-        {/* DROPDOWWWWWWNNNNNNNN*/}
-        
-          {/* <div 
-          className=" flex items-center gap-2 relative cursor-pointer" 
+        {/* Dropdoowwwnnnn */}
+        {/* <div 
+          className="flex items-center gap-2 relative cursor-pointer" 
           onClick={toggleDropdown} 
           ref={dropRef}
         >
@@ -92,28 +105,28 @@ const Navbar = () => {
           {opendrop && (
             <div className="absolute top-[110%] right-0 bg-light shadow-primary-4 w-[200px] rounded-small-md py-2.5 px-5">
               <Link to={'/profile'} className="block text-text no-underline text-[1.2rem] my-4 pb-2 border-b border-b50">Profile</Link>
-              <Button type='primary'
-              icon='icons/login.svg'>
+              <Button type='primary' icon='icons/login.svg'>
                 Login
               </Button>
             </div>
           )}
         </div> */}
-
-        
       </header>
       
       {/* Mobile Menu */}
       <div 
-        className={`fixed top-0 left-0 w-[300px] h-full z-[9999999999999999] bg-light border-r-2 border-accent p-[100px_20px] transition-transform duration-300 ease-in-out -translate-x-full md:hidden ${open ? 'translate-x-0' : ''}`}
+        className={`space-y-8 fixed top-0 left-0 w-[300px] h-full z-[999999999] bg-primary rounded-r-large-md p-[100px_20px] transition-transform duration-300 ease-in-out -translate-x-full md:hidden ${open ? 'translate-x-0' : ''}`}
       >
-        <Link to={'/offers'} className="block mt-6 text-text no-underline pb-4 border-b-2 border-accent">Offers</Link>
-        <Link to={'/drivingschool'} className="block mt-6 text-text no-underline pb-4 border-b-2 border-accent">Driving School</Link>
-        <Link to={'/howitworks'} className="block mt-6 text-text no-underline pb-4 border-b-2 border-accent">How it works</Link>
-        <Link to={'/contact'} className="block mt-6 text-text no-underline pb-4 border-b-2 border-accent">Contact</Link>
+        <Link to={'/'} className="block">
+          <img src={logo3} className="w-[80px]" alt="Mobile logo" />
+        </Link>
+        <Link to={'/offers'} className="block text-light no-underline text-lg">Offers</Link>
+        <Link to={'/drivingschool'} className="block text-light no-underline text-lg">Driving School</Link>
+        <Link to={'/howitworks'} className="block text-light no-underline text-lg">How it works</Link>
+        <Link to={'/contact'} className="block text-light no-underline text-lg">Contact</Link>
         
         <IoMdClose 
-          className="absolute top-[50px] right-5 text-[1.8rem] text-primary cursor-pointer" 
+          className="absolute top-[10px] right-5 text-[1.8rem] text-light cursor-pointer" 
           onClick={() => setOpen(false)} 
         />
       </div>
