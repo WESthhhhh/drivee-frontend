@@ -1,12 +1,12 @@
 import React from 'react';
-import rect from '/images/Union.png';
+import rect from '/images/Union.svg';
 
 const Union = () => {
   return (
-    <div className=" flex justify-center items-center bg-[url('../../assets/Union.png')] bg-center bg-no-repeat w-full text-center relative">
-      <div className="content z-10">
-        <h1 className="text-light text-3xl font-medium mb-8">What is Drivee ?</h1>
-        <p className="text-light font-light leading-8 max-w-[700px] w-full mt-8">
+    <div className="min-h-screen md:min-h-[80vh] flex justify-center items-center bg-[url('/images/Union.svg')] bg-cover bg-center bg-no-repeat w-full text-center relative px-4 md:px-0">
+      <div className="content z-10 py-20">
+        <h1 className="text-light font-bold text-2xl md:text-3xl  mb-6 md:mb-8">What is Drivee ?</h1>
+        <p className="text-light font-light leading-7 md:leading-8 max-w-[700px] w-full mt-6 md:mt-8 px-4 md:px-0">
           Drivee is a platform that connects drivers with driving schools in Agadir, making it easy to find and book the best offers for extra practice hours. Whether you need a refresher, advanced training, or just more time behind the wheel, Drivee helps you gain real road experience with professional instructors.
         </p>
       </div>
