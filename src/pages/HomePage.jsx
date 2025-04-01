@@ -2,6 +2,8 @@ import React from 'react';
 import Button from '../components/UI/button';
 import Union from '../components/layouts/union';
 import { useNavigate, Link } from 'react-router-dom';
+import Work from '../components/layouts/work';
+import Features from '../components/layouts/features';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -48,7 +50,9 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-      <Union></Union>      
+      <Union></Union>
+      <Work></Work>
+      <Features></Features>      
       {/* Features Section */}
       <section className="py-16 px-4 bg-gray-50">
         <div className="max-w-6xl mx-auto">
