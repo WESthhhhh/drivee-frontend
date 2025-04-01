@@ -55,7 +55,7 @@ const Navbar = () => {
         className="w-full max-w-[1200px] fixed top-[50px] left-1/2 transform -translate-x-1/2 bg-light px-5 py-3 shadow-primary-4 rounded-large-md z-[9999999] flex justify-between items-center"
       >
         <BiMenu 
-          className="hidden md:block text-4xl text-text cursor-pointer" 
+          className="block md:hidden text-4xl text-text cursor-pointer" 
           onClick={toggleMenu} 
         />
         
@@ -71,15 +71,18 @@ const Navbar = () => {
           <Link to={'/contact'} className="text-gray-800 text-[1.05rem] no-underline">Contact</Link>
         </nav>
         
+
         <Button
           type='primary'
           icon='icons/login.svg'
         >
           Login
           </Button>
+
+        {/* DROPDOWWWWWWNNNNNNNN*/}
         
-        <div 
-          className="hidden md:flex items-center gap-2 relative cursor-pointer" 
+          {/* <div 
+          className=" flex items-center gap-2 relative cursor-pointer" 
           onClick={toggleDropdown} 
           ref={dropRef}
         >
@@ -89,12 +92,15 @@ const Navbar = () => {
           {opendrop && (
             <div className="absolute top-[110%] right-0 bg-light shadow-primary-4 w-[200px] rounded-small-md py-2.5 px-5">
               <Link to={'/profile'} className="block text-text no-underline text-[1.2rem] my-4 pb-2 border-b border-b50">Profile</Link>
-              <button className="flex items-center w-full">
-                Logout 
-              </button>
+              <Button type='primary'
+              icon='icons/login.svg'>
+                Login
+              </Button>
             </div>
           )}
-        </div>
+        </div> */}
+
+        
       </header>
       
       {/* Mobile Menu */}

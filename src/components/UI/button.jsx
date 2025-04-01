@@ -9,7 +9,7 @@ const Button = ({
   className: additionalClasses = ''
 }) => {
   // Base classes
-  let className = `text-[14px] md:text-[16px] px-[20px] py-[10px] rounded-small-md hover:shadow-primary-4 transition-all duration-300 flex items-center justify-center ${additionalClasses}`;
+  let className = `text-[12px] px-[15px] py-[9px] md:text-[16px] md:px-[20px] md:py-[10px] rounded-small-md hover:shadow-primary-4 transition-all duration-300 flex items-center justify-center ${additionalClasses}`;
 
   // Icon-only buttons
   if (icon && !children) {
