@@ -5,16 +5,13 @@ import { Outlet } from 'react-router-dom';
 
 export default function RootLayout() {
   return (
-    <div className="min-h-screen flex flex-col font-poppins max-w-7xl mx-auto">
-      {/* 1. Navbar appears on every page */}
+    <div className="min-h-screen flex flex-col max-w-7xl mx-auto font-poppins">
       <Navbar />
       
-      {/* 2. Dynamic content area */}
-      <main className="flex-1 p-4">
-        <Outlet /> {/* This changes based on URL */}
+      <main className="flex-1">
+        <Outlet />
       </main>
-      
-      {/* 3. Footer appears on every page */}
+
       <Footer />
     </div>
   );

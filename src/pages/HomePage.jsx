@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '../components/UI/button';
+import Union from '../components/layouts/union';
 import { useNavigate, Link } from 'react-router-dom';
 
 const HomePage = () => {
@@ -47,7 +48,7 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-
+      <Union></Union>      
       {/* Features Section */}
       <section className="py-16 px-4 bg-gray-50">
         <div className="max-w-6xl mx-auto">

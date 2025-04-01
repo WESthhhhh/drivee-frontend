@@ -14,6 +14,7 @@ import profile from '../../assets/avatar.png';
 const Navbar = () => {
   const [opendrop, setOpendrop] = useState(false);
   const [open, setOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navRef = useRef(null);
   const dropRef = useRef(null);
@@ -22,6 +23,14 @@ const Navbar = () => {
     e.stopPropagation(); 
     setOpendrop((prev) => !prev);
   };
+
+  // Check if user is logged in when component mounts
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   // Prevent scrolling when menu is open
   useEffect(() => {
@@ -51,6 +60,13 @@ const Navbar = () => {
     document.addEventListener('click', closeMenus);
     return () => document.removeEventListener('click', closeMenus);
   }, []);
+
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    setOpendrop(false);
+  };
 
   return (
     <>
@@ -86,31 +102,35 @@ const Navbar = () => {
           <Link to={'/contact'} className="text-gray-800 text-[1.05rem] no-underline">Contact</Link>
         </nav>
         
-        <Button
-          type='primary'
-          icon='icons/login.svg'
-        >
-          Login
-        </Button>
-
-        {/* Dropdoowwwnnnn */}
-        {/* <div 
-          className="flex items-center gap-2 relative cursor-pointer" 
-          onClick={toggleDropdown} 
-          ref={dropRef}
-        >
-          <img src={profile} alt="Profile" className="w-[50px] h-[50px] object-cover" />
-          <IoChevronDown className="text-accent" />
-          
-          {opendrop && (
-            <div className="absolute top-[110%] right-0 bg-light shadow-primary-4 w-[200px] rounded-small-md py-2.5 px-5">
-              <Link to={'/profile'} className="block text-text no-underline text-[1.2rem] my-4 pb-2 border-b border-b50">Profile</Link>
-              <Button type='primary' icon='icons/login.svg'>
-                Login
-              </Button>
-            </div>
-          )}
-        </div> */}
+        {isLoggedIn ? (
+          // Show profile dropdown for authenticated users
+          <div 
+            className="flex items-center gap-2 relative cursor-pointer" 
+            onClick={toggleDropdown} 
+            ref={dropRef}
+          >
+            <img src={profile} alt="Profile" className="w-[50px] h-[50px] object-cover rounded-full" />
+            <IoChevronDown className={`text-accent transition-transform duration-300 ${opendrop ? 'rotate-180' : ''}`} />
+            
+            {opendrop && (
+              <div className="absolute top-[110%] right-0 bg-light shadow-primary-4 w-[200px] rounded-small-md py-2.5 px-5">
+                <Link to={'/profile'} className="block text-text no-underline text-[1.2rem] my-4 pb-2 border-b border-b50">Profile</Link>
+                <div className="flex items-center gap-2 text-text cursor-pointer" onClick={handleLogout}>
+                  <TbLogout className="text-xl" />
+                  <span>Logout</span>
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          // Show login button for non-authenticated users
+          <Button
+            type='primary'
+            icon='icons/login.svg'
+          >
+            Login
+          </Button>
+        )}
       </header>
       
       {/* Mobile Menu */}
@@ -124,6 +144,19 @@ const Navbar = () => {
         <Link to={'/drivingschool'} className="block text-light no-underline text-lg">Driving School</Link>
         <Link to={'/howitworks'} className="block text-light no-underline text-lg">How it works</Link>
         <Link to={'/contact'} className="block text-light no-underline text-lg">Contact</Link>
+        
+        {/* Add authentication-related items to mobile menu */}
+        {isLoggedIn ? (
+          <div>
+            <Link to={'/profile'} className="block text-light no-underline text-lg">Profile</Link>
+            <div className="flex items-center gap-2 text-light cursor-pointer mt-4" onClick={handleLogout}>
+              <TbLogout className="text-xl" />
+              <span>Logout</span>
+            </div>
+          </div>
+        ) : (
+          <Link to={'/login'} className="block text-light no-underline text-lg">Login</Link>
+        )}
         
         <IoMdClose 
           className="absolute top-[10px] right-5 text-[1.8rem] text-light cursor-pointer" 
