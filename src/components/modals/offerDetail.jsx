@@ -6,7 +6,7 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-[9999] p-4">
-      <div className="bg-white rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto relative">
+      <div className="bg-light rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto relative">
         {/* Close Button */}
         <button 
           onClick={closeModal}
@@ -102,7 +102,7 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
             </div>
 
             {/* Action Button */}
-            <button className="w-full py-3 bg-blue-900 text-white font-medium rounded-lg mt-6 hover:bg-blue-800 transition">
+            <button className="w-full py-3 bg-blue-900 text-light font-medium rounded-lg mt-6 hover:bg-blue-800 transition">
               Book Now
             </button>
           </div>

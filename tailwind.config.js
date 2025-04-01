@@ -20,10 +20,11 @@ export default {
         b75:'#9DACDE',
         b50:'#E7EBF7',
         b500:'#09206A',
+        b200:'#0F34AE',
         cayan50:'#F5FBFB',
         lightgrey:'#D9DCE1',
         inputtext:'#7D838B',
-        gre:'#929599',
+        grey:'#929599',
       },
       borderRadius: {
         'small-sm': '8px',
