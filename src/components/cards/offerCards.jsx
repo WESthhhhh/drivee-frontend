@@ -32,7 +32,7 @@ const OfferCard = ({ offer }) => {
         </div>
 
         <h3 className="text-xl font-bold text-text mb-3 text-left">{offer.name}</h3>
-        <p className="text-gray-600 text-left mb-6">{offer.description}</p>
+        <p className="text-inputtext text-left mb-6">{offer.description}</p>
 
         <div className="flex justify-between mb-6">
           <div className="flex items-center gap-2">

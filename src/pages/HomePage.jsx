@@ -58,7 +58,7 @@ const HomePage = () => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Why Choose Drivee</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-inputtext max-w-2xl mx-auto">
               We're redefining driving practice with premium service and professional instructors
             </p>
           </div>
@@ -84,7 +84,7 @@ const HomePage = () => {
               <div key={index} className="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 text-center">
                 <img src={feature.icon} alt={feature.title} className="w-16 h-16 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <p className="text-inputtext">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -120,7 +120,7 @@ const HomePage = () => {
                 <img src={car.image} alt={car.model} className="w-full h-48 object-cover" />
                 <div className="p-6">
                   <h3 className="text-xl font-semibold">{car.model}</h3>
-                  <div className="flex justify-between mt-2 text-gray-600">
+                  <div className="flex justify-between mt-2 text-inputtext">
                     <span>{car.type}</span>
                     <span className="font-medium">{car.price}</span>
                   </div>
@@ -155,7 +155,7 @@ const HomePage = () => {
               }
             ].map((testimonial, index) => (
               <div key={index} className="bg-white p-8 rounded-xl shadow-md">
-                <p className="text-gray-600 mb-4 italic">"{testimonial.quote}"</p>
+                <p className="text-inputtext mb-4 italic">"{testimonial.quote}"</p>
                 <div className="flex justify-between items-center">
                   <span className="font-medium">{testimonial.name}</span>
                   <span className="text-yellow-400">{testimonial.rating}</span>

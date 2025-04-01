@@ -50,7 +50,7 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
                     <star.icon key={star.id} className="text-blue-900 text-xl" />
                   ))}
                 </div>
-                <span className="text-gray-600">({offer.reviews})</span>
+                <span className="text-inputtext">({offer.reviews})</span>
               </div>
             </div>
 
