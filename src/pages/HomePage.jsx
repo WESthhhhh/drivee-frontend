@@ -4,6 +4,7 @@ import Union from '../components/layouts/union';
 import { useNavigate, Link } from 'react-router-dom';
 import Work from '../components/layouts/work';
 import Features from '../components/layouts/features';
+import Reviews from '../components/layouts/reviews';
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -52,7 +53,8 @@ const HomePage = () => {
       </section>
       <Union></Union>
       <Work></Work>
-      <Features></Features>      
+      <Features></Features>
+      <Reviews></Reviews>      
       {/* Features Section */}
       <section className="py-16 px-4 bg-gray-50">
         <div className="max-w-6xl mx-auto">
