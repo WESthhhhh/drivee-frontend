@@ -17,7 +17,7 @@ const OfferCard = ({ offer }) => {
   return (
     <>
       <div className="bg-light rounded-large-md shadow-primary-4 p-6 max-w-md w-full ">
-        <div className="flex items-center gap-4 mb-6">
+      <div className="flex items-center gap-4 mb-6">
           <img 
             src={offer.img} 
             alt={offer.school} 

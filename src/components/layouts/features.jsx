@@ -16,12 +16,12 @@ const Features = () => {
 
   return (
     <div className="min-h-screen max-w-7xl mx-auto px-4 py-20 text-center relative overflow-hidden">
-      {/* Decorative background images */}
+    
       <img src={big_circle} className="absolute -left-32 top-1/4 opacity-30 -z-10" alt="" />
       <img src={sm2} className="absolute left-8 top-1/2 opacity-20 -z-10" alt="" />
       <img src={sm1} className="absolute right-0 top-1/4 opacity-20 -z-10" alt="" />
 
-      {/* Header section */}
+   
       <h1 className="text-3xl font-bold text-text mb-4">
         Check Out Our Featured Offers
       </h1>
@@ -31,7 +31,7 @@ const Features = () => {
       </p>
 
 
-      <div className="flex flex-col md:flex-row justify-center gap-8 mb-12">
+      <div className="grid sm:grid-cols-1 justify-center md:flex md:flex-row   gap-8 mb-12">
         {offers.slice(0, 2).map((offer, index) => (
           <OfferCard key={index} offer={offer} />
         ))}
