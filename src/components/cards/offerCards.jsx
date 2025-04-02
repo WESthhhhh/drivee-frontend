@@ -22,6 +22,7 @@ const OfferCard = ({ offer }) => {
             src={offer.img} 
             alt={offer.school} 
             className="w-16 h-16 rounded-full object-cover"
+            loading='lazy'
           />
           <div className="text-left">
             <h2 className="text-lg font-bold text-primary">{offer.school}</h2>
