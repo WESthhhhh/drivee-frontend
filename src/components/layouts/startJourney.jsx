@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const Journey = () => {
     const navigate = useNavigate();
   return (
-    <div className="w-full max-w-[1100px] mx-auto my-12 py-12 px-4 md:px-12 lg:px-[50px] text-center bg-[#f5fbfb]">
+    <div className="w-full max-w-[1100px] mx-auto my-12 py-12 px-4 md:px-12 lg:px-[50px] text-center bg-cayan50 rounded-large-md">
       <h1 className="text-2xl md:text-3xl font-bold text-center text-primary">
         Start Your Journey with Drivee Today!
       </h1>

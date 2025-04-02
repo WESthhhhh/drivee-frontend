@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { FaArrowRight, FaArrowLeft } from 'react-icons/fa6';
-import r1 from '/images/qoute.png';
+import r1 from '/images/quote.svg';
 
 const ReviewSwiper = ({ reviews }) => {
   const swiperRef = useRef(null);
@@ -41,13 +41,13 @@ const ReviewSwiper = ({ reviews }) => {
 
       {/* Custom Arrow Icons - Mobile responsive */}
       <div 
-        className="absolute right-0 top-0 md:right-5 md:top-1/2 block w-8 h-8 md:flex justify-center items-center bg-[#f5fbfb] rounded-full cursor-pointer z-[9999]"
+        className="absolute right-0 top-0 md:right-5 md:top-1/2 block text-primary w-8 h-8 md:flex justify-center items-center bg-cayan50 rounded-full cursor-pointer z-[9999]"
         onClick={() => swiperRef.current?.slideNext()}
       >
         <FaArrowRight />
       </div>
       <div 
-        className="absolute left-0 top-0 md:left-4 md:top-1/2 block w-8 h-8 md:flex justify-center items-center bg-[#f5fbfb] rounded-full cursor-pointer z-[9999]"
+        className="absolute left-0 top-0 md:left-4 md:top-1/2 block text-primary w-8 h-8 md:flex justify-center items-center bg-cayan50 rounded-full cursor-pointer z-[9999]"
         onClick={() => swiperRef.current?.slidePrev()}
       >
         <FaArrowLeft />
