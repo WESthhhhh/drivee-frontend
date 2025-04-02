@@ -18,7 +18,7 @@ const Button = ({
 
   // Disabled state
   if (disabled) {
-    className += ` bg-lightgrey text-[#7F8286] cursor-not-allowed`;
+    className += ` bg-lightgrey text-inputtext cursor-not-allowed`;
   } else {
     // Button types when not disabled
     switch(type) {
@@ -115,9 +115,9 @@ export default Button;
 //     className = `px-[10px] py-[8px]  rounded-small-md hover:shadow-primary-4 transition-all duration-300`;
 //   }
 //   if (disabled && icon) {
-//     className += ` bg-[#D1D5DB] text-[#7F8286] flex flex gap-[8px] bg-[#D1D5DB] text-[#7F8286] `;
+//     className += ` bg-[#D1D5DB] text-inputtext flex flex gap-[8px] bg-[#D1D5DB] text-inputtext `;
 //   }if (disabled) {
-//     className += ` bg-[#D1D5DB] text-[#7F8286] `;
+//     className += ` bg-[#D1D5DB] text-inputtext `;
 //   }
 
 //   if (type === "primary" && icon) {
@@ -133,7 +133,7 @@ export default Button;
 //   }
 
 //   if(type === "ghost" && disabled) {
-//     className += ` border-none bg-[#ECEEF0] text-[#7F8286] `
+//     className += ` border-none bg-[#ECEEF0] text-inputtext `
 //   }if(type === "ghost"){
 //     className += ` border-none bg-[#F5FBFB]  text-[#09206A]`;
 //   }
