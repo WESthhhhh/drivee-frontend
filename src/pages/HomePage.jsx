@@ -11,9 +11,6 @@ import HeroSection from '../components/layouts/hero';
 const HomePage = () => {
   const navigate = useNavigate();
 
-  const handleMove = () => {
-    navigate('/offers');
-  };
 
   return (
     <div className="bg-light">
