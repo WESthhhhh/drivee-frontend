@@ -2,9 +2,10 @@ import { FaRegClock, FaDollarSign, FaMapMarkerAlt } from 'react-icons/fa';
 import { IoMdClose } from 'react-icons/io';
 import React from 'react';
 import Button from '../UI/button';
+import { useNavigate } from 'react-router-dom'; 
 const OfferDetail = ({ isOpen, closeModal, offer }) => {
   if (!isOpen || !offer) return null;
-
+  const navigate = useNavigate();
   return (
     <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-8">
       <div className="bg-light rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto relative">
@@ -100,10 +101,14 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
               </a>
             </div>
 
-            {/* Action Button */}
-            <button className="w-full py-3 bg-b500 text-light font-medium rounded-lg mt-6 hover:bg-blue-800 transition">
+            <Button
+              type='primary'
+              onClick={() => navigate('/reservation')}
+              className='w-full'
+              >
               Book Now
-            </button>
+            </Button>
+        
           </div>
         </div>
       </div>

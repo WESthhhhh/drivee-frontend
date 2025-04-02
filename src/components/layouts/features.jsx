@@ -10,10 +10,6 @@ import Button from '../UI/button';
 const Features = () => {
   const navigate = useNavigate();
 
-  const handleSeeMore = () => {
-    navigate('/offers');
-  };
-
   return (
     <div className="min-h-screen max-w-7xl mx-auto px-4 py-20 text-center relative overflow-hidden">
     

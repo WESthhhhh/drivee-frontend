@@ -3,8 +3,10 @@ import phone from '/images/Phone.svg';
 import big_circle from '/images/phone-ellipse.png';
 import sm2 from '/images/home-elli-t.png';
 import Button from '../UI/button';
+import { useNavigate } from 'react-router-dom'; 
 
 const Work = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen max-w-7xl w-[90%] mx-auto flex  flex-col md:flex-row md:justify-between items-center overflow-x-hidden xl:min-h-auto">
       {/* Content Section */}

@@ -1,7 +1,11 @@
 import ReviewSwiper from '../cards/review';
 import { review } from '../../review'; // Your reviews data
 import rainbow from '/images/rainbow.png'; // Your image
+import { useNavigate, Link } from 'react-router-dom';
+
 const ReviewsPage = () => {
+    const navigate = useNavigate();
+
   return (
     <div className="min-h-screen w-full mx-auto flex justify-between items-center relative px-4 lg:px-0">
         <img 
