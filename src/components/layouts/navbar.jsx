@@ -95,7 +95,7 @@ const Navbar = () => {
         
         <nav className="hidden md:flex items-center gap-12">
           <Link to={'/offers'} className="text-gray-800 text-[1.05rem] no-underline">Offers</Link>
-          <Link to={'/drivingschool'} className="text-gray-800 text-[1.05rem] no-underline">Driving School</Link>
+          <Link to={'/drivingschools'} className="text-gray-800 text-[1.05rem] no-underline">Driving School</Link>
           <Link to={'/howitworks'} className="text-gray-800 text-[1.05rem] no-underline">How it works</Link>
           <Link to={'/contact'} className="text-gray-800 text-[1.05rem] no-underline">Contact</Link>
         </nav>
@@ -139,7 +139,7 @@ const Navbar = () => {
           <img src={logo3} className="w-[80px]" alt="Mobile logo" />
         </Link>
         <Link to={'/offers'} className="block text-light no-underline text-lg">Offers</Link>
-        <Link to={'/drivingschool'} className="block text-light no-underline text-lg">Driving School</Link>
+        <Link to={'/drivingschools'} className="block text-light no-underline text-lg">Driving School</Link>
         <Link to={'/howitworks'} className="block text-light no-underline text-lg">How it works</Link>
         <Link to={'/contact'} className="block text-light no-underline text-lg">Contact</Link>
         

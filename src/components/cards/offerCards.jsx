@@ -3,6 +3,7 @@ import { IoLocationOutline } from 'react-icons/io5';
 import { FaDollarSign, FaRegClock } from 'react-icons/fa6';
 import OfferDetailModal from '../modals/offerDetail';
 import Button from '../UI/button';
+import { useNavigate } from 'react-router-dom'; 
 const OfferCard = ({ offer }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -13,7 +14,7 @@ const OfferCard = ({ offer }) => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
+  const navigate = useNavigate();
   return (
     <>
       <div className="bg-light rounded-large-md shadow-primary-4 p-6 max-w-md w-full ">

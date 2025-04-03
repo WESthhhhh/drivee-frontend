@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage.jsx";
 import OffersPage from "./pages/OffersPage.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
 import NotFoundPage from  "./pages/NotFoundPage.jsx"
+import DrivingSchools from "./pages/DrivingSchools.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
       {
         path: 'contact',
         element: <ContactPage />
+      },
+      {
+        path: 'drivingschools',
+        element: <DrivingSchools />
       },
      
       // Add more routes as needed
