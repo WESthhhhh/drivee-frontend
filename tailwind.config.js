@@ -25,6 +25,7 @@ export default {
         lightgrey:'#D9DCE1',
         inputtext:'#7D838B',
         grey:'#929599',
+        stroke:'#E7EBF7',
       },
       borderRadius: {
         'small-sm': '8px',

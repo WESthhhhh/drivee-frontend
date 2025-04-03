@@ -3,11 +3,13 @@ import { FaChevronDown, FaChevronLeft, FaChevronRight, FaTimes } from 'react-ico
 import { offers } from '../offers';
 import OfferCard from '../components/cards/offerCards';
 
-
 const OffersPage = () => {
   // State management
-  const [filters, setFilters] = useState([]);
-  const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [filters, setFilters] = useState({
+    location: null,
+    rating: null,
+    price: [0, 1000]
+  });
   const [openDropdown, setOpenDropdown] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
@@ -15,11 +17,11 @@ const OffersPage = () => {
   // Filter offers
   const filteredOffers = offers.filter(offer => {
     const price = parseInt(offer.price.replace('dh', ''));
-    const matchesPrice = price >= priceRange[0] && price <= priceRange[1];
-    const matchesLocation = filters.includes(offer.location);
-    const matchesRating = filters.some(f => f.includes('Star') && offer.rating >= parseInt(f));
+    const matchesPrice = price >= filters.price[0] && price <= filters.price[1];
+    const matchesLocation = filters.location ? offer.location === filters.location : true;
+    const matchesRating = filters.rating ? offer.rating >= parseInt(filters.rating) : true;
     
-    return matchesPrice && (filters.length === 0 || matchesLocation || matchesRating);
+    return matchesPrice && matchesLocation && matchesRating;
   });
 
   // Paginate offers
@@ -32,22 +34,34 @@ const OffersPage = () => {
   // Filter handlers
   const handlePriceChange = (e) => {
     const value = parseInt(e.target.value);
-    setPriceRange([0, value]);
-    setFilters(prev => [...prev.filter(f => !f.startsWith('Price')), `Price: 0-${value}dh`]);
+    setFilters(prev => ({
+      ...prev,
+      price: [0, value]
+    }));
     setCurrentPage(1);
   };
 
-  const addFilter = (filter) => {
-    if (!filters.includes(filter)) {
-      setFilters([...filters, filter]);
-      setCurrentPage(1);
-    }
+  const addFilter = (type, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [type]: value
+    }));
+    setCurrentPage(1);
     setOpenDropdown(null);
   };
 
-  const removeFilter = (filter) => {
-    if (filter.startsWith('Price')) setPriceRange([0, 1000]);
-    setFilters(filters.filter(f => f !== filter));
+  const clearFilter = (type) => {
+    if (type === 'price') {
+      setFilters(prev => ({
+        ...prev,
+        [type]: [0, 1000]
+      }));
+    } else {
+      setFilters(prev => ({
+        ...prev,
+        [type]: null
+      }));
+    }
   };
 
   // Close dropdown when clicking outside
@@ -62,37 +76,65 @@ const OffersPage = () => {
   }, []);
 
   return (
+    
     <div className="max-w-[1200px] w-full mx-auto pt-[15rem] min-h-[200vh] overflow-x-hidden px-4">
+      
+      
       {/* Header */}
-      <h1 className="text-[2.5rem] text-center font-normal mb-12">
+      <h1 className="text-[2.5rem] text-center font-normal mb-12 z-[999999999999999]">
         Limited-Time <span className="font-semibold text-primary">Offers</span> on Driving Packages!
       </h1>
-
+      <img 
+        src="/images/home-ellipse.png" 
+        className="absolute top-0 right-0 w-auto h-auto" 
+        alt="background circle" 
+      />
+      <img 
+        src="/images/home-elli-b.png" 
+        className="absolute right-[2%] top-1/2 w-auto h-auto" 
+        alt="small decorative element" 
+      /> 
       {/* Filter Controls */}
-      <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 mb-8">
+      <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 mb-8 z-[999999999999999]">
         <h2 className="text-lg font-medium">Filter:</h2>
         <div className="flex flex-wrap gap-4">
           {/* Price Filter */}
           <div className="dropdown_container relative">
             <button 
-              className="flex items-center gap-3 px-4 py-2 text-primary font-medium border border-primary/30 rounded-lg hover:bg-primary/5 transition-colors"
+              className="flex items-center gap-3 px-4 py-2 text-b200 font-medium border border-b75 rounded-small-md hover:bg-cayan50 transition-colors"
               onClick={() => setOpenDropdown(openDropdown === 'price' ? null : 'price')}
             >
-              Price Range <FaChevronDown className={`transition-transform ${openDropdown === 'price' ? 'rotate-180' : ''}`} />
+              {filters.price[1] === 1000 ? (
+                "Price Range"
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span>0-{filters.price[1]}dh</span>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearFilter('price');
+                    }}
+                    className="text-b200/70 hover:text-b200 transition-colors"
+                  >
+                    <FaTimes className="text-xs" />
+                  </button>
+                </div>
+              )}
+              <FaChevronDown className={`transition-transform ${openDropdown === 'price' ? 'rotate-180' : ''}`} />
             </button>
             {openDropdown === 'price' && (
-              <div className="dropdown absolute top-full left-0 mt-2 bg-white shadow-lg rounded-lg p-4 w-64 z-50 border border-gray-100">
+              <div className="dropdown absolute top-full left-0 mt-2 bg-light shadow-primary-4 rounded-small-md p-4 w-64 z-50 border border-stroke">
                 <input
                   type="range"
                   min="0"
                   max="1000"
-                  value={priceRange[1]}
+                  value={filters.price[1]}
                   onChange={handlePriceChange}
-                  className="w-full mb-2 accent-primary"
+                  className="w-full mb-2 accent-accent"
                 />
-                <div className="flex justify-between text-sm text-primary">
+                <div className="flex justify-between text-sm text-b200">
                   <span>0dh</span>
-                  <span>{priceRange[1]}dh</span>
+                  <span>{filters.price[1]}dh</span>
                 </div>
               </div>
             )}
@@ -101,18 +143,34 @@ const OffersPage = () => {
           {/* Location Filter */}
           <div className="dropdown_container relative">
             <button 
-              className="flex items-center gap-3 px-4 py-2 text-primary font-medium border border-primary/30 rounded-lg hover:bg-primary/5 transition-colors"
+              className="flex items-center gap-3 px-4 py-2 text-b200 font-medium border border-b75 rounded-small-md hover:bg-cayan50 transition-colors"
               onClick={() => setOpenDropdown(openDropdown === 'location' ? null : 'location')}
             >
-              Location <FaChevronDown className={`transition-transform ${openDropdown === 'location' ? 'rotate-180' : ''}`} />
+              {filters.location ? (
+                <div className="flex items-center gap-2">
+                  <span>{filters.location}</span>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearFilter('location');
+                    }}
+                    className="text-b200/70 hover:text-b200 transition-colors"
+                  >
+                    <FaTimes className="text-xs" />
+                  </button>
+                </div>
+              ) : (
+                "Location"
+              )}
+              <FaChevronDown className={`transition-transform ${openDropdown === 'location' ? 'rotate-180' : ''}`} />
             </button>
             {openDropdown === 'location' && (
-              <div className="dropdown absolute top-full left-0 mt-2 bg-white shadow-lg rounded-lg p-2 w-48 z-50 border border-gray-100">
+              <div className="dropdown absolute top-full left-0 mt-2 bg-light shadow-primary-4 rounded-small-md p-2 w-48 z-50 border border-stroke">
                 {["Casablanca", "Rabat", "Marrakech"].map(location => (
                   <div
                     key={location}
-                    className="py-2 px-4 hover:bg-primary/5 cursor-pointer text-primary rounded-md"
-                    onClick={() => addFilter(location)}
+                    className="py-2 px-4 hover:bg-cayan50 cursor-pointer text-b200 rounded-md"
+                    onClick={() => addFilter('location', location)}
                   >
                     {location}
                   </div>
@@ -124,20 +182,36 @@ const OffersPage = () => {
           {/* Rating Filter */}
           <div className="dropdown_container relative">
             <button 
-              className="flex items-center gap-3 px-4 py-2 text-primary font-medium border border-primary/30 rounded-lg hover:bg-primary/5 transition-colors"
+              className="flex items-center gap-3 px-4 py-2 text-b200 font-medium border border-b75 rounded-small-md hover:bg-cayan50 transition-colors"
               onClick={() => setOpenDropdown(openDropdown === 'rating' ? null : 'rating')}
             >
-              Ratings <FaChevronDown className={`transition-transform ${openDropdown === 'rating' ? 'rotate-180' : ''}`} />
+              {filters.rating ? (
+                <div className="flex items-center gap-2">
+                  <span>{filters.rating} Star</span>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearFilter('rating');
+                    }}
+                    className="text-b200/70 hover:text-b200 transition-colors"
+                  >
+                    <FaTimes className="text-xs" />
+                  </button>
+                </div>
+              ) : (
+                "Ratings"
+              )}
+              <FaChevronDown className={`transition-transform ${openDropdown === 'rating' ? 'rotate-180' : ''}`} />
             </button>
             {openDropdown === 'rating' && (
-              <div className="dropdown absolute top-full left-0 mt-2 bg-white shadow-lg rounded-lg p-2 w-48 z-50 border border-gray-100">
-                {["5 Star", "4 Star", "3 Star"].map(rating => (
+              <div className="dropdown absolute top-full left-0 mt-2 bg-light shadow-primary-4 rounded-small-md p-2 w-48 z-50 border border-stroke">
+                {["5", "4", "3"].map(rating => (
                   <div
                     key={rating}
-                    className="py-2 px-4 hover:bg-primary/5 cursor-pointer text-primary rounded-md"
-                    onClick={() => addFilter(rating)}
+                    className="py-2 px-4 hover:bg-cayan50 cursor-pointer text-b200 rounded-small-md"
+                    onClick={() => addFilter('rating', rating)}
                   >
-                    {rating}
+                    {rating} Star
                   </div>
                 ))}
               </div>
@@ -146,46 +220,26 @@ const OffersPage = () => {
         </div>
       </div>
 
-      {/* Active Filters */}
-      {filters.length > 0 && (
-        <div className="flex flex-wrap gap-3 mb-8">
-          {filters.map(filter => (
-            <span 
-              key={filter} 
-              className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full text-sm text-primary"
-            >
-              {filter}
-              <button 
-                onClick={() => removeFilter(filter)}
-                className="text-primary/70 hover:text-primary transition-colors"
-              >
-                <FaTimes className="text-xs" />
-              </button>
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* Offers Grid - Responsive with centered layout */}
-      <div className="flex flex-wrap justify-center gap-8 mb-12">
+      {/* Offers Grid */}
+      <div className="flex flex-wrap justify-center gap-8 mb-12 z-[999999999999999]">
         {paginatedOffers.length > 0 ? (
           paginatedOffers.map(offer => (
-            <div 
-              key={offer.id}
-              className=""
-            >
-              <OfferCard offer={offer} />
+            <div key={offer.id} className="">
+              <OfferCard offer={offer} className="z-[999999999999999]"/>
             </div>
           ))
         ) : (
           <div className="w-full text-center py-12">
-            <p className="text-gray-500 mb-4">No offers match your filters</p>
+            <p className="text-inputtext mb-4">No offers match your filters</p>
             <button
               onClick={() => {
-                setFilters([]);
-                setPriceRange([0, 1000]);
+                setFilters({
+                  location: null,
+                  rating: null,
+                  price: [0, 1000]
+                });
               }}
-              className="px-4 py-2 text-primary hover:underline"
+              className="px-4 py-2 text-b200 hover:underline"
             >
               Clear all filters
             </button>
@@ -199,9 +253,9 @@ const OffersPage = () => {
           <button
             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="p-2 rounded-full disabled:opacity-50 hover:bg-primary/10 transition-colors"
+            className="p-2 rounded-full disabled:opacity-50 hover:bg-cayan50 transition-colors"
           >
-            <FaChevronLeft className="text-primary" />
+            <FaChevronLeft className="text-b200" />
           </button>
           
           {Array.from({ length: totalPages }, (_, i) => (
@@ -210,8 +264,8 @@ const OffersPage = () => {
               onClick={() => setCurrentPage(i + 1)}
               className={`w-10 h-10 rounded-full flex items-center justify-center ${
                 currentPage === i + 1 
-                  ? 'bg-primary text-white' 
-                  : 'hover:bg-primary/10 text-primary'
+                  ? 'bg-primary text-light' 
+                  : 'hover:bg-cayan50 text-b200'
               } transition-colors`}
             >
               {i + 1}
@@ -221,9 +275,9 @@ const OffersPage = () => {
           <button
             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            className="p-2 rounded-full disabled:opacity-50 hover:bg-primary/10 transition-colors"
+            className="p-2 rounded-full disabled:opacity-50 hover:bg-cayan50 transition-colors"
           >
-            <FaChevronRight className="text-primary" />
+            <FaChevronRight className="text-b200" />
           </button>
         </div>
       )}
