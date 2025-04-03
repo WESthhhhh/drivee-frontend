@@ -5,6 +5,7 @@ import OffersPage from "./pages/OffersPage.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
 import NotFoundPage from  "./pages/NotFoundPage.jsx"
 import DrivingSchools from "./pages/DrivingSchools.jsx";
+import HowItWorks from './pages/howitWorks.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -30,8 +31,10 @@ export const router = createBrowserRouter([
         path: 'drivingschools',
         element: <DrivingSchools />
       },
-     
-      // Add more routes as needed
+      {
+        path: 'howitworks',
+        element: <HowItWorks/>
+      },
     ]
   }
 ]);
