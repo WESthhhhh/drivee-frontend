@@ -21,18 +21,18 @@ const Howitwork1 = () => {
 
       {/* Content */}
       <div className="container mx-auto px-4 relative z-10">
-      <h1 className="text-4xl md:text-5xl text-center font-normal mb-16">
+        <h1 className="text-4xl md:text-5xl text-center font-normal mb-16">
           How It Works ?
         </h1>
         
         <h2 className="text-2xl md:text-3xl text-center font-medium mb-20">
-          Want to <span className="text-primary font-bold">Perfect Your Driving?</span> Here's How!
+          Want to <span className="text-primary">Perfect Your Driving?</span> Here's How!
         </h2>
 
-        {/* Card rows - matching Howitwork2's structure */}
-        <div className="max-w-5xl mx-auto my-[4rem] flex flex-col justify-center gap-12">
-          {/* First row */}
-          <div className="flex flex-col justify-center md:flex-row md:justify-center gap-8">
+       
+        <div className="max-w-5xl mx-auto my-[4rem] flex flex-col items-center gap-12">
+      
+          <div className="flex flex-col md:flex-row justify-center items-center md:items-stretch gap-8 w-full">
             <HowCard
               icon={<IoSearchSharp className='text-b200' />}
               title="Find Driving Schools"
@@ -45,8 +45,8 @@ const Howitwork1 = () => {
             />
           </div>
 
-          {/* Second row */}
-          <div className="flex flex-col md:flex-row justify-center gap-8">
+         
+          <div className="flex flex-col md:flex-row justify-center items-center md:items-stretch gap-8 w-full">
             <HowCard
               icon={<MdPayment className='text-b200' />}
               title="Book & Pay Online"
@@ -60,7 +60,7 @@ const Howitwork1 = () => {
           </div>
         </div>
 
-        <div className="text-center">
+        <div className="text-center mb-10">
           <Button type='primary' className="inline-flex items-center gap-2">
             Browse Offers <FaArrowRight />
           </Button>

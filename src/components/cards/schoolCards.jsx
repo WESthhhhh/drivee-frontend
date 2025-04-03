@@ -6,7 +6,7 @@ const SchoolCard = ({ school }) => {
   const navigate = useNavigate();
   
   return (
-    <div className="bg-light rounded-[20px] overflow-hidden shadow-primary-4 w-full h-full flex flex-col">
+    <div className="bg-light rounded-large-md overflow-hidden shadow-primary-4 w-full h-full flex flex-col">
       <div className="h-[100px] w-full overflow-hidden">
         <img 
           src={school.bgimg} 
