@@ -4,7 +4,7 @@ import { IoIosDocument } from "react-icons/io";
 import { PiUsersThreeFill } from "react-icons/pi";
 import big_circle from '/images/phone-ellipse.png';
 import sm from '/images/howw-1.png';
-import intersect from '/images/Intersect.png';
+import rect from '/images/big-rect.png';
 import Button from '../UI/button';
 import HowCard from '../cards/howCards';
 
@@ -13,10 +13,9 @@ const Howitwork2 = () => {
     <div className="min-h-screen mt-10 relative z-10 overflow-x-hidden text-tet">
       {/* Background elements */}
       <div className="pointer-events-none">
-        <img src={big_circle} className="absolute top-0 right-0 z-0" alt="" />
-        <img src={sm} className="absolute top-[200px] right-[200px] z-0" alt="" />
-        <img src={intersect} className="absolute top-[45%] w-full max-w-full left-[-10px] z-0" alt="" />
-        <img src={intersect} className="absolute top-[55%] w-full max-w-full left-[-10px] z-0" alt="" />
+        {/* <img src={big_circle} className="absolute top-0 right-0 z-0" alt="" />
+        <img src={sm} className="absolute top-[200px] right-[200px] z-0" alt="" /> */}
+        <img src={rect} className="absolute top-[38%] w-full max-w-full left-[-10px] z-0" alt="" />
       </div>
 
       {/* Content */}
