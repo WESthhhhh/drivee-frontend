@@ -9,7 +9,7 @@ const ReviewSwiper = ({ reviews }) => {
   const swiperRef = useRef(null);
 
   return (
-    <div className="relative w-full max-w-[700px] mx-auto">
+    <div className="relative w-full md:max-w-[700px] mx-auto">
       <Swiper
         spaceBetween={50}
         slidesPerView={1}
@@ -22,10 +22,10 @@ const ReviewSwiper = ({ reviews }) => {
             key={index} 
             className="flex flex-row items-center justify-start p-4 px-8 py-5 md:py-10 border border-b50 rounded-small-md md:rounded-large-md gap-8 relative"
           >
-            <img src={item.img} alt={item.name} className="w-16 h-16 rounded-full object-cover" />
-            <div className="content ">
+            <img src={item.img} alt={item.name} className="w-10 h-10 rounded-full object-cover" />
+            <div className="content p-2 md:p-0">
               <h3 className="text-primary font-bold">{item.name}</h3>
-              <p className="text-left max-w-[300px] my-4">{item.description}</p>
+              <p className="text-left max-w-[250px] md:max-w-[300px] my-4">{item.description}</p>
               <div className="flex items-center">
                 {item.stars.map((star) => (
                   <div key={star.id} className="text-primary text-xl">

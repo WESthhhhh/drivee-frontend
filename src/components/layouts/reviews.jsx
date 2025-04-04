@@ -7,7 +7,7 @@ const ReviewsPage = () => {
     const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen w-full mx-auto flex justify-between items-center relative px-4 lg:px-0">
+    <div className=" w-full mx-auto flex justify-between items-center relative px-4 lg:px-0 mb-[50px]">
         <img 
         src={rainbow} 
         className="absolute top-0 max-w-full w-full left-0" 

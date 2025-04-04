@@ -11,7 +11,7 @@ const Features = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen max-w-7xl mx-auto px-4 py-20 text-center relative overflow-hidden">
+    <div className="max-w-7xl mx-auto px-4 py-20 text-center relative overflow-hidden mb-[50px]">
     
       <img src={big_circle} className="absolute -left-32 top-1/4 opacity-30 -z-10" alt="" />
       <img src={sm2} className="absolute left-8 top-1/2 opacity-20 -z-10" alt="" />
