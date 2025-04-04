@@ -6,6 +6,7 @@ import ContactPage from "./pages/ContactPage.jsx";
 import NotFoundPage from  "./pages/NotFoundPage.jsx"
 import DrivingSchools from "./pages/DrivingSchools.jsx";
 import HowItWorks from './pages/howitWorks.jsx';
+import Login from './pages/Auth/LoginPage.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ export const router = createBrowserRouter([
       {
         path: 'howitworks',
         element: <HowItWorks/>
+      },
+      {
+        path: 'login',
+        element: <Login/>
       },
     ]
   }

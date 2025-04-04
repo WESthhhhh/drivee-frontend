@@ -5,6 +5,7 @@ import { IoChevronDown } from 'react-icons/io5';
 import { BiMenu } from 'react-icons/bi';
 import { TbLogout } from 'react-icons/tb';
 import Button from '../UI/button';
+import { useNavigate } from 'react-router-dom';
 
 import logo from '/logo/Logo.svg';
 import logo2 from '/logo/Logosm.svg';
@@ -12,6 +13,7 @@ import logo3 from '/logo/Logolightsm.svg';
 import profile from '../../assets/avatar.png';
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [opendrop, setOpendrop] = useState(false);
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -125,6 +127,7 @@ const Navbar = () => {
           <Button
             type='primary'
             icon='icons/login.svg'
+            onClick={() => navigate('/login')}
           >
             Login
           </Button>
