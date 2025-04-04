@@ -29,7 +29,7 @@ const HeroSection = () => {
       /> 
       
       <div className="relative z-10 w-full px-4 xl:px-40 lg:px-16 md:px-8 sm:px-4 space-y-[30px]">
-        <span className="text-inputtext tracking-widest font-semibold relative z-10">
+        <span className="text-inputtext tracking-[10px] font-semibold relative z-10">
           Find. Book. Drive.
         </span>
         
@@ -60,7 +60,7 @@ const HeroSection = () => {
         <div className="mt-24 flex flex-col justify-center items-center gap-6 relative z-10 md:flex-row">
           <img 
             src="/images/home-1.png" 
-            className="w-full md:w-[430px]" 
+            className="w-full md:w-[430px] hidden md:block" 
             alt="driving illustration" 
           />
           <img 
