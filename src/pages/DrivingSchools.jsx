@@ -80,7 +80,7 @@ const DrivingSchools = () => {
   }, []);
 
   return (
-    <div className="max-w-[1200px] w-full mx-auto pt-[15rem] min-h-[200vh] overflow-x-hidden px-4 relative">
+    <div className="max-w-7xl w-full mx-auto pt-[15rem] min-h-[200vh] overflow-x-hidden px-4 relative">
       {/* Background elements */}
       <img 
         src="/images/home-ellipse.png" 

@@ -1,195 +1,103 @@
 import React from "react";
 
-export const Inputs = ({
-  label,
-  placeholder,
-  type = "text",
-  icon = null,      
-  error = null,
-  success = null,
-  disabled = false,
-}) => {
-  const commonProps = {
-    placeholder,
-    disabled,
-    className: `w-full p-2 border rounded-md focus:outline-none focus:ring-thin focus:ring-b75 focus:border-primary ${
-      error ? 'border-error' 
-      : success ? 'border-success' 
-      : disabled ? 'border-none bg-lightgrey' 
-      : 'border-b75'
-    } ${
-      icon ? 'pl-10' : ''
-    }`,
-  };
+export const PrimaryInput = ({ label, placeholder, type = "text", icon = null, error = null, succes = null }) => {
+    return (
+        <div className="mb-4 ">
+            <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
+            <div className="relative">
+                <input
+                    type={type}
+                    placeholder={placeholder}
+                    className={`w-full p-2 border    ${error ? 'border-error' : succes ? 'border-success' : 'border-b50'} rounded-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 text-[14px]`} />
+                {icon && (
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <img src={`/images/${icon}.png`} alt={icon} className="w-4 h-4" />
+                    </div>
+                )}
+                {error && (
+                    <p className="text-[13px] text-error">{error}</p>
+                )}
+                {succes && (
+                    <p className="text-[13px] text-success">{succes}</p>
+                )}
+            </div>
+        </div>
+    );
+};
 
-  return (
-    <div className="mb-4 w-[500px]">
-      <label className={`block text-sm font-medium mb-[12px] ${
-        disabled ? 'text-gray-500' : 'text-primary'
-      }`}>
-        {label}
-      </label>
-      
-      <div className="relative">
-        {/* Icon container - only shown if icon exists */}
-        {icon && (
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            {typeof icon === 'string' ? (
-              <img src={`./assets/${icon}.png`} alt={icon} className="w-4 h-4" />
-            ) : (
-              <span className="text-gray-400">{icon}</span>
-            )}
-          </div>
-        )}
+export const SecondaryInput = ({ label, placeholder, type = "text", icon = null }) => {
+    return (
+        <div className="mb-4 ">
+            <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
+            <div className="relative">
+                <input
+                    type={type}
+                    placeholder={placeholder}
+                    className="w-full p-2 text-[14px] border border-border-b50 rounded-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75"
+                />
+                {icon && (
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <img src={`./assets/${icon}.png`} alt={icon} className="w-4 h-4" />
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
 
-        {type === 'textarea' ? (
-          <textarea {...commonProps} rows={4} />
-        ) : (
-          <input type={type} {...commonProps} />
-        )}
-        
-        {error && <p className="text-sm text-error">{error}</p>}
-        {success && <p className="text-sm text-success">{success}</p>}
-      </div>
-    </div>
-  );
+export const DisableInput = ({ label, placeholder, type = "text", icon = null }) => {
+    return (
+        <div className="mb-4 ">
+            <label className="block text-sm font-medium mb-[12px] text-inputtext">{label}</label>
+            <div className="relative">
+                <input
+                    type={type}
+                    placeholder={placeholder}
+                    disabled
+                    className="w-full p-2 border-none text-[14px] rounded-md focus:outline-none bg-lightgrey"
+                />
+                {icon && (
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <img src={`./assets/${icon}.png`} alt={icon} className="w-4 h-4" />
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export const FileInput = ({ label }) => {
+    return (
+        <div className="mb-4 w-[500px]">
+            <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
+            <div className="relative flex items-center border border-border-b50 rounded-md px-3 py-2 focus-within:ring-thin focus-within:ring-border-b50 focus-within:border-b75 ">
+                <label htmlFor="file-upload" className="flex items-center cursor-pointer gap-[12px]">
+                    <svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.33317 0.333374H1.99984C1.2665 0.333374 0.673171 0.933374 0.673171 1.66671L0.666504 12.3334C0.666504 13.0667 1.25984 13.6667 1.99317 13.6667H9.99984C10.7332 13.6667 11.3332 13.0667 11.3332 12.3334V4.33337L7.33317 0.333374ZM1.99984 12.3334V1.66671H6.6665V5.00004H9.99984V12.3334H1.99984Z" fill="#7D838B" />
+                    </svg>
+                    <span className="text-inputtext">Upload File</span>
+                </label>
+                <input
+                    id="file-upload"
+                    type="file"
+                    className="hidden text-[14px]"
+                />
+            </div>
+        </div>
+    );
+};
+
+export const TextArea = ({ label, placeholder }) => {
+    return (
+        <div className="mb-4 ">
+            <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
+            <textarea
+                placeholder={placeholder}
+                className="w-full p-2 text-[14px] border border-border-b50 rounded-md h-24 focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75"
+            />
+        </div>
+    );
 };
 
 
-
-
-// // With image icon (string path)
-// <Input
-//   type="text"
-//   label="Username"
-//   placeholder="Enter username"
-//   icon="user"  // Will look for ./assets/user.png
-// />
-
-// // With React icon component
-// <Input
-//   type="email"
-//   label="Email"
-//   placeholder="Enter email"
-//   icon={<FaEnvelope className="text-gray-400" />}
-// />
-
-// // With password field
-// <Input
-//   type="password"
-//   label="Password"
-//   placeholder="Enter password"
-//   icon={<FaLock className="text-gray-400" />}
-// />
-
-// // Textarea (won't show icon even if passed)
-// <Input
-//   type="textarea"
-//   label="Message"
-//   placeholder="Your message"
-// />
-
-
-// import React from "react";
-
-// export const PrimaryInput = ({ label, placeholder, type = "text", icon = null, error = null, succes = null }) => {
-//     return (
-//         <div className="mb-4 w-[500px]">
-//             <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
-//             <div className="relative">
-//                 <input
-//                     type={type}
-//                     placeholder={placeholder}
-//                     className={`w-full p-2 border    ${error ? 'border-error' : succes ? 'border-success' : 'border-b75'} rounded-md focus:outline-none focus:ring-thin focus:ring-b75 focus:border-primary`} />
-//                 {icon && (
-//                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-//                         <img src={`./assets/${icon}.png`} alt={icon} className="w-4 h-4" />
-//                     </div>
-//                 )}
-//                 {error && (
-//                     <p className="text-sm text-error">{error}</p>
-//                 )}
-//                 {succes && (
-//                     <p className="text-sm text-success">{succes}</p>
-//                 )}
-//             </div>
-//         </div>
-//     );
-// };
-
-// export const SecondaryInput = ({ label, placeholder, type = "text", icon = null }) => {
-//     return (
-//         <div className="mb-4 w-[500px]">
-//             <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
-//             <div className="relative">
-//                 <input
-//                     type={type}
-//                     placeholder={placeholder}
-//                     className="w-full p-2 border border-b75 rounded-md focus:outline-none focus:ring-thin focus:ring-b75 focus:border-primary"
-//                 />
-//                 {icon && (
-//                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-//                         <img src={`./assets/${icon}.png`} alt={icon} className="w-4 h-4" />
-//                     </div>
-//                 )}
-//             </div>
-//         </div>
-//     );
-// };
-
-// export const DisableInput = ({ label, placeholder, type = "text", icon = null }) => {
-//     return (
-//         <div className="mb-4 w-[500px]">
-//             <label className="block text-sm font-medium mb-[12px] text-gray-500">{label}</label>
-//             <div className="relative">
-//                 <input
-//                     type={type}
-//                     placeholder={placeholder}
-//                     disabled
-//                     className="w-full p-2 border-none rounded-md focus:outline-none bg-lightgrey"
-//                 />
-//                 {icon && (
-//                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-//                         <img src={`./assets/${icon}.png`} alt={icon} className="w-4 h-4" />
-//                     </div>
-//                 )}
-//             </div>
-//         </div>
-//     );
-// };
-
-// export const FileInput = ({ label }) => {
-//     return (
-//         <div className="mb-4 w-[500px]">
-//             <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
-//             <div className="relative flex items-center border border-b75 rounded-md px-3 py-2 focus-within:ring-thin focus-within:ring-b75 focus-within:border-primary ">
-//                 <label htmlFor="file-upload" className="flex items-center cursor-pointer gap-[12px]">
-//                     <svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-//                         <path d="M7.33317 0.333374H1.99984C1.2665 0.333374 0.673171 0.933374 0.673171 1.66671L0.666504 12.3334C0.666504 13.0667 1.25984 13.6667 1.99317 13.6667H9.99984C10.7332 13.6667 11.3332 13.0667 11.3332 12.3334V4.33337L7.33317 0.333374ZM1.99984 12.3334V1.66671H6.6665V5.00004H9.99984V12.3334H1.99984Z" fill="#7D838B" />
-//                     </svg>
-//                     <span className="text-gray-500">Upload File</span>
-//                 </label>
-//                 <input
-//                     id="file-upload"
-//                     type="file"
-//                     className="hidden"
-//                 />
-//             </div>
-//         </div>
-//     );
-// };
-
-// export const TextArea = ({ label, placeholder }) => {
-//     return (
-//         <div className="mb-4 w-[500px]">
-//             <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
-//             <textarea
-//                 placeholder={placeholder}
-//                 className="w-full p-2 border border-b75 rounded-md h-24 focus:outline-none focus:ring-thin focus:ring-b75 focus:border-primary"
-//             />
-//         </div>
-//     );
-// };
-
-
-// {/* <PrimaryInput label="Primary Input" placeholder="Enter your name" /> */}
+{/* <PrimaryInput label="Primary Input" placeholder="Enter your name" /> */}

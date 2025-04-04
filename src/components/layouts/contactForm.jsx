@@ -1,4 +1,4 @@
-import { Inputs } from '../UI/formInputs'; 
+import { PrimaryInput, TextArea } from '../UI/formInputs'; 
 import Button from '../UI/button';
 import React, { useState } from 'react';
 
@@ -78,20 +78,20 @@ const Contactform = () => {
   };
 
   return (
-    <div className="max-w-[45%]  p-8 md:p-4 border shadow-primary-4 border-cayan50 rounded-large-md  relative z-10 ">
+    <div className="md:w-[45%]  p-8 border shadow-primary-4 border-cayan50 rounded-large-md  relative z-10 mt-10 md:mt-0 ">
       {submitStatus === 'success' && (
-        <div className="mb-6 p-4 bg-success/10 text-success rounded-lg">
+        <div className="mb-6 p-4 bg-success/10 text-success rounded-large-sm">
           Message sent successfully! We'll get back to you soon.
         </div>
       )}
       {submitStatus === 'error' && (
-        <div className="mb-6 p-4 bg-error/10 text-error rounded-lg">
+        <div className="mb-6 p-4 bg-error/10 text-error rounded-large-sm">
           Failed to send message. Please try again later.
         </div>
       )}
 
       <form onSubmit={handleSubmit} noValidate>
-        <Inputs 
+        <PrimaryInput 
           label="Name" 
           name="name" 
           placeholder="Enter Your Name"
@@ -100,7 +100,7 @@ const Contactform = () => {
           error={errors.name}
         />
         
-        <Inputs 
+        <PrimaryInput 
           label="Email" 
           name="email" 
           placeholder="Enter Your Email"
@@ -110,7 +110,7 @@ const Contactform = () => {
           error={errors.email}
         />
         
-        <Inputs 
+        <PrimaryInput 
           label="Subject" 
           name="subject" 
           placeholder="Enter The Subject"
@@ -119,8 +119,7 @@ const Contactform = () => {
           error={errors.subject}
         />
         
-        <Inputs
-          type='textarea' 
+        <TextArea 
           label="Message" 
           name="message" 
           placeholder="Enter Your Message..."

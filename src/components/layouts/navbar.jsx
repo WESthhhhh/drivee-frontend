@@ -81,7 +81,7 @@ const Navbar = () => {
 
       <header 
         ref={navRef}
-        className="w-full max-w-[1200px] fixed top-[50px] left-1/2 transform -translate-x-1/2 bg-light px-5 py-3 shadow-primary-4 rounded-large-md z-[9999999] flex justify-between items-center"
+        className="w-full max-w-7xl fixed top-[50px] left-1/2 transform -translate-x-1/2 bg-light px-5 py-3 shadow-primary-4 rounded-large-md z-[9999999] flex justify-between items-center"
       >
         <BiMenu 
           className="block md:hidden text-4xl text-text cursor-pointer" 

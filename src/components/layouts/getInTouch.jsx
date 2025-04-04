@@ -4,8 +4,8 @@ import { IoMail } from "react-icons/io5";
 
 const Getintouch = () => {
   return (
-    <div className="md:max-w-[50%] ">
-      <h1 className="text-4xl font-normal relative z-10">
+    <div className="text-center md:max-w-[50%] md:text-left ">
+      <h1 className="text-4xl  relative z-10">
         Get In Touch
       </h1>
       
@@ -13,13 +13,13 @@ const Getintouch = () => {
         Have Any <span className="text-b200 font-semibold">Questions or need Help?</span> Fill Out The Form Below, And We'll Get Back To You As Soon As Possible.
       </p>
 
-      <div className="flex  gap-4 md:flex-col md:gap-0">
-        <div className="flex items-center  gap-4 text-primary">
+      <div className=" items-center text-center  flex flex-col justify-center md:gap-8 md:flex-row ">
+        <div className="flex items-center pb-4  md:pb-0 gap-4 text-primary md:">
           <FaPhoneAlt />
           <p>+212 645789765</p>
         </div>
         
-        <div className="flex items-center  gap-4 text-primary">
+        <div className="flex  items-center  gap-4 text-primary">
           <IoMail />
           <p>Drivee.it@gmail.com</p>
         </div>
