@@ -18,9 +18,15 @@ const Login = () => {
   };
 
   return (
+    
     <div className='flex gap-32 xl:gap-40 items-center my-4 ml-4'>
+    <img 
+        src="/images/home-ellipse.png" 
+        className="absolute top-0 right-0 w-auto h-auto" 
+        alt="background circle" 
+      />
       <div className="max-w-[50%]">
-        <img src="/images/loginpic.svg" alt="Login illustration" className='h-[700px]' />
+        <img src="/images/loginpic.svg" alt="Login image" className='h-[700px]' />
       </div>
       
       <div className="w-full max-w-md">
@@ -77,6 +83,7 @@ const Login = () => {
 
           <Button 
             type='secondary' 
+            htmlType='submit'
             className='gap-2 w-full mt-4'
             onClick={() => {
             }}
