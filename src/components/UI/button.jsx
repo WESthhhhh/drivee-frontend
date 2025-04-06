@@ -1,69 +1,65 @@
 import React from 'react';
 
 const Button = ({ 
-  children, 
-  type = 'primary', 
-  icon, 
-  disabled = false, 
-  onClick,
-  className: additionalClasses = ''
+  children, 
+  type = 'primary', // style type: 'primary', 'secondary', etc.
+  htmlType = 'button', // actual HTML type: 'button', 'submit', 'reset'
+  icon, 
+  disabled = false, 
+  onClick,
+  className: additionalClasses = ''
 }) => {
-  // Base classes
-  let className = `text-[12px] px-[15px] py-[9px] md:text-[16px] md:px-[20px] md:py-[10px] rounded-small-md hover:shadow-primary-4 transition-all duration-300 flex items-center justify-center ${additionalClasses}`;
+  let className = `text-[12px] px-[15px] py-[9px] md:text-[16px] md:px-[20px] md:py-[10px] rounded-small-md hover:shadow-primary-4 transition-all duration-300 flex items-center justify-center ${additionalClasses}`;
 
-  // Icon-only buttons
-  if (icon && !children) {
-    className = `px-[10px] py-[10px] rounded-small-md hover:shadow-primary-4 transition-all duration-300 flex items-center justify-center ${additionalClasses}`;
-  }
+  if (icon && !children) {
+    className = `px-[10px] py-[10px] rounded-small-md hover:shadow-primary-4 transition-all duration-300 flex items-center justify-center ${additionalClasses}`;
+  }
 
-  // Disabled state
-  if (disabled) {
-    className += ` bg-lightgrey text-inputtext cursor-not-allowed`;
-  } else {
-    // Button types when not disabled
-    switch(type) {
-      case 'primary':
-        className += ` bg-primary text-light hover:bg-[#09206A]`;
-        break;
-      case 'secondary':
-        className += ` border border-primary text-primary hover:bg-primary/10`;
-        break;
-      case 'ghost':
-        className += ` border-none bg-[#F5FBFB] text-[#09206A] hover:bg-[#ECEEF0]`;
-        break;
-      default:
-        className += ` bg-primary text-light hover:bg-[#09206A]`;
-    }
-  }
+  if (disabled) {
+    className += ` bg-lightgrey text-inputtext cursor-not-allowed`;
+  } else {
+    switch(type) {
+      case 'primary':
+        className += ` bg-primary text-light hover:bg-[#09206A]`;
+        break;
+      case 'secondary':
+        className += ` border border-primary text-primary hover:bg-primary/10`;
+        break;
+      case 'ghost':
+        className += ` border-none bg-[#F5FBFB] text-[#09206A] hover:bg-[#ECEEF0]`;
+        break;
+      default:
+        className += ` bg-primary text-light hover:bg-[#09206A]`;
+    }
+  }
 
-  // Handle icon with conditional spacing
-  const iconElement = icon ? (
-    <img 
-      src={icon}
-      alt=""
-      className={`w-[18px] h-[18px] ${children ? 'ml-[8px]' : ''}`} // Adds margin-left only when there's text
-      onError={(e) => {
-        console.error('Failed to load icon:', icon);
-        e.target.style.display = 'none';
-      }}
-    />
-  ) : null;
+  const iconElement = icon ? (
+    <img 
+      src={icon}
+      alt=""
+      className={`w-[18px] h-[18px] ${children ? 'ml-[8px]' : ''}`}
+      onError={(e) => {
+        console.error('Failed to load icon:', icon);
+        e.target.style.display = 'none';
+      }}
+    />
+  ) : null;
 
-  return (
-    <button
-      className={className}
-      disabled={disabled}
-      onClick={onClick}
-      type="button"
-    >
-      {/* Reverse order to put icon after text */}
-      {children}
-      {iconElement}
-    </button>
-  );
+  return (
+    <button
+      type={htmlType}
+      className={className}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {children}
+      {iconElement}
+    </button>
+  );
 };
 
 export default Button;
+
 //to call them
 
 // Regular button with action

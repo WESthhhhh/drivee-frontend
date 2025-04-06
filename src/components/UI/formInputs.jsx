@@ -1,17 +1,29 @@
 import React from "react";
+import { FiEye, FiEyeOff, FiLock, FiMail, FiFile, FiUser } from "react-icons/fi";
 
 export const PrimaryInput = ({ label, placeholder, type = "text", icon = null, error = null, succes = null }) => {
+    const getIcon = () => {
+        switch(icon) {
+            case 'user': return <FiUser className="w-4 h-4 text-gray-400" />;
+            case 'lock': return <FiLock className="w-4 h-4 text-gray-400" />;
+            case 'mail': return <FiMail className="w-4 h-4 text-gray-400" />;
+            case 'file': return <FiFile className="w-4 h-4 text-gray-400" />;
+            default: return null;
+        }
+    };
+
     return (
-        <div className="mb-4 ">
+        <div className=" ">
             <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
             <div className="relative">
                 <input
                     type={type}
                     placeholder={placeholder}
-                    className={`w-full p-2 border    ${error ? 'border-error' : succes ? 'border-success' : 'border-b50'} rounded-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 text-[14px]`} />
+                    className={`w-full p-2 border ${error ? 'border-error' : succes ? 'border-success' : 'border-b50'} rounded-small-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 text-[14px] ${icon ? 'pl-10' : ''}`} 
+                />
                 {icon && (
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <img src={`/images/${icon}.png`} alt={icon} className="w-4 h-4" />
+                        {getIcon()}
                     </div>
                 )}
                 {error && (
@@ -25,19 +37,87 @@ export const PrimaryInput = ({ label, placeholder, type = "text", icon = null, e
     );
 };
 
-export const SecondaryInput = ({ label, placeholder, type = "text", icon = null }) => {
+export const PasswordInput = ({ label, placeholder, icon = 'lock', error = null, succes = null }) => {
+    const [showPassword, setShowPassword] = React.useState(false);
+    
     return (
-        <div className="mb-4 ">
+        <div className=" ">
+            <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
+            <div className="relative">
+                <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder={placeholder}
+                    className={`w-full p-2 border ${error ? 'border-error' : succes ? 'border-success' : 'border-b50'} rounded-small-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 text-[14px] pl-10 pr-10`} 
+                />
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <FiLock className="w-4 h-4 text-gray-400" />
+                </div>
+                <button 
+                    type="button" 
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 focus:outline-none"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                    {showPassword ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
+                </button>
+                {error && (
+                    <p className="text-[13px] text-error">{error}</p>
+                )}
+                {succes && (
+                    <p className="text-[13px] text-success">{succes}</p>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export const EmailInput = ({ label, placeholder, error = null, succes = null }) => {
+    return (
+        <div className=" ">
+            <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
+            <div className="relative">
+                <input
+                    type="email"
+                    placeholder={placeholder}
+                    className={`w-full p-2 border ${error ? 'border-error' : succes ? 'border-success' : 'border-b50'} rounded-small-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 text-[14px] pl-10`} 
+                />
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <FiMail className="w-4 h-4 text-gray-400" />
+                </div>
+                {error && (
+                    <p className="text-[13px] text-error">{error}</p>
+                )}
+                {succes && (
+                    <p className="text-[13px] text-success">{succes}</p>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export const SecondaryInput = ({ label, placeholder, type = "text", icon = null }) => {
+    const getIcon = () => {
+        switch(icon) {
+            case 'user': return <FiUser className="w-4 h-4 text-gray-400" />;
+            case 'lock': return <FiLock className="w-4 h-4 text-gray-400" />;
+            case 'mail': return <FiMail className="w-4 h-4 text-gray-400" />;
+            case 'file': return <FiFile className="w-4 h-4 text-gray-400" />;
+            default: return null;
+        }
+    };
+
+    return (
+        <div className=" ">
             <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
             <div className="relative">
                 <input
                     type={type}
                     placeholder={placeholder}
-                    className="w-full p-2 text-[14px] border border-border-b50 rounded-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75"
+                    className={`w-full p-2 text-[14px] border border-border-b50 rounded-small-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 ${icon ? 'pl-10' : ''}`}
                 />
                 {icon && (
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <img src={`./assets/${icon}.png`} alt={icon} className="w-4 h-4" />
+                        {getIcon()}
                     </div>
                 )}
             </div>
@@ -46,19 +126,29 @@ export const SecondaryInput = ({ label, placeholder, type = "text", icon = null 
 };
 
 export const DisableInput = ({ label, placeholder, type = "text", icon = null }) => {
+    const getIcon = () => {
+        switch(icon) {
+            case 'user': return <FiUser className="w-4 h-4 text-gray-400" />;
+            case 'lock': return <FiLock className="w-4 h-4 text-gray-400" />;
+            case 'mail': return <FiMail className="w-4 h-4 text-gray-400" />;
+            case 'file': return <FiFile className="w-4 h-4 text-gray-400" />;
+            default: return null;
+        }
+    };
+
     return (
-        <div className="mb-4 ">
+        <div className=" ">
             <label className="block text-sm font-medium mb-[12px] text-inputtext">{label}</label>
             <div className="relative">
                 <input
                     type={type}
                     placeholder={placeholder}
                     disabled
-                    className="w-full p-2 border-none text-[14px] rounded-md focus:outline-none bg-lightgrey"
+                    className={`w-full p-2 border-none text-[14px] rounded-small-md focus:outline-none bg-lightgrey ${icon ? 'pl-10' : ''}`}
                 />
                 {icon && (
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <img src={`./assets/${icon}.png`} alt={icon} className="w-4 h-4" />
+                        {getIcon()}
                     </div>
                 )}
             </div>
@@ -68,13 +158,11 @@ export const DisableInput = ({ label, placeholder, type = "text", icon = null })
 
 export const FileInput = ({ label }) => {
     return (
-        <div className="mb-4 w-[500px]">
+        <div className=" w-[500px]">
             <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
-            <div className="relative flex items-center border border-border-b50 rounded-md px-3 py-2 focus-within:ring-thin focus-within:ring-border-b50 focus-within:border-b75 ">
+            <div className="relative flex items-center border border-border-b50 rounded-small-md px-3 py-2 focus-within:ring-thin focus-within:ring-border-b50 focus-within:border-b75 ">
                 <label htmlFor="file-upload" className="flex items-center cursor-pointer gap-[12px]">
-                    <svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M7.33317 0.333374H1.99984C1.2665 0.333374 0.673171 0.933374 0.673171 1.66671L0.666504 12.3334C0.666504 13.0667 1.25984 13.6667 1.99317 13.6667H9.99984C10.7332 13.6667 11.3332 13.0667 11.3332 12.3334V4.33337L7.33317 0.333374ZM1.99984 12.3334V1.66671H6.6665V5.00004H9.99984V12.3334H1.99984Z" fill="#7D838B" />
-                    </svg>
+                    <FiFile className="w-4 h-4 text-gray-400" />
                     <span className="text-inputtext">Upload File</span>
                 </label>
                 <input
@@ -89,15 +177,12 @@ export const FileInput = ({ label }) => {
 
 export const TextArea = ({ label, placeholder }) => {
     return (
-        <div className="mb-4 ">
+        <div className=" ">
             <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
             <textarea
                 placeholder={placeholder}
-                className="w-full p-2 text-[14px] border border-border-b50 rounded-md h-24 focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75"
+                className="w-full p-2 text-[14px] border border-border-b50 rounded-small-md h-24 focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75"
             />
         </div>
     );
 };
-
-
-{/* <PrimaryInput label="Primary Input" placeholder="Enter your name" /> */}
