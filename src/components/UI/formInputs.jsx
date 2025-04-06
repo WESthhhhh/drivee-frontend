@@ -37,7 +37,7 @@ export const PrimaryInput = ({ label, placeholder, type = "text", icon = null, e
     );
 };
 
-export const PasswordInput = ({ label, placeholder, icon = 'lock', error = null, succes = null }) => {
+export const PasswordInput = ({ label, placeholder, icon = 'lock', error = null, succes = null, ...rest }) => {
     const [showPassword, setShowPassword] = React.useState(false);
     
     return (
@@ -48,6 +48,7 @@ export const PasswordInput = ({ label, placeholder, icon = 'lock', error = null,
                     type={showPassword ? "text" : "password"}
                     placeholder={placeholder}
                     className={`w-full p-2 border ${error ? 'border-error' : succes ? 'border-success' : 'border-b50'} rounded-small-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 text-[14px] pl-10 pr-10`} 
+                    {...rest} // This spreads all the react-hook-form props
                 />
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                     <FiLock className="w-4 h-4 text-gray-400" />
@@ -71,29 +72,39 @@ export const PasswordInput = ({ label, placeholder, icon = 'lock', error = null,
     );
 };
 
-export const EmailInput = ({ label, placeholder, error = null, succes = null }) => {
+export const EmailInput = ({ 
+    label, 
+    placeholder, 
+    error = null, 
+    succes = null,
+    register // Add this single prop
+  }) => {
     return (
-        <div className=" ">
-            <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
-            <div className="relative">
-                <input
-                    type="email"
-                    placeholder={placeholder}
-                    className={`w-full p-2 border ${error ? 'border-error' : succes ? 'border-success' : 'border-b50'} rounded-small-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 text-[14px] pl-10`} 
-                />
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <FiMail className="w-4 h-4 text-gray-400 focus:text-b50" />
-                </div>
-                {error && (
-                    <p className="text-[13px] text-error">{error}</p>
-                )}
-                {succes && (
-                    <p className="text-[13px] text-success">{succes}</p>
-                )}
-            </div>
+      <div className=" ">
+        <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
+        <div className="relative">
+          <input
+            type="email"
+            placeholder={placeholder}
+            className={`w-full p-2 border ${
+              error ? 'border-error' : 
+              succes ? 'border-success' : 'border-b50'
+            } rounded-small-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 text-[14px] pl-10`}
+            {...register} // Only this line changes
+          />
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <FiMail className="w-4 h-4 text-gray-400 focus:text-b50" />
+          </div>
+          {error && (
+            <p className="text-[13px] text-error">{error}</p>
+          )}
+          {succes && (
+            <p className="text-[13px] text-success">{succes}</p>
+          )}
         </div>
+      </div>
     );
-};
+  };
 
 export const SecondaryInput = ({ label, placeholder, type = "text", icon = null }) => {
     const getIcon = () => {

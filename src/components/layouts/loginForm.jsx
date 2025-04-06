@@ -9,8 +9,14 @@ const Login = () => {
   const { 
     register, 
     handleSubmit, 
-    formState: { errors } 
-  } = useForm();
+    formState: { errors, isValid } 
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      email: "",
+      password: ""
+    }
+  });
 
   const onSubmit = (data) => {
     console.log('Login data:', data);
@@ -18,9 +24,8 @@ const Login = () => {
   };
 
   return (
-    
     <div className='flex gap-32 xl:gap-40 items-center my-4 ml-4'>
-    <img 
+      <img 
         src="/images/home-ellipse.png" 
         className="absolute top-0 right-0 w-auto h-auto" 
         alt="background circle" 
@@ -35,19 +40,19 @@ const Login = () => {
         </h1>
         
         <form onSubmit={handleSubmit(onSubmit)}>
-          <EmailInput
-            label="Email Address"
-            placeholder="Enter Your email"
-            error={errors.email?.message}
-            {...register("email", {
-              required: "Email is required",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Invalid email address"
-              }
-            })}
-            className="mb-4"
-          />
+        <EmailInput
+          label="Email Address"
+          placeholder="Enter Your email"
+          error={errors.email?.message}
+          register={register("email", {
+          required: "Email is required",
+          pattern: {
+          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+          message: "Invalid email address"
+          }
+          })}
+  className="mb-4"
+/>
 
           <div className="flex flex-col gap-1 py-7">
             <PasswordInput
@@ -67,7 +72,12 @@ const Login = () => {
             </Link>
           </div>
 
-          <Button type='primary' htmlType='submit' className='w-full'>
+          <Button 
+            type='primary' 
+            htmlType='submit' 
+            className='w-full'
+           
+          >
             Log In
           </Button>
 
@@ -83,9 +93,10 @@ const Login = () => {
 
           <Button 
             type='secondary' 
-            htmlType='submit'
+            htmlType='button'
             className='gap-2 w-full mt-4'
             onClick={() => {
+              // Handle Google login here
             }}
           >
             <FaGoogle/> Login With Google
