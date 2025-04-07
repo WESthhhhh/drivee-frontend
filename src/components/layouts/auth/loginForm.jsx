@@ -45,17 +45,21 @@ const Login = () => {
 
           <div className="flex flex-col gap-1">
             <PasswordInput
-              label="Password"
-              placeholder="Enter Your password"
-              error={errors.password?.message}
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 8,
-                  message: "Password must be at least 8 characters"
-                }
-              })}
-            />
+          label="Password"
+          placeholder="Enter Your password"
+          error={errors.password?.message}
+          {...register("password", {
+            required: "Password is required",
+            minLength: {
+              value: 8,
+              message: "Password must be at least 8 characters"
+            },
+            pattern: {
+              value: /[A-Z]/,
+              message: "Need at least one uppercase letter"
+            }
+          })}
+        />
             <Link to={'/forgotPassword'} className='text-primary no-underline text-sm text-right'>
               Forgot Password?
             </Link>
