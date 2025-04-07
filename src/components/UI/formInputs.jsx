@@ -37,7 +37,7 @@ export const PrimaryInput = ({ label, placeholder, type = "text", icon = null, e
     );
 };
 
-export const PasswordInput = ({ label, placeholder, icon = 'lock', error = null, succes = null, ...rest }) => {
+export const PasswordInput = ({ label, placeholder, error = null, succes = null, ...rest }) => {
     const [showPassword, setShowPassword] = React.useState(false);
     
     return (
@@ -47,20 +47,18 @@ export const PasswordInput = ({ label, placeholder, icon = 'lock', error = null,
                 <input
                     type={showPassword ? "text" : "password"}
                     placeholder={placeholder}
-                    className={`w-full p-2 border ${error ? 'border-error' : succes ? 'border-success' : 'border-b50'} rounded-small-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 text-[14px] pl-10 pr-10`} 
-                    {...rest} // This spreads all the react-hook-form props
+                    className={`w-full p-2 border ${error ? 'border-error' : succes ? 'border-success' : 'border-b50'} rounded-small-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 text-[14px] `} 
+                    {...rest} 
                 />
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <FiLock className="w-4 h-4 text-gray-400" />
-                </div>
-                <button 
+                
+                {/* <button 
                     type="button" 
                     className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 focus:outline-none"
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                     {showPassword ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
-                </button>
+                </button> */}
                 {error && (
                     <p className="text-[13px] text-error">{error}</p>
                 )}
@@ -77,7 +75,7 @@ export const EmailInput = ({
     placeholder, 
     error = null, 
     succes = null,
-    register // Add this single prop
+    register 
   }) => {
     return (
       <div className=" ">
@@ -89,12 +87,10 @@ export const EmailInput = ({
             className={`w-full p-2 border ${
               error ? 'border-error' : 
               succes ? 'border-success' : 'border-b50'
-            } rounded-small-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 text-[14px] pl-10`}
-            {...register} // Only this line changes
+            } rounded-small-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 text-[14px] `}
+            {...register} 
           />
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <FiMail className="w-4 h-4 text-gray-400 focus:text-b50" />
-          </div>
+         
           {error && (
             <p className="text-[13px] text-error">{error}</p>
           )}

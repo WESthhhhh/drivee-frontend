@@ -24,18 +24,21 @@ const Login = () => {
   };
 
   return (
-    <div className='flex gap-32 xl:gap-40 items-center my-4 ml-4'>
+    <div className='flex flex-col md:flex-row gap-10 md:mr-30 xl:mr-40 items-center md:my-4 md:ml-4'>
       <img 
         src="/images/home-ellipse.png" 
-        className="absolute top-0 right-0 w-auto h-auto" 
+        className="hidden md:block absolute top-0 right-0 w-auto h-auto" 
         alt="background circle" 
       />
-      <div className="max-w-[50%]">
-        <img src="/images/loginpic.svg" alt="Login image" className='h-[700px]' />
+      <div>
+        <img src="/images/loginpicsm.svg" alt="" className='md:hidden'/>
+      </div>
+      <div className="hidden md:block md:max-w-[50%]">
+        <img src="/images/loginpic.svg" alt="Login image" className='md:h-[1200px] lg:h-[700px]' />
       </div>
       
       <div className="w-full max-w-md">
-        <h1 className="text-4xl font-regular mb-8 text-text">
+        <h1 className="text-4xl font-regular mb-8 text-text text-center md:text-start">
           Welcome back to <span className='text-primary font-bold'>Drivee.</span>
         </h1>
         
