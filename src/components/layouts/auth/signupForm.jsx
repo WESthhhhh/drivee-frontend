@@ -93,6 +93,10 @@ const Signup = () => {
             minLength: {
               value: 8,
               message: "Password must be at least 8 characters"
+            },
+            pattern: {
+              value: /[A-Z]/,
+              message: "Need at least one uppercase letter"
             }
           })}
         />
