@@ -57,7 +57,8 @@ import NotFoundPage from "./pages/NotFoundPage.jsx";
 import DrivingSchools from "./pages/DrivingSchools.jsx";
 import HowItWorks from './pages/howitWorks.jsx';
 import Login from './pages/Auth/LoginPage.jsx';
-import Signup from './components/layouts/signupForm.jsx';
+import Signup from './pages/Auth/SignupPage.jsx';
+// import Signup from './components/layouts/auth/signupForm.jsx';
 
 export const router = createBrowserRouter([
   {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import Button from '../UI/button';
-import { EmailInput, PasswordInput } from '../UI/formInputs';
+import Button from '../../UI/button';
+import { EmailInput, PasswordInput } from '../../UI/formInputs';
 import { Link } from 'react-router-dom';
 import { FaGoogle } from "react-icons/fa";
 
