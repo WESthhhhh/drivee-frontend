@@ -1,41 +1,50 @@
 import React from "react";
 import { FiEye, FiEyeOff, FiLock, FiMail, FiFile, FiUser } from "react-icons/fi";
 
-export const PrimaryInput = ({ label, placeholder, type = "text", icon = null, error = null, succes = null }) => {
-    const getIcon = () => {
-        switch(icon) {
-            case 'user': return <FiUser className="w-4 h-4 text-gray-400" />;
-            case 'lock': return <FiLock className="w-4 h-4 text-gray-400" />;
-            case 'mail': return <FiMail className="w-4 h-4 text-gray-400" />;
-            case 'file': return <FiFile className="w-4 h-4 text-gray-400" />;
-            default: return null;
-        }
-    };
-
-    return (
-        <div className=" ">
-            <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
-            <div className="relative">
-                <input
-                    type={type}
-                    placeholder={placeholder}
-                    className={`w-full p-2 border ${error ? 'border-error' : succes ? 'border-success' : 'border-b50'} rounded-small-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 text-[14px] ${icon ? 'pl-10' : ''}`} 
-                />
-                {icon && (
-                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        {getIcon()}
-                    </div>
-                )}
-                {error && (
-                    <p className="text-[13px] text-error">{error}</p>
-                )}
-                {succes && (
-                    <p className="text-[13px] text-success">{succes}</p>
-                )}
-            </div>
-        </div>
-    );
-};
+export const PrimaryInput = ({ 
+    label, 
+    placeholder, 
+    type = "text", 
+    icon = null, 
+    error = null, 
+    succes = null, 
+    ...props  
+  }) => {
+      const getIcon = () => {
+          switch(icon) {
+              case 'user': return <FiUser className="w-4 h-4 text-gray-400" />;
+              case 'lock': return <FiLock className="w-4 h-4 text-gray-400" />;
+              case 'mail': return <FiMail className="w-4 h-4 text-gray-400" />;
+              case 'file': return <FiFile className="w-4 h-4 text-gray-400" />;
+              default: return null;
+          }
+      };
+  
+      return (
+          <div className=" ">
+              <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
+              <div className="relative">
+                  <input
+                      type={type}
+                      placeholder={placeholder}
+                      className={`w-full p-2 border ${error ? 'border-error' : succes ? 'border-success' : 'border-b50'} rounded-small-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 text-[14px] ${icon ? 'pl-10' : ''}`}
+                      {...props}  // This spreads all props (including register) onto the input
+                  />
+                  {icon && (
+                      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                          {getIcon()}
+                      </div>
+                  )}
+                  {error && (
+                      <p className="text-[13px] text-error">{error}</p>
+                  )}
+                  {succes && (
+                      <p className="text-[13px] text-success">{succes}</p>
+                  )}
+              </div>
+          </div>
+      );
+  };
 
 export const PasswordInput = ({ label, placeholder, error = null, succes = null, ...rest }) => {
     const [showPassword, setShowPassword] = React.useState(false);

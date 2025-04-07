@@ -2,10 +2,10 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import Button from '../UI/button';
 import { EmailInput, PasswordInput, PrimaryInput } from '../UI/formInputs';
+import { FaGoogle } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { FaGoogle } from "react-icons/fa";
 
-const SignupForm = () => {
+const Signup = () => {
   const { 
     register, 
     handleSubmit, 
@@ -13,7 +13,9 @@ const SignupForm = () => {
   } = useForm({
     mode: "onChange",
     defaultValues: {
+      fullName: "",
       email: "",
+      phoneNumber: "",
       password: ""
     }
   });
@@ -24,15 +26,31 @@ const SignupForm = () => {
 
   return (
     <>
-    <div className='w-full max-w-lg'>
       <h1 className="text-4xl font-regular mb-8 text-text">
         Welcome to <span className='text-primary font-bold'>Drivee.</span>
       </h1>
       
       <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4'>
+
         <PrimaryInput
           label="Full Name"
           placeholder="User Name Or School name"
+          error={errors.fullName?.message}
+          {...register("fullName", {
+            required: "Full name is required",
+            minLength: {
+              value: 2,
+              message: "Name must be at least 2 characters"
+            },
+            maxLength: {
+              value: 50,
+              message: "Name cannot exceed 50 characters"
+            },
+            pattern: {
+              value: /^[A-Za-z\s]+$/i,
+              message: "Name should only contain letters"
+            }
+          })}
         />
         
         <EmailInput
@@ -49,8 +67,21 @@ const SignupForm = () => {
         />
         
         <PrimaryInput
-          label="Phone Number"
-          placeholder="eg: +212 509-867-345"
+        label="Phone Number"
+        placeholder="eg: +212 6XX-XXX-XXX"
+        error={errors.phoneNumber?.message}
+        {...register("phoneNumber", {
+            required: "Phone number is required",
+            pattern: {
+            value: /^(?:\+212|0)([ \-_/]*)(?:[0-9][ \-_/]*){9}$/,
+            message: "Please enter a valid Moroccan phone number (e.g., +212 6XX-XXX-XXX or 06XX-XXX-XXX)"
+            },
+            validate: {
+            validPrefix: value => 
+                /^(?:\+212|0)([ \-_/]*)([67][ \-_/]*)/.test(value) || 
+                "Must start with +2126, +2127, 06, or 07"
+            }
+        })}
         />
 
         <PasswordInput
@@ -79,13 +110,6 @@ const SignupForm = () => {
             Already Have an Account? <span className='font-bold ml-1'>Login</span>
           </Link>
         </div>
-
-        <div className="flex items-center my-4">
-          <div className="flex-grow border-t border-b200"></div>
-          <span className="mx-4 text-b200">or</span>
-          <div className="flex-grow border-t border-b200"></div>
-        </div>
-
         <Button 
           type='secondary' 
           htmlType='button'
@@ -94,9 +118,8 @@ const SignupForm = () => {
           <FaGoogle/> Sign Up With Google
         </Button>
       </form>
-      </div>
     </>
   );
 };
 
-export default SignupForm;
+export default Signup;
