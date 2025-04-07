@@ -57,6 +57,7 @@ import NotFoundPage from "./pages/NotFoundPage.jsx";
 import DrivingSchools from "./pages/DrivingSchools.jsx";
 import HowItWorks from './pages/howitWorks.jsx';
 import Login from './pages/Auth/LoginPage.jsx';
+import Signup from './components/layouts/signupForm.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -75,7 +76,7 @@ export const router = createBrowserRouter([
     element: <AuthLayout />,
     children: [
       { path: 'login', element: <Login /> },
-      // { path: 'register', element: <Register /> },
+      { path: 'signup', element: <Signup /> },
     ]
   },
 ]);

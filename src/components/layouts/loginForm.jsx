@@ -9,7 +9,7 @@ const Login = () => {
   const { 
     register, 
     handleSubmit, 
-    formState: { errors, isValid } 
+    formState: { errors } 
   } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -20,44 +20,30 @@ const Login = () => {
 
   const onSubmit = (data) => {
     console.log('Login data:', data);
-    // Add your authentication logic here
   };
 
   return (
-    <div className='flex flex-col md:flex-row gap-10 md:mr-30 xl:mr-40 items-center md:my-4 md:ml-4'>
-      <img 
-        src="/images/home-ellipse.png" 
-        className="hidden md:block absolute top-0 right-0 w-auto h-auto" 
-        alt="background circle" 
-      />
-      <div>
-        <img src="/images/loginpicsm.svg" alt="" className='md:hidden'/>
-      </div>
-      <div className="hidden md:block md:max-w-[50%]">
-        <img src="/images/loginpic.svg" alt="Login image" className='md:h-[1200px] lg:h-[700px]' />
-      </div>
-      
-      <div className="w-full max-w-md">
+    <div className=''>
+      <div className="w-full max-w-lg md:ml-30 xl:ml-30">
         <h1 className="text-4xl font-regular mb-8 text-text text-center md:text-start">
           Welcome back to <span className='text-primary font-bold'>Drivee.</span>
         </h1>
         
-        <form onSubmit={handleSubmit(onSubmit)}>
-        <EmailInput
-          label="Email Address"
-          placeholder="Enter Your email"
-          error={errors.email?.message}
-          register={register("email", {
-          required: "Email is required",
-          pattern: {
-          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-          message: "Invalid email address"
-          }
-          })}
-  className="mb-4"
-/>
+        <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4'>
+          <EmailInput
+            label="Email Address"
+            placeholder="Enter Your email"
+            error={errors.email?.message}
+            register={register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email address"
+              }
+            })}
+          />
 
-          <div className="flex flex-col gap-1 py-7">
+          <div className="flex flex-col gap-1">
             <PasswordInput
               label="Password"
               placeholder="Enter Your password"
@@ -70,23 +56,24 @@ const Login = () => {
                 }
               })}
             />
-            <Link to={'/forgotPassword'} className='text-primary no-underline text-[12px]'>
-              Forgot Password
+            <Link to={'/forgotPassword'} className='text-primary no-underline text-sm text-right'>
+              Forgot Password?
             </Link>
           </div>
 
           <Button 
             type='primary' 
             htmlType='submit' 
-            className='w-full'
-           
+            className='w-full mt-2'
           >
             Log In
           </Button>
 
-          <Link to={'/Signup'} className='text-primary no-underline text-[12px] text-center items-center my-4 flex justify-center'>
-            New Here? <span className='font-bold'>Sign up</span>
-          </Link>
+          <div className='text-center mt-2'>
+            <Link to={'/Signup'} className='text-primary text-sm flex justify-center items-center'>
+              New Here? <span className='font-bold ml-1'>Sign up</span>
+            </Link>
+          </div>
 
           <div className="flex items-center my-4">
             <div className="flex-grow border-t border-b200"></div>
@@ -97,10 +84,7 @@ const Login = () => {
           <Button 
             type='secondary' 
             htmlType='button'
-            className='gap-2 w-full mt-4'
-            onClick={() => {
-              // Handle Google login here
-            }}
+            className='gap-2 w-full'
           >
             <FaGoogle/> Login With Google
           </Button>
