@@ -28,7 +28,7 @@ export const PrimaryInput = ({
                       type={type}
                       placeholder={placeholder}
                       className={`w-full p-2 border ${error ? 'border-error' : succes ? 'border-success' : 'border-b50'} rounded-small-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 text-[14px] ${icon ? 'pl-10' : ''}`}
-                      {...props}  // This spreads all props (including register) onto the input
+                      {...props} 
                   />
                   {icon && (
                       <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
