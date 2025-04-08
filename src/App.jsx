@@ -11,7 +11,12 @@ import {
   DisableInput,
   TextArea,
   FileInput,
-} from "./components/UI/formInputs";
+} from "./components/formInputs";
+import ProfilDropdown from "./components/UI/profildropdown";
+import UserType from "./components/UI/userType";
+import RadioButton from "./components/UI/radioButton";
+
+
 
 function App() {
   return (
@@ -50,6 +55,9 @@ function App() {
 
           <Button Children="submit" type="primary" />
         </from>
+        <ProfilDropdown/>
+        <UserType type="Learner"/>
+        <RadioButton label="checked"/>
       </div>
       </Router>
     </>
@@ -57,3 +65,4 @@ function App() {
 }
 
 export default App;
+ 
