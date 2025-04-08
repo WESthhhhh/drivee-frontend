@@ -55,6 +55,7 @@ const Signup = () => {
 
   return (
     <>
+    <div>
       <h1 className="text-4xl font-regular mb-8 text-text">
         Welcome to <span className='text-primary font-bold'>Drivee.</span>
       </h1>
@@ -167,6 +168,7 @@ const Signup = () => {
           <FaGoogle/> Sign Up With Google
         </Button>
       </form>
+      </div>
     </>
   );
 };

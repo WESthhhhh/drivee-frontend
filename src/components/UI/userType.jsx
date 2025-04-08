@@ -6,7 +6,7 @@ const UserType = ({ onSelect }) => {
   const handleSelect = (type) => {
     setSelectedType(type);
     if (onSelect) {
-      onSelect(type); 
+      onSelect(type === "school" ? "SCHOOL" : "STUDENT"); // Match your Prisma enum
     }
   };
 
@@ -16,8 +16,8 @@ const UserType = ({ onSelect }) => {
         onClick={() => handleSelect("school")}
         className={`flex flex-col items-center gap-[8px] w-[179px] py-[20px] rounded-large-md border transition-colors duration-300 ${
           selectedType === "school"
-            ? "border-b200 bg-light" // Selected state
-            : "border-b50 bg-light hover:border-b200 hover:bg-b25" // Default + hover state
+            ? "border-b200 bg-light"
+            : "border-b50 bg-light hover:border-b200 hover:bg-b25"
         }`}
       >
         <svg width="45" height="44" viewBox="0 0 45 44" fill="none">
@@ -33,19 +33,18 @@ const UserType = ({ onSelect }) => {
         </p>
       </button>
 
-      {/* Learner Button */}
       <button
         onClick={() => handleSelect("learner")}
         className={`flex flex-col items-center gap-[8px] w-[179px] py-[20px] rounded-large-md border transition-colors duration-300 ${
           selectedType === "learner"
-            ? "border-b200 bg-light" // Selected state
-            : "border-b50 bg-light hover:border-b200 hover:bg-b25" // Default + hover state
+            ? "border-b200 bg-light"
+            : "border-b50 bg-light hover:border-b200 hover:bg-b25"
         }`}
       >
         <svg width="45" height="45" viewBox="0 0 45 45" fill="none">
           <path
             d="M22.5 5.34375C25.7625 5.34375 28.4062 7.9875 28.4062 11.25C28.4062 14.5125 25.7625 17.1562 22.5 17.1562C19.2375 17.1562 16.5937 14.5125 16.5937 11.25C16.5937 7.9875 19.2375 5.34375 22.5 5.34375ZM22.5 30.6562C30.8531 30.6562 39.6562 34.7625 39.6562 36.5625V39.6562H5.34375V36.5625C5.34375 34.7625 14.1469 30.6562 22.5 30.6562ZM22.5 0C16.2844 0 11.25 5.03437 11.25 11.25C11.25 17.4656 16.2844 22.5 22.5 22.5C28.7156 22.5 33.75 17.4656 33.75 11.25C33.75 5.03437 28.7156 0 22.5 0ZM22.5 25.3125C14.9906 25.3125 0 29.0812 0 36.5625V45H45V36.5625C45 29.0812 30.0094 25.3125 22.5 25.3125Z"
-            fill={selectedType === "learner" ? "#0F34AE" : "#9DACDE"} 
+            fill={selectedType === "learner" ? "#0F34AE" : "#9DACDE"}
           />
         </svg>
         <p className={`font-bold transition-colors duration-300 ${selectedType === "learner" ? "text-b200" : "text-b75 hover:text-b200"}`}>

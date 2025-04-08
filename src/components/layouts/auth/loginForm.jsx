@@ -25,7 +25,7 @@ const Login = () => {
   return (
     <div className=''>
       <div className="w-full max-w-lg md:ml-30 xl:ml-30">
-        <h1 className="text-3xl leading-10 md:text-4xl font-regular mb-8 text-text text-center md:text-start">
+        <h1 className="text-4xl font-regular mb-8 text-text text-center md:text-start">
           Welcome back to <span className='text-primary font-bold'>Drivee.</span>
         </h1>
         
@@ -74,7 +74,7 @@ const Login = () => {
           </Button>
 
           <div className='text-center mt-2'>
-            <Link to={'/Signup1'} className='text-primary text-sm flex justify-center items-center'>
+            <Link to={'/Signup'} className='text-primary text-sm flex justify-center items-center'>
               New Here? <span className='font-bold ml-1'>Sign up</span>
             </Link>
           </div>
