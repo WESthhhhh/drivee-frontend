@@ -59,6 +59,7 @@ import HowItWorks from './pages/howitWorks.jsx';
 import Login from './pages/Auth/LoginPage.jsx';
 import Signup from './pages/Auth/SignupPage.jsx';
 // import Signup from './components/layouts/auth/signupForm.jsx';
+import Signup1 from './components/layouts/auth/signupForm1.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -78,6 +79,7 @@ export const router = createBrowserRouter([
     children: [
       { path: 'login', element: <Login /> },
       { path: 'signup', element: <Signup /> },
+      { path: 'signup1', element: <Signup1 /> },
     ]
   },
 ]);

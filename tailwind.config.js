@@ -18,7 +18,6 @@ export default {
         error: '#F16965',
         light: '#FDFDFD',
         b75:'#9DACDE',
-        
         b50:'#E7EBF7',
         b500:'#09206A',
         b200:'#0F34AE',
@@ -46,6 +45,9 @@ export default {
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
       },
+      fontSize: {
+        '4xl': '49px', 
+      }
     },
   },
   plugins: [],

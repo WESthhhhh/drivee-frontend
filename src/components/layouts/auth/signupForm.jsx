@@ -35,7 +35,7 @@ const Signup = () => {
         lastName: data.lastName,
         email: data.email,
         password: data.password,
-        phone: data.phone,  // Changed from phoneNumber
+        phone: data.phone,  
         role: 'STUDENT'
       });
 
