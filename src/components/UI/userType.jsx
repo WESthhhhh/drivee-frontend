@@ -28,7 +28,7 @@ const UserType = ({ onSelect }) => {
             fill={selectedType === "school" ? "#0F34AE" : "#9DACDE"}
           />
         </svg>
-        <p className={`font-bold transition-colors duration-300 ${selectedType === "school" ? "text-b200" : "text-b75 hover:text-b200"}`}>
+        <p className={`font-bold transition-colors duration-300 ${selectedType === "school" ? "text-b200" : "text-b75 "}`}>
           Driving School
         </p>
       </button>
@@ -47,7 +47,7 @@ const UserType = ({ onSelect }) => {
             fill={selectedType === "learner" ? "#0F34AE" : "#9DACDE"}
           />
         </svg>
-        <p className={`font-bold transition-colors duration-300 ${selectedType === "learner" ? "text-b200" : "text-b75 hover:text-b200"}`}>
+        <p className={`font-bold transition-colors duration-300 ${selectedType === "learner" ? "text-b200" : "text-b75 "}`}>
           Learner
         </p>
       </button>
