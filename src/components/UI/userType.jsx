@@ -6,7 +6,7 @@ const UserType = ({ onSelect }) => {
   const handleSelect = (type) => {
     setSelectedType(type);
     if (onSelect) {
-      onSelect(type === "school" ? "SCHOOL" : "STUDENT"); // Match your Prisma enum
+      onSelect(type === "school" ? "SCHOOL" : "STUDENT"); 
     }
   };
 
