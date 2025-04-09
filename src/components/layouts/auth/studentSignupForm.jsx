@@ -237,8 +237,8 @@ const StudentSignupForm = () => {
           {/* Error message when no license */}
           {driverLicenseValue === false && (
             <div className="flex items-start p-3 bg-red-50 rounded-lg border border-red-200">
-              <span className="text-red-500 mr-2">❌</span>
-              <p className="text-red-700 text-sm">
+              <span className=" text-error mr-2">❌</span>
+              <p className="text-red-500 text-sm">
                 Sorry, this platform is only for those with a valid permit.
               </p>
             </div>
@@ -255,7 +255,8 @@ const StudentSignupForm = () => {
           className="w-full mt-6"
           loading={isLoading}
         >
-          {driverLicenseValue ? "Sign Up" : "License Required"}
+          {driverLicenseValue ? "Sign Up" : "Sign Up"}  
+          {/* //License Required */}
         </Button>
       </form>
     </div>

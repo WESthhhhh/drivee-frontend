@@ -59,7 +59,7 @@ import HowItWorks from './pages/howitWorks.jsx';
 import Login from './pages/Auth/LoginPage.jsx';
 import Signup from './pages/Auth/SignupPage.jsx';
 // import Signup from './components/layouts/auth/signupForm.jsx';
-import SelectUserType from './components/layouts/auth/signupForm1.jsx';
+import SelectUserType from './components/layouts/auth/selectUser.jsx';
 import Verification from './pages/Auth/VerificationPage.jsx';
 import SchoolSignup from './pages/Auth/SchoolSignup.jsx';
 import StudentSignup from './pages/Auth/StudentSignup.jsx';
