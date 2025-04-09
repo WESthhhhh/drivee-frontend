@@ -4,6 +4,16 @@ import { Outlet } from 'react-router-dom';
 const AuthLayout = () => {
   return (
     <div className="max-w-7xl mx-auto px-4   font-poppins">
+      <img 
+        src="/images/home-ellipse.png" 
+        className="absolute top-0 right-0 w-auto h-auto z-[-1]" 
+        alt="background circle" 
+      />
+      {/* <img 
+        src="/images/home-ellipse.png" 
+        className="absolute top-1/5 left-0 transform rotate-180 w-auto h-auto" 
+        alt="background circle" 
+      /> */}
       <div className="flex flex-col justify-center md:flex-row items-center gap-8 ">
         <div className="hidden md:block md:w-1/2 py-8">
           <img 
@@ -20,7 +30,7 @@ const AuthLayout = () => {
           />
         </div>
         <div className="w-full md:w-1/2">
-          <Outlet />
+          <Outlet className="relative z-10"/>
         </div>
       </div>
     </div>
