@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import Button from '../../UI/button';
 import { EmailInput, PasswordInput } from '../../UI/formInputs';
 import { Link, useNavigate } from 'react-router-dom';
-// import { FaGoogle } from "react-icons/fa";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -22,11 +21,14 @@ const Login = () => {
     }
   });
 
+  const [loginSuccess, setLoginSuccess] = useState(false);
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-
+    console.log(' Auth cookie received');
+    console.log(' Redirecting to /home');
     clearErrors(['email', 'password', 'root']);
+    setLoginSuccess(false);
     
     try {
       const response = await axios.post('http://localhost:5000/users/login', data, {
@@ -34,10 +36,14 @@ const Login = () => {
       });
       
       if (response.status === 200) {
+        setLoginSuccess(true);
         toast.success('Login successful!');
-        navigate('/');
+        setTimeout(() => {
+          navigate('/');
+        }, 1500);
       }
     } catch (error) {
+      setLoginSuccess(false);
       if (error.response) {
         if (error.response.status === 401) {
           if (error.response.data.message === 'User not found') {
@@ -86,6 +92,14 @@ const Login = () => {
           Welcome back to <span className='text-primary font-bold'>Drivee.</span>
         </h1>
         
+        {/* Success Message */}
+        {loginSuccess && (
+          <div className="text-success bg-green-50 text-sm mb-4 p-2 rounded">
+            Login successful! Redirecting...
+          </div>
+        )}
+
+        {/* Error Message */}
         {errors.root && (
           <div className="text-error text-sm mb-4 p-2 bg-red-50 rounded">
             {errors.root.message}
@@ -132,7 +146,7 @@ const Login = () => {
             type='primary' 
             htmlType='submit' 
             className='w-full mt-2'
-            // disabled={isSubmitting}
+            disabled={isSubmitting}
           >
             {isSubmitting ? 'Logging in...' : 'Log In'}
           </Button>
@@ -142,20 +156,6 @@ const Login = () => {
               New Here? <span className='font-bold ml-1'>Sign up</span>
             </Link>
           </div>
-
-          {/* <div className="flex items-center my-4">
-            <div className="flex-grow border-t border-b200"></div>
-            <span className="mx-4 text-b200">or</span>
-            <div className="flex-grow border-t border-b200"></div>
-          </div>
-
-          <Button 
-            type='secondary' 
-            htmlType='button'
-            className='gap-2 w-full'
-          >
-            <FaGoogle/> Login With Google
-          </Button> */}
         </form>
       </div>
     </div>
