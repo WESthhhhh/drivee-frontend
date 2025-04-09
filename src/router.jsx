@@ -88,7 +88,6 @@ export const router = createBrowserRouter([
       { path: 'signup/student', element: <StudentSignup/> },
       { path: '/signup/school/verification', element: <Verification /> },
       { path: '/forgotPassword', element: <ForgotPassword /> },
-
     ]
   },
 ]);
