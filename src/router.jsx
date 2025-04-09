@@ -59,7 +59,11 @@ import HowItWorks from './pages/howitWorks.jsx';
 import Login from './pages/Auth/LoginPage.jsx';
 import Signup from './pages/Auth/SignupPage.jsx';
 // import Signup from './components/layouts/auth/signupForm.jsx';
-import Signup1 from './components/layouts/auth/signupForm1.jsx';
+import SelectUserType from './components/layouts/auth/signupForm1.jsx';
+import Verification from './pages/Auth/VerificationPage.jsx';
+import SchoolSignup from './pages/Auth/SchoolSignup.jsx';
+import StudentSignup from './pages/Auth/StudentSignup.jsx';
+import ForgotPassword from './pages/Auth/ForgotPassword.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -78,8 +82,13 @@ export const router = createBrowserRouter([
     element: <AuthLayout />,
     children: [
       { path: 'login', element: <Login /> },
-      { path: 'signup/signup2', element: <Signup /> },
-      { path: 'signup', element: <Signup1 /> },
+      // { path: 'signup', element: <Signup /> },
+      { path: 'select-user', element: <SelectUserType /> },
+      { path: 'signup/school', element: <SchoolSignup /> },
+      { path: 'signup/student', element: <StudentSignup/> },
+      { path: '/signup/school/verification', element: <Verification /> },
+      { path: '/forgotPassword', element: <ForgotPassword /> },
+
     ]
   },
 ]);

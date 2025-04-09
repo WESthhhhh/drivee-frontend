@@ -74,7 +74,7 @@ const Login = () => {
           </Button>
 
           <div className='text-center mt-2'>
-            <Link to={'/Signup'} className='text-primary text-sm flex justify-center items-center'>
+            <Link to={'/select-user'} className='text-primary text-sm flex justify-center items-center'>
               New Here? <span className='font-bold ml-1'>Sign up</span>
             </Link>
           </div>

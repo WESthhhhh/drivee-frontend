@@ -12,7 +12,7 @@ const UserType = ({ onSelect }) => {
 
   return (
     <div className="flex gap-4">
-      <button
+      <button type="button"
         onClick={() => handleSelect("school")}
         className={`flex flex-col items-center gap-[8px] w-[179px] py-[20px] rounded-large-md border transition-colors duration-300 ${
           selectedType === "school"
@@ -33,7 +33,7 @@ const UserType = ({ onSelect }) => {
         </p>
       </button>
 
-      <button
+      <button type="button"
         onClick={() => handleSelect("learner")}
         className={`flex flex-col items-center gap-[8px] w-[179px] py-[20px] rounded-large-md border transition-colors duration-300 ${
           selectedType === "learner"
