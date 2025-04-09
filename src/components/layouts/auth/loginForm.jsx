@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Button from '../../UI/button';
 import { EmailInput, PasswordInput } from '../../UI/formInputs';
-import { Link } from 'react-router-dom';
-import { FaGoogle } from "react-icons/fa";
+import { Link, useNavigate } from 'react-router-dom';
+// import { FaGoogle } from "react-icons/fa";
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const { 
     register, 
     handleSubmit, 
-    formState: { errors } 
+    formState: { errors, isSubmitting },
+    setError,
+    clearErrors
   } = useForm({
     mode: "onChange",
     defaultValues: {
@@ -18,8 +22,61 @@ const Login = () => {
     }
   });
 
-  const onSubmit = (data) => {
-    console.log('Login data:', data);
+  const navigate = useNavigate();
+
+  const onSubmit = async (data) => {
+
+    clearErrors(['email', 'password', 'root']);
+    
+    try {
+      const response = await axios.post('http://localhost:5000/users/login', data, {
+        withCredentials: true
+      });
+      
+      if (response.status === 200) {
+        toast.success('Login successful!');
+        navigate('/');
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          if (error.response.data.message === 'User not found') {
+            setError('email', {
+              type: 'manual',
+              message: 'No account found with this email'
+            });
+          } 
+          else if (error.response.data.message === 'Invalid password') {
+            setError('password', {
+              type: 'manual',
+              message: 'Incorrect password'
+            });
+          }
+          else {
+            setError('root', {
+              type: 'manual',
+              message: 'Invalid email or password'
+            });
+          }
+        }
+        else {
+          setError('root', {
+            type: 'manual',
+            message: error.response.data.message || 'Login failed'
+          });
+        }
+      } else if (error.request) {
+        setError('root', {
+          type: 'manual',
+          message: 'No response from server'
+        });
+      } else {
+        setError('root', {
+          type: 'manual',
+          message: 'Login error: ' + error.message
+        });
+      }
+    }
   };
 
   return (
@@ -29,11 +86,17 @@ const Login = () => {
           Welcome back to <span className='text-primary font-bold'>Drivee.</span>
         </h1>
         
+        {errors.root && (
+          <div className="text-error text-sm mb-4 p-2 bg-red-50 rounded">
+            {errors.root.message}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4'>
           <EmailInput
             label="Email Address"
             placeholder="Enter Your email"
-            error={errors.email?.message}
+            error={errors.email?.message} 
             register={register("email", {
               required: "Email is required",
               pattern: {
@@ -45,21 +108,21 @@ const Login = () => {
 
           <div className="flex flex-col gap-1">
             <PasswordInput
-          label="Password"
-          placeholder="Enter Your password"
-          error={errors.password?.message}
-          {...register("password", {
-            required: "Password is required",
-            minLength: {
-              value: 8,
-              message: "Password must be at least 8 characters"
-            },
-            pattern: {
-              value: /[A-Z]/,
-              message: "Need at least one uppercase letter"
-            }
-          })}
-        />
+              label="Password"
+              placeholder="Enter Your password"
+              error={errors.password?.message} 
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters"
+                },
+                pattern: {
+                  value: /[A-Z]/,
+                  message: "Need at least one uppercase letter"
+                }
+              })}
+            />
             <Link to={'/forgotPassword'} className='text-primary no-underline text-sm text-right'>
               Forgot Password?
             </Link>
@@ -69,8 +132,9 @@ const Login = () => {
             type='primary' 
             htmlType='submit' 
             className='w-full mt-2'
+            disabled={isSubmitting}
           >
-            Log In
+            {isSubmitting ? 'Logging in...' : 'Log In'}
           </Button>
 
           <div className='text-center mt-2'>
@@ -79,7 +143,7 @@ const Login = () => {
             </Link>
           </div>
 
-          <div className="flex items-center my-4">
+          {/* <div className="flex items-center my-4">
             <div className="flex-grow border-t border-b200"></div>
             <span className="mx-4 text-b200">or</span>
             <div className="flex-grow border-t border-b200"></div>
@@ -91,7 +155,7 @@ const Login = () => {
             className='gap-2 w-full'
           >
             <FaGoogle/> Login With Google
-          </Button>
+          </Button> */}
         </form>
       </div>
     </div>
