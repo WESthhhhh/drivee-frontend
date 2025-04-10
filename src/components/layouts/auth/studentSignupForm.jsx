@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Button from '../../UI/button';
+import { toast } from 'react-toastify'
 import RadioButton from '../../UI/radioButton';
 
 import { EmailInput, PasswordInput, PrimaryInput } from '../../UI/formInputs';
@@ -33,7 +34,7 @@ const StudentSignupForm = () => {
   const validateDriverLicense = (value) => {
     const validateDriverLicense = (value) => {
       if (value !== true) {
-        return false; // Just return false to prevent form submission
+        return false; 
       }
       return true;
     };
@@ -41,16 +42,13 @@ const StudentSignupForm = () => {
   const [apiError, setApiError] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
   const navigate = useNavigate();
-
+  const [signupSuccess, setSignupSuccess] = useState(false);
   const onSubmit = async (data) => {
-      try {
-        if (!data.driverLicense) {
-          return; // Prevent submission if no license
-        }
+    try {
+      if (!data.driverLicense) return;
 
-        setApiError('');
-        setIsLoading(true);
-        
+      setApiError('');
+      setIsLoading(true);
         const payload = {
             firstName: data.firstName.trim(),
             lastName: data.lastName.trim(),
@@ -59,7 +57,7 @@ const StudentSignupForm = () => {
             password: data.password,
             driverLicense: data.driverLicense === "true" || data.driverLicense === true,
             role: 'STUDENT'
-            // role is handled by backend
+            
         };
 
         console.log("Sending payload:", payload); // Debug log
@@ -67,7 +65,11 @@ const StudentSignupForm = () => {
         const response = await axios.post('http://localhost:5000/users/signupLearner', payload);
 
         if (response.data.success) {
-            navigate('/student/dashboard'); // Redirect to student dashboard
+          setSignupSuccess(true); // Set success state
+          toast.success('Signup successful!');
+          setTimeout(() => {
+            navigate('/student/dashboard');
+          }, 1500);
         }
     } catch (error) {
         console.error("Registration error:", error);
@@ -94,8 +96,12 @@ const StudentSignupForm = () => {
       <h1 className="text-4xl font-regular mb-8 text-text">
         Welcome to <span className='text-primary font-bold'>Drivee.</span>
       </h1>
+      {signupSuccess && (
+        <div className="text-success bg-green-50 text-sm mb-4 p-2 rounded">
+          Signup successful! Redirecting...
+        </div>
+      )}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Name Fields */}
         <div className="grid grid-cols-2 gap-4">
           <PrimaryInput
             label="First Name"
@@ -144,8 +150,8 @@ const StudentSignupForm = () => {
             },
             validate: {
               validPrefix: value => 
-                /^(?:\+212|0)([ \-_/]*)([67][ \-_/]*)/.test(value) || 
-                "Must start with +2126/7 or 06/07"
+                /^(?:\+212|0)([ \-_/]*)([675][ \-_/]*)/.test(value) || 
+                "Must start with +2126/7/5 or 06/07/05"
             }
           })}
         />

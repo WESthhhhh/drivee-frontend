@@ -1,37 +1,65 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import Button from '../../UI/button';
 import { EmailInput } from '../../UI/formInputs';
-import { Link } from 'react-router-dom';
-import { FaGoogle } from "react-icons/fa";
+import Button from '../../UI/button';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
-const forgotPassword = () => {
+const ForgotPassword = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm();
 
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:5000/users/forgot-password',
+        { email: data.email }
+      );
+      toast.success(response.data.message); 
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || 'Failed to send reset email'
+      );
+    }
+  };
 
- 
   return (
-    <div className=''>
-      <div className="w-full max-w-lg md:ml-30 xl:ml-30">
-        <h1 className="text-4xl font-regular mb-8 text-text text-center md:text-start">Did You Forget Your Password?</h1>
-        <h3 className='text-inputtext text-center mb-8'>If you've forgotten your password, enter your e-mail address and we'll send you an e-mail </h3>
-        
-        <form  className='flex flex-col gap-4'>
-         <EmailInput
-         label="Email Address"
-         placeholder="Enter Your email"
-         />
+    <div className="w-full max-w-lg md:ml-30 xl:ml-30">
+      <h1 className="text-4xl font-regular mb-8 text-text text-center md:text-start">
+        Did You Forget Your Password?
+      </h1>
+      <h3 className="text-inputtext text-center mb-8">
+        Enter your email address to receive a reset link.
+      </h3>
 
-          <Button 
-            type='primary' 
-            htmlType='submit' 
-            className='w-full mt-2'
-          >
-            Reset Password
-          </Button>
-        </form>
-      </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <EmailInput
+                  label="Email Address"
+                  placeholder="Enter Your email"
+                  error={errors.email?.message}
+                  register={register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address"
+                    }
+                  })}
+                />
+
+        <Button
+          type="primary"
+          htmlType="submit"
+          className="w-full mt-2"
+          // disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Sending...' : 'Reset Password'}
+        </Button>
+      </form>
     </div>
   );
 };
 
-export default forgotPassword;
+export default ForgotPassword;
