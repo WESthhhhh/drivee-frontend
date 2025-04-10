@@ -64,6 +64,7 @@ import Verification from './pages/Auth/VerificationPage.jsx';
 import SchoolSignup from './pages/Auth/SchoolSignup.jsx';
 import StudentSignup from './pages/Auth/StudentSignup.jsx';
 import ForgotPassword from './pages/Auth/ForgotPassword.jsx';
+import ResetPassword from './pages/Auth/ResetPassword.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -87,7 +88,8 @@ export const router = createBrowserRouter([
       { path: 'signup/school', element: <SchoolSignup /> },
       { path: 'signup/student', element: <StudentSignup/> },
       { path: '/signup/school/verification', element: <Verification /> },
-      { path: '/forgotPassword', element: <ForgotPassword /> },
+      { path: '/forgot-password', element: <ForgotPassword /> },
+      { path: '/reset-password', element: <ResetPassword /> },
     ]
   },
 ]);
