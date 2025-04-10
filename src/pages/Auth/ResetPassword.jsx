@@ -6,7 +6,7 @@ const resetPassword = () => {
       <div className="max-w-7xl mx-auto">
            <ResetPassword></ResetPassword>
        </div>
-     
+    
       </>
     );
   };

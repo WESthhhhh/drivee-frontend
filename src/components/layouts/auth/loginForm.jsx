@@ -137,7 +137,7 @@ const Login = () => {
                 }
               })}
             />
-            <Link to={'/forgotPassword'} className='text-primary no-underline text-sm text-right'>
+            <Link to={'/forgot-password'} className='text-primary no-underline text-sm text-right'>
               Forgot Password?
             </Link>
           </div>
@@ -146,7 +146,6 @@ const Login = () => {
             type='primary' 
             htmlType='submit' 
             className='w-full mt-2'
-            // disabled={isSubmitting}
           >
             {isSubmitting ? 'Logging in...' : 'Log In'}
           </Button>
