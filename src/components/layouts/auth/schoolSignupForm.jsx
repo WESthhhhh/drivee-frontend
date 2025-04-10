@@ -37,10 +37,8 @@ const SchoolSignupForm = () => {
         lastName: data.lastName?.trim() || "School",
         email: data.email.trim(),
         phone: data.phone.trim(),
-        // replace(/\D/g, ''),
         password: data.password,
         address: data.address.trim(),
-        // role: role
         role: 'SCHOOL' 
       };
       try {
