@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoMail } from "react-icons/io5";
+import { Link } from 'react-router-dom';
 
 const Getintouch = () => {
   return (
@@ -21,7 +22,7 @@ const Getintouch = () => {
         
         <div className="flex  items-center  gap-4 text-primary">
           <IoMail />
-          <p>Drivee.it@gmail.com</p>
+          <Link ><p>Drivee.it@gmail.com</p></Link>
         </div>
       </div>
     </div>

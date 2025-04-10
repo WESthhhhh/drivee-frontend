@@ -81,7 +81,8 @@ const DrivingSchools = () => {
 
   return (
     <div className="max-w-7xl w-full mx-auto pt-[15rem] min-h-[200vh] overflow-x-hidden px-4 relative">
-      {/* Background elements */}
+      <div className='max-w-6xl mx-auto'>
+      
       <img 
         src="/images/home-ellipse.png" 
         className="absolute top-0 right-0 w-auto h-auto -z-10" 
@@ -93,9 +94,10 @@ const DrivingSchools = () => {
         alt="small decorative element" 
       /> 
 
-      {/* Header */}
+     
+      
       <h1 className="text-[2.5rem] text-center font-normal mb-12 z-10">
-    <span className="font-semibold text-primary">Trusted</span> Driving Schools
+        <span className="font-semibold text-primary">Trusted</span> Driving Schools
       </h1>
 
       {/* Filter Controls */}
@@ -245,6 +247,7 @@ const DrivingSchools = () => {
           </button>
         </div>
       )}
+      </div>
     </div>
   );
 };

@@ -123,7 +123,7 @@ const StudentSignupForm = () => {
           />
         </div>
 
-        {/* Email */}
+        {/* email */}
         <EmailInput
           label="Email Address"
           placeholder="Enter Your email"
@@ -137,7 +137,7 @@ const StudentSignupForm = () => {
           })}
         />
 
-        {/* Phone */}
+        {/* phone */}
         <PrimaryInput
           label="Phone Number"
           placeholder="+212 6XX-XXX-XXX or 06XX-XXX-XXX"
@@ -156,7 +156,7 @@ const StudentSignupForm = () => {
           })}
         />
 
-        {/* Password */}
+        {/* password */}
         <PasswordInput
           label="Password"
           placeholder="At least 8 characters"
@@ -183,38 +183,14 @@ const StudentSignupForm = () => {
           })}
         /> */}
 
-        {/* Driver License */}
-        {/* <div className="flex items-center gap-3">
-          <label className="block text-sm font-medium text-gray-700">
-            Do you have a driver's license?
-          </label>
-          <div className="flex items-center gap-2">
-            <input
-              type="radio"
-              id="license-yes"
-              value={true}
-              {...register("driverLicense")}
-            />
-            <label htmlFor="license-yes">Yes</label>
-          </div>
-          <div className="flex items-center gap-2">
-            <input
-              type="radio"
-              id="license-no"
-              value={false}
-              defaultChecked
-              {...register("driverLicense")}
-            />
-            <label htmlFor="license-no">No</label>
-          </div>
-        </div> */}
+        
 
 
-      {/* Driver License Section */}
+      {/* permit */}
       <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <label className="block text-sm font-medium text-gray-700">
-              Do you have a driver's license? <span className="text-red-500">*</span>
+          <div className=" items-center gap-3">
+            <label className="text-sm font-medium text-primary mb-2">
+            Do you have a valid permit?
             </label>
             <div className="flex items-center gap-4">
               <RadioButton
