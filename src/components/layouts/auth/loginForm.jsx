@@ -10,6 +10,7 @@ const Login = () => {
   const { 
     register, 
     handleSubmit, 
+    reset,
     formState: { errors, isSubmitting },
     setError,
     clearErrors
@@ -34,7 +35,7 @@ const Login = () => {
       const response = await axios.post('http://localhost:5000/users/login', data, {
         withCredentials: true
       });
-      
+      reset();
       if (response.status === 200) {
         setLoginSuccess(true);
         toast.success('Login successful!');

@@ -14,7 +14,8 @@ const StudentSignupForm = () => {
 
   const { 
     register, 
-    handleSubmit, 
+    handleSubmit,
+    reset, 
     formState: { errors, isValid },
     watch,
     setValue,
@@ -63,6 +64,7 @@ const StudentSignupForm = () => {
         console.log("Sending payload:", payload); // Debug log
 
         const response = await axios.post('http://localhost:5000/users/signupLearner', payload);
+        reset();
 
         if (response.data.success) {
           setSignupSuccess(true); // Set success state

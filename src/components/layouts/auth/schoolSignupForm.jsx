@@ -14,6 +14,7 @@ const SchoolSignupForm = () => {
     const { 
       register, 
       handleSubmit, 
+      reset,
       formState: { errors, isValid }
     } = useForm({
       mode: "onChange",
@@ -48,7 +49,8 @@ const SchoolSignupForm = () => {
         setIsLoading(true);
         console.log("[DEBUG] Payload being sent:", JSON.stringify(payload, null, 2));
         const response = await axios.post('http://localhost:5000/users/signupSchool', payload);
-  
+        reset();
+
         if (response.status === 201) {
           setSignupSuccess(true); 
           toast.success('Signup successful!');
