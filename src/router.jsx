@@ -87,7 +87,7 @@ export const router = createBrowserRouter([
       { path: 'select-user', element: <SelectUserType /> },
       { path: 'signup/school', element: <SchoolSignup /> },
       { path: 'signup/student', element: <StudentSignup/> },
-      { path: '/signup/school/verification', element: <Verification /> },
+      { path: '/verification', element: <Verification /> },
       { path: '/forgot-password', element: <ForgotPassword /> },
       { path: '/reset-password', element: <ResetPassword /> },
     ]

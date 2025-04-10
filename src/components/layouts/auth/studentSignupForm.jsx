@@ -94,7 +94,7 @@ const StudentSignupForm = () => {
 };
 
   return (
-    <div className="max-w-xl mx-auto p-4">
+    <div className="max-w-xl mx-auto md:ml-30 xl:ml-30">
       <h1 className="text-4xl font-regular mb-8 text-text">
         Welcome to <span className='text-primary font-bold'>Drivee.</span>
       </h1>

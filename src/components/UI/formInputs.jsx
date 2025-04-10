@@ -174,7 +174,7 @@ export const DisableInput = ({ label, placeholder, type = "text", icon = null })
 
 export const FileInput = ({ label }) => {
     return (
-        <div className=" w-[500px]">
+        <div className=" ">
             <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
             <div className="relative flex items-center border border-border-b50 rounded-small-md px-3 py-2 focus-within:ring-thin focus-within:ring-border-b50 focus-within:border-b75 ">
                 <label htmlFor="file-upload" className="flex items-center cursor-pointer gap-[12px]">

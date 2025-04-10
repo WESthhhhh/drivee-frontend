@@ -55,7 +55,7 @@ const SchoolSignupForm = () => {
           setSignupSuccess(true); 
           toast.success('Signup successful!');
           setTimeout(() => {
-            navigate('/signup/school/verification');
+            navigate('/verification');
           }, 1500);
         }
       } catch (error) {
@@ -81,7 +81,7 @@ const SchoolSignupForm = () => {
     };
   
   return (
-    <div className="max-w-xl mx-auto p-4">
+    <div className="max-w-xl mx-auto md:ml-30 xl:ml-30">
         <h1 className="text-4xl font-regular mb-8 text-text">
         Welcome to <span className='text-primary font-bold'>Drivee.</span>
       </h1>
@@ -107,7 +107,7 @@ const SchoolSignupForm = () => {
           placeholder="School owner's last name"
           error={errors.lastName?.message}
           {...register("lastName", {
-            required: false, // Make optional
+            required: false, 
             minLength: { value: 2, message: "Minimum 2 characters" }
           })}
         />
@@ -190,7 +190,7 @@ const SchoolSignupForm = () => {
           type="primary"
           htmlType="submit"
           className="w-full"
-          disabled={!isValid || isLoading}
+          // disabled={!isValid || isLoading}
           loading={isLoading}
         >
           Continue to Verification
