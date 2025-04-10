@@ -92,14 +92,14 @@ const Login = () => {
           Welcome back to <span className='text-primary font-bold'>Drivee.</span>
         </h1>
         
-        {/* Success Message */}
+        
         {loginSuccess && (
           <div className="text-success bg-green-50 text-sm mb-4 p-2 rounded">
             Login successful! Redirecting...
           </div>
         )}
 
-        {/* Error Message */}
+       
         {errors.root && (
           <div className="text-error text-sm mb-4 p-2 bg-red-50 rounded">
             {errors.root.message}

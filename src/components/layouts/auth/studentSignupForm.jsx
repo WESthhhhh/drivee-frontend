@@ -123,7 +123,7 @@ const StudentSignupForm = () => {
           />
         </div>
 
-        {/* email */}
+
         <EmailInput
           label="Email Address"
           placeholder="Enter Your email"
@@ -137,7 +137,6 @@ const StudentSignupForm = () => {
           })}
         />
 
-        {/* phone */}
         <PrimaryInput
           label="Phone Number"
           placeholder="+212 6XX-XXX-XXX or 06XX-XXX-XXX"
@@ -156,7 +155,6 @@ const StudentSignupForm = () => {
           })}
         />
 
-        {/* password */}
         <PasswordInput
           label="Password"
           placeholder="At least 8 characters"
@@ -216,7 +214,6 @@ const StudentSignupForm = () => {
             </div>
           </div>
 
-          {/* Error message when no license */}
           {driverLicenseValue === false && (
             <div className="flex items-start p-3 bg-red-50 rounded-lg border border-red-200">
               <span className=" text-error mr-2">❌</span>
@@ -238,7 +235,6 @@ const StudentSignupForm = () => {
           loading={isLoading}
         >
           {driverLicenseValue ? "Sign Up" : "Sign Up"}  
-          {/* //License Required */}
         </Button>
       </form>
     </div>

@@ -22,7 +22,6 @@ const UserTypeSelection = () => {
       return;
     }
     
-    // Navigate directly to the appropriate signup page
     navigate(`/signup/${selectedType}`, {
       state: { 
         role: selectedType === "school" ? "SCHOOL" : "STUDENT" 
@@ -56,7 +55,6 @@ const UserTypeSelection = () => {
           htmlType="submit" 
           className="w-full mt-4"
           loading={isLoading}
-          // disabled={!selectedType}
         >
           Continue
         </Button>

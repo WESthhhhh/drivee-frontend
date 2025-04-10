@@ -108,7 +108,7 @@ const SchoolSignupForm = () => {
           })}
         />
         </div>
-        {/* Email */}
+        
         <EmailInput
           label="Email Address"
           placeholder="Enter Your email"
@@ -122,7 +122,7 @@ const SchoolSignupForm = () => {
           })}
         />
 
-        {/* Phone */}
+        
         <PrimaryInput
           label="Phone Number"
           placeholder="+212 6XX-XXX-XXX or 06XX-XXX-XXX"
@@ -151,7 +151,7 @@ const SchoolSignupForm = () => {
         />
 
 
-        {/* Password */}
+        
         <PasswordInput
           label="Password"
           placeholder="At least 8 characters"
