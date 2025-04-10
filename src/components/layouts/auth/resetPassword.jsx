@@ -87,6 +87,7 @@ const ResetPassword = () => {
               type="primary"
               htmlType="submit"
               className="w-full mt-2"
+              disabled={isSubmitting}
             >
               {isSubmitting ? 'Resetting Password...' : 'Reset Password'}
             </Button>

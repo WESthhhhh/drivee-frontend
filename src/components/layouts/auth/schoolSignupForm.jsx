@@ -190,7 +190,7 @@ const SchoolSignupForm = () => {
           type="primary"
           htmlType="submit"
           className="w-full"
-        //   disabled={!isValid || isLoading}
+          disabled={!isValid || isLoading}
           loading={isLoading}
         >
           Continue to Verification

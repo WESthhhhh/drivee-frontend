@@ -147,6 +147,7 @@ const Login = () => {
             type='primary' 
             htmlType='submit' 
             className='w-full mt-2'
+            disabled={isSubmitting}
           >
             {isSubmitting ? 'Logging in...' : 'Log In'}
           </Button>
