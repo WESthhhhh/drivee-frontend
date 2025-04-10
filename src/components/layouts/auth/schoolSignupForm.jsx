@@ -9,7 +9,8 @@ import { EmailInput, PasswordInput, PrimaryInput } from '../../UI/formInputs';
 const SchoolSignupForm = () => {
     const location = useLocation();
     const { role } = location.state || { role: 'SCHOOL' };
-  
+
+
     const { 
       register, 
       handleSubmit, 
@@ -30,6 +31,7 @@ const SchoolSignupForm = () => {
     const [isLoading, setIsLoading] = React.useState(false);
     const navigate = useNavigate();
     const [signupSuccess, setSignupSuccess] = useState(false);
+    
     const onSubmit = async (data) => {
       console.log("[DEBUG] Form data:", JSON.stringify(data, null, 2));
       const payload = {
