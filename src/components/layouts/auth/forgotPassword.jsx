@@ -1,9 +1,10 @@
-import React from 'react';
+import {React, useState} from 'react';
 import { useForm } from 'react-hook-form';
 import { EmailInput } from '../../UI/formInputs';
 import Button from '../../UI/button';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
 
 const ForgotPassword = () => {
   const {
@@ -11,14 +12,23 @@ const ForgotPassword = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
-
+  
+  const [forgotSuccess, setForgotSuccess] = useState(false);
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
         'http://localhost:5000/users/forgot-password',
         { email: data.email }
       );
-      toast.success(response.data.message); 
+      // toast.success(response.data.message); 
+      if (response.status === 200) {
+          setForgotSuccess(true);
+          toast.success('Email is Sent');
+          setTimeout(() => {
+          navigate('/');
+              }, 1500);
+      }
+      setForgotSuccess(false);
     } catch (error) {
       toast.error(
         error.response?.data?.message || 'Failed to send reset email'
@@ -34,7 +44,11 @@ const ForgotPassword = () => {
       <h3 className="text-inputtext text-center mb-8">
         Enter your email address to receive a reset link.
       </h3>
-
+      {forgotSuccess && (
+          <div className="text-success bg-green-50 text-sm mb-4 p-2 rounded">
+            Login successful! Redirecting...
+          </div>
+        )}
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <EmailInput
                   label="Email Address"
@@ -53,10 +67,12 @@ const ForgotPassword = () => {
           type="primary"
           htmlType="submit"
           className="w-full mt-2"
-          // disabled={isSubmitting}
+          disabled={isSubmitting}
         >
           {isSubmitting ? 'Sending...' : 'Reset Password'}
         </Button>
+       
+      <p className='text-primary no-underline text-sm text-center'>Remember Your Password? <Link to={'/login'} className='font-bold'>Login</Link></p>
       </form>
     </div>
   );

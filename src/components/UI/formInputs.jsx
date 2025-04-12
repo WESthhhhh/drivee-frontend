@@ -172,24 +172,46 @@ export const DisableInput = ({ label, placeholder, type = "text", icon = null })
     );
 };
 
-export const FileInput = ({ label }) => {
+export const FileInput = ({ 
+    label,
+    onChange,
+    error,
+    accept,
+    id = "file-upload",
+    fileName
+  }) => {
     return (
-        <div className=" w-[500px]">
-            <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
-            <div className="relative flex items-center border border-border-b50 rounded-small-md px-3 py-2 focus-within:ring-thin focus-within:ring-border-b50 focus-within:border-b75 ">
-                <label htmlFor="file-upload" className="flex items-center cursor-pointer gap-[12px]">
-                    <FiFile className="w-4 h-4 text-gray-400" />
-                    <span className="text-inputtext">Upload File</span>
-                </label>
-                <input
-                    id="file-upload"
-                    type="file"
-                    className="hidden text-[14px]"
-                />
-            </div>
+      <div className="space-y-2">
+        <label className="block text-sm font-medium text-primary">{label}</label>
+        <div className={`relative flex items-center border rounded-small-md px-3 py-2 ${
+          error ? 'border-error' : 'border-border-b50 focus-within:ring-thin focus-within:ring-border-b50 focus-within:border-b75'
+        }`}>
+          <label htmlFor={id} className="flex items-center cursor-pointer gap-3 w-full">
+            <FiFile className={`w-4 h-4 ${
+              error ? 'text-error' : 'text-gray-400'
+            }`} />
+            <span className={`text-sm ${
+              error ? 'text-error' : 'text-inputtext'
+            } truncate`}>
+              {fileName || "Upload File"}
+            </span>
+          </label>
+          <input
+            id={id}
+            type="file"
+            className="hidden"
+            onChange={onChange}
+            accept={accept}
+          />
         </div>
+        {error && (
+          <p className="text-sm text-error mt-1">
+            {error}
+          </p>
+        )}
+      </div>
     );
-};
+  };
 
 export const TextArea = ({ label, placeholder }) => {
     return (

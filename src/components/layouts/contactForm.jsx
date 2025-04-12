@@ -12,7 +12,7 @@ const Contactform = () => {
 
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // 'success' or 'error'
+  const [submitStatus, setSubmitStatus] = useState(null); 
 
   const validate = () => {
     const newErrors = {};
@@ -34,7 +34,6 @@ const Contactform = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    // Clear error when user types
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: null }));
     }
@@ -49,7 +48,6 @@ const Contactform = () => {
     setIsLoading(true);
 
     try {
-      // Replace with your actual API call
       const response = await fetch('your-api-endpoint', {
         method: 'POST',
         headers: {

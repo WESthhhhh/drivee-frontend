@@ -2,8 +2,8 @@ import React from 'react';
 
 const Button = ({ 
   children, 
-  type = 'primary', // style type: 'primary', 'secondary', etc.
-  htmlType = 'button', // actual HTML type: 'button', 'submit', 'reset'
+  type = 'primary', 
+  htmlType = 'button', 
   icon, 
   disabled = false, 
   onClick,
@@ -23,10 +23,10 @@ const Button = ({
         className += ` bg-primary text-light hover:bg-[#09206A]`;
         break;
       case 'secondary':
-        className += ` border border-primary text-primary hover:bg-primary/10`;
+        className += ` border border-primary text-primary hover:shadow-primary-9`;
         break;
       case 'ghost':
-        className += ` border-none bg-[#F5FBFB] text-[#09206A] hover:bg-[#ECEEF0]`;
+        className += ` border-none bg-cayan50 text-[14px] text-primary hover:shadow-primary-9`;
         break;
       default:
         className += ` bg-primary text-light hover:bg-[#09206A]`;
@@ -131,7 +131,7 @@ export default Button;
 //   if(type === "ghost" && disabled) {
 //     className += ` border-none bg-[#ECEEF0] text-inputtext `
 //   }if(type === "ghost"){
-//     className += ` border-none bg-[#F5FBFB]  text-[#09206A]`;
+//     className += ` border-none bg-accent  text-primary`;
 //   }
 
 //   return (
