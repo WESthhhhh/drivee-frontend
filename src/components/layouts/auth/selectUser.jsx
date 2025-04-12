@@ -22,7 +22,6 @@ const UserTypeSelection = () => {
       return;
     }
     
-    // Navigate directly to the appropriate signup page
     navigate(`/signup/${selectedType}`, {
       state: { 
         role: selectedType === "school" ? "SCHOOL" : "STUDENT" 
@@ -33,7 +32,7 @@ const UserTypeSelection = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-4">
+    <div className="max-w-xl mx-auto md:ml-30 xl:ml-30">
       <h1 className="text-4xl font-regular mb-8 text-center">
         Welcome to <span className="text-primary font-bold">Drivee</span>
       </h1>
@@ -56,7 +55,6 @@ const UserTypeSelection = () => {
           htmlType="submit" 
           className="w-full mt-4"
           loading={isLoading}
-          // disabled={!selectedType}
         >
           Continue
         </Button>

@@ -9,11 +9,13 @@ import { EmailInput, PasswordInput, PrimaryInput } from '../../UI/formInputs';
 const SchoolSignupForm = () => {
     const location = useLocation();
     const { role } = location.state || { role: 'SCHOOL' };
-  
+
+
     const { 
       register, 
       handleSubmit, 
-      formState: { errors, isValid }
+      reset,
+      formState: { errors }
     } = useForm({
       mode: "onChange",
       defaultValues: {
@@ -30,6 +32,7 @@ const SchoolSignupForm = () => {
     const [isLoading, setIsLoading] = React.useState(false);
     const navigate = useNavigate();
     const [signupSuccess, setSignupSuccess] = useState(false);
+    
     const onSubmit = async (data) => {
       console.log("[DEBUG] Form data:", JSON.stringify(data, null, 2));
       const payload = {
@@ -37,10 +40,8 @@ const SchoolSignupForm = () => {
         lastName: data.lastName?.trim() || "School",
         email: data.email.trim(),
         phone: data.phone.trim(),
-        // replace(/\D/g, ''),
         password: data.password,
         address: data.address.trim(),
-        // role: role
         role: 'SCHOOL' 
       };
       try {
@@ -48,12 +49,13 @@ const SchoolSignupForm = () => {
         setIsLoading(true);
         console.log("[DEBUG] Payload being sent:", JSON.stringify(payload, null, 2));
         const response = await axios.post('http://localhost:5000/users/signupSchool', payload);
-  
+        reset();
+
         if (response.status === 201) {
           setSignupSuccess(true); 
           toast.success('Signup successful!');
           setTimeout(() => {
-            navigate('/signup/school/verification');
+            navigate('/login');
           }, 1500);
         }
       } catch (error) {
@@ -79,7 +81,7 @@ const SchoolSignupForm = () => {
     };
   
   return (
-    <div className="max-w-xl mx-auto p-4">
+    <div className="max-w-xl mx-auto md:ml-30 xl:ml-30">
         <h1 className="text-4xl font-regular mb-8 text-text">
         Welcome to <span className='text-primary font-bold'>Drivee.</span>
       </h1>
@@ -105,12 +107,12 @@ const SchoolSignupForm = () => {
           placeholder="School owner's last name"
           error={errors.lastName?.message}
           {...register("lastName", {
-            required: false, // Make optional
+            required: false, 
             minLength: { value: 2, message: "Minimum 2 characters" }
           })}
         />
         </div>
-        {/* Email */}
+        
         <EmailInput
           label="Email Address"
           placeholder="Enter Your email"
@@ -124,7 +126,7 @@ const SchoolSignupForm = () => {
           })}
         />
 
-        {/* Phone */}
+        
         <PrimaryInput
           label="Phone Number"
           placeholder="+212 6XX-XXX-XXX or 06XX-XXX-XXX"
@@ -153,7 +155,7 @@ const SchoolSignupForm = () => {
         />
 
 
-        {/* Password */}
+        
         <PasswordInput
           label="Password"
           placeholder="At least 8 characters"
@@ -188,7 +190,7 @@ const SchoolSignupForm = () => {
           type="primary"
           htmlType="submit"
           className="w-full"
-        //   disabled={!isValid || isLoading}
+          // disabled={!isValid || isLoading}
           loading={isLoading}
         >
           Continue to Verification

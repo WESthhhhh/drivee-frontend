@@ -3,7 +3,11 @@ import logo from '/logo/Logolight.svg';
 import logosm from '/logo/Logolightsm.svg';
 export default function Footer() {
     return (
+<<<<<<< HEAD
       <footer className=" text-light  text-center items-center p-[70px]  bg-[url('../images/footer.png')] bg-cover bg-center space-y-[50px]">
+=======
+      <footer className="text-light  text-center items-center p-[70px]  bg-[url('../images/footer.png')] bg-cover bg-center space-y-[50px]">
+>>>>>>> 55d17386704d8d2e5ea9be25d6c5044e636c954c
         <Link to={'/'} className="flex items-center justify-center">
           <img src={logo} className="hidden md:block" alt="Drive logo" />
           <img src={logosm} className="block md:hidden w-[100px]" alt="Mobile logo" />

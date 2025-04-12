@@ -14,7 +14,8 @@ const StudentSignupForm = () => {
 
   const { 
     register, 
-    handleSubmit, 
+    handleSubmit,
+    reset, 
     formState: { errors, isValid },
     watch,
     setValue,
@@ -63,12 +64,13 @@ const StudentSignupForm = () => {
         console.log("Sending payload:", payload); // Debug log
 
         const response = await axios.post('http://localhost:5000/users/signupLearner', payload);
+        reset();
 
         if (response.data.success) {
           setSignupSuccess(true); // Set success state
           toast.success('Signup successful!');
           setTimeout(() => {
-            navigate('/student/dashboard');
+            navigate('/login');
           }, 1500);
         }
     } catch (error) {
@@ -92,7 +94,7 @@ const StudentSignupForm = () => {
 };
 
   return (
-    <div className="max-w-xl mx-auto p-4">
+    <div className="max-w-xl mx-auto md:ml-30 xl:ml-30">
       <h1 className="text-4xl font-regular mb-8 text-text">
         Welcome to <span className='text-primary font-bold'>Drivee.</span>
       </h1>
@@ -123,7 +125,7 @@ const StudentSignupForm = () => {
           />
         </div>
 
-        {/* Email */}
+
         <EmailInput
           label="Email Address"
           placeholder="Enter Your email"
@@ -137,7 +139,6 @@ const StudentSignupForm = () => {
           })}
         />
 
-        {/* Phone */}
         <PrimaryInput
           label="Phone Number"
           placeholder="+212 6XX-XXX-XXX or 06XX-XXX-XXX"
@@ -156,7 +157,6 @@ const StudentSignupForm = () => {
           })}
         />
 
-        {/* Password */}
         <PasswordInput
           label="Password"
           placeholder="At least 8 characters"
@@ -183,38 +183,14 @@ const StudentSignupForm = () => {
           })}
         /> */}
 
-        {/* Driver License */}
-        {/* <div className="flex items-center gap-3">
-          <label className="block text-sm font-medium text-gray-700">
-            Do you have a driver's license?
-          </label>
-          <div className="flex items-center gap-2">
-            <input
-              type="radio"
-              id="license-yes"
-              value={true}
-              {...register("driverLicense")}
-            />
-            <label htmlFor="license-yes">Yes</label>
-          </div>
-          <div className="flex items-center gap-2">
-            <input
-              type="radio"
-              id="license-no"
-              value={false}
-              defaultChecked
-              {...register("driverLicense")}
-            />
-            <label htmlFor="license-no">No</label>
-          </div>
-        </div> */}
+        
 
 
-      {/* Driver License Section */}
+      {/* permit */}
       <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <label className="block text-sm font-medium text-gray-700">
-              Do you have a driver's license? <span className="text-red-500">*</span>
+          <div className=" items-center gap-3">
+            <label className="text-sm font-medium text-primary mb-2">
+            Do you have a valid permit?
             </label>
             <div className="flex items-center gap-4">
               <RadioButton
@@ -240,7 +216,6 @@ const StudentSignupForm = () => {
             </div>
           </div>
 
-          {/* Error message when no license */}
           {driverLicenseValue === false && (
             <div className="flex items-start p-3 bg-red-50 rounded-lg border border-red-200">
               <span className=" text-error mr-2">❌</span>
@@ -262,7 +237,6 @@ const StudentSignupForm = () => {
           loading={isLoading}
         >
           {driverLicenseValue ? "Sign Up" : "Sign Up"}  
-          {/* //License Required */}
         </Button>
       </form>
     </div>

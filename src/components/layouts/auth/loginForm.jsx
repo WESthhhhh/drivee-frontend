@@ -10,6 +10,7 @@ const Login = () => {
   const { 
     register, 
     handleSubmit, 
+    reset,
     formState: { errors, isSubmitting },
     setError,
     clearErrors
@@ -24,9 +25,19 @@ const Login = () => {
   const [loginSuccess, setLoginSuccess] = useState(false);
   const navigate = useNavigate();
 
+  const checkVerificationStatus = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/verifications/status', {
+        withCredentials: true
+      });
+      return response.data.verified;
+    } catch (error) {
+      console.error('Verification check failed:', error);
+      return false;
+    }
+  };
+
   const onSubmit = async (data) => {
-    console.log(' Auth cookie received');
-    console.log(' Redirecting to /home');
     clearErrors(['email', 'password', 'root']);
     setLoginSuccess(false);
     
@@ -35,15 +46,46 @@ const Login = () => {
         withCredentials: true
       });
       
+      reset();
+      
       if (response.status === 200) {
         setLoginSuccess(true);
-        toast.success('Login successful!');
-        setTimeout(() => {
-          navigate('/');
-        }, 1500);
+        toast.success("Login successful!");
+        
+        // More reliable role extraction
+        const userRole = response.data.role || 
+                        response.data.user?.role || 
+                        (data.email.includes('admin@') ? 'ADMIN' : null);
+        
+        console.log("Full response data:", response.data); // Debug full response
+        console.log("Determined role:", userRole); // Debug final role
+  
+        if (!userRole) {
+          console.error("Role not found in response");
+          navigate("/");
+          return;
+        }
+  
+        const upperRole = userRole.toUpperCase();
+        
+        if (upperRole === "SCHOOL") {
+          const isVerified = await checkVerificationStatus();
+          navigate(isVerified ? "/school/dashboard" : "/verification");
+        } 
+        else if (upperRole === "ADMIN") {
+          navigate("/admin/dashboard"); 
+        }
+        else if (upperRole === "STUDENT") {
+          navigate("/student/dashboard");
+        }
+        else {
+          console.warn("Unknown role:", upperRole);
+          navigate("/");
+        }
       }
     } catch (error) {
       setLoginSuccess(false);
+      
       if (error.response) {
         if (error.response.status === 401) {
           if (error.response.data.message === 'User not found') {
@@ -92,14 +134,12 @@ const Login = () => {
           Welcome back to <span className='text-primary font-bold'>Drivee.</span>
         </h1>
         
-        {/* Success Message */}
         {loginSuccess && (
           <div className="text-success bg-green-50 text-sm mb-4 p-2 rounded">
             Login successful! Redirecting...
           </div>
         )}
 
-        {/* Error Message */}
         {errors.root && (
           <div className="text-error text-sm mb-4 p-2 bg-red-50 rounded">
             {errors.root.message}
@@ -137,7 +177,7 @@ const Login = () => {
                 }
               })}
             />
-            <Link to={'/forgotPassword'} className='text-primary no-underline text-sm text-right'>
+            <Link to={'/forgot-password'} className='text-primary no-underline text-sm text-right'>
               Forgot Password?
             </Link>
           </div>
