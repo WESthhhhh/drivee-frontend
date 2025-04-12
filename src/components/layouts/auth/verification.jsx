@@ -67,7 +67,9 @@ const VerificationForm = () => {
     if (!selectedFile) {
       setFileError('Please select a verification document');
       return;
+      
     }
+    console.log('Selected file:', selectedFile); // Debug
   
     const formData = new FormData();
     formData.append('schoolName', data.schoolName.trim());
