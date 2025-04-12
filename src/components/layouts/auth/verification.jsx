@@ -7,8 +7,7 @@ import Button from '../../UI/button';
 import { PrimaryInput, FileInput } from '../../UI/formInputs';
 import { FiFile } from 'react-icons/fi';
 
-// Configure axios to send credentials
-axios.defaults.withCredentials = true; 
+axios.defaults.withCredentials = true;
 
 const VerificationForm = () => {
   const {
@@ -23,7 +22,6 @@ const VerificationForm = () => {
     }
   });
 
-  // State management
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
   const navigate = useNavigate();
@@ -32,7 +30,6 @@ const VerificationForm = () => {
   const [fileError, setFileError] = useState('');
   const [formError, setFormError] = useState(null);
 
-  // File input handler
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setFileError('');
@@ -44,9 +41,8 @@ const VerificationForm = () => {
       return;
     }
 
-    // Validate file type and size
     const validTypes = ['application/pdf', 'image/jpeg', 'image/png'];
-    const maxSize = 2 * 1024 * 1024; // 2MB
+    const maxSize = 2 * 1024 * 1024;
     
     if (!validTypes.includes(file.type)) {
       setFileError('Only PDF, JPG, or PNG files are allowed');
@@ -62,19 +58,40 @@ const VerificationForm = () => {
     setFileName(file.name);
   };
 
-  // Form submission handler
   const onSubmit = async (data) => {
     if (!selectedFile) {
       setFileError('Please select a verification document');
       return;
-      
     }
-    console.log('Selected file:', selectedFile); // Debug
-  
+
     const formData = new FormData();
     formData.append('schoolName', data.schoolName.trim());
     formData.append('proof', selectedFile);
-  
+
+    // DEBUG: Log all data being sent
+    console.log('--- Data being submitted ---');
+    console.log('School Name:', data.schoolName.trim());
+    console.log('File Info:', {
+      name: selectedFile.name,
+      type: selectedFile.type,
+      size: `${(selectedFile.size / 1024).toFixed(2)} KB`,
+      lastModified: new Date(selectedFile.lastModified).toLocaleString()
+    });
+
+    // DEBUG: Log FormData contents
+    console.log('--- FormData Contents ---');
+    for (let [key, value] of formData.entries()) {
+      if (value instanceof File) {
+        console.log(key, {
+          name: value.name,
+          type: value.type,
+          size: value.size
+        });
+      } else {
+        console.log(key, value);
+      }
+    }
+
     try {
       setIsSubmitting(true);
       setFormError(null);
@@ -89,37 +106,30 @@ const VerificationForm = () => {
           withCredentials: true
         }
       );
-  
+
       if (response.status === 201) {
         setSignupSuccess(true);
         toast.success('Verification submitted successfully!');
         setTimeout(() => navigate('/profile'), 1500);
       }
     } catch (error) {
-      console.error('Submission error:', error);
-      setFormError(null);
-      
-      // Handle network errors
-      if (!error.response) {
-        const msg = 'Network error - please check your connection';
-        setFormError(msg);
-        toast.error(msg);
-        return;
-      }
+      console.error('--- Full Error Details ---', {
+        status: error.response?.status,
+        data: error.response?.data,
+        headers: error.response?.headers,
+        request: error.request
+      });
 
-      // Set user-friendly error messages
-      const errorMessage = error.response.data?.error === 'Réservé aux écoles.' 
+      const errorMessage = error.response?.data?.error === 'Réservé aux écoles.' 
         ? 'This feature is reserved for schools only'
-        : error.response.data?.message || 
-          error.response.data?.error || 
+        : error.response?.data?.message || 
+          error.response?.data?.error || 
           'Submission failed. Please try again.';
       
-      // Display error in both places
       setFormError(errorMessage);
       toast.error(errorMessage);
 
-      // Handle special cases
-      if (error.response.status === 403 || error.response.status === 401) {
+      if (error.response?.status === 403 || error.response?.status === 401) {
         setTimeout(() => navigate('/profile'), 2000);
       }
     } finally {
@@ -133,14 +143,12 @@ const VerificationForm = () => {
         Verify Your Profile to Start <span className='text-primary font-bold'>Listing Offers</span>
       </h1>
       
-      {/* Success message */}
       {signupSuccess && (
         <div className="text-success bg-green-50 text-sm mb-4 p-2 rounded">
           Verification submitted! Redirecting...
         </div>
       )}
       
-      {/* Form error display */}
       {formError && (
         <div className="text-error bg-red-50 text-sm mb-4 p-2 rounded animate-fade-in">
           {formError}
@@ -148,7 +156,6 @@ const VerificationForm = () => {
       )}
       
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-7 w-full" noValidate>
-        {/* School Name Input */}
         <PrimaryInput
           label="Official School Name"
           placeholder="As registered in official documents"
@@ -159,7 +166,6 @@ const VerificationForm = () => {
           })}
         />
         
-        {/* File Upload */}
         <FileInput
           label="Verification Document"
           onChange={handleFileChange}
@@ -172,7 +178,6 @@ const VerificationForm = () => {
           Upload official documents (PDF, JPG, PNG) proving your school's registration. Max 2MB.
         </p>
 
-        {/* Form Actions */}
         <div className="flex flex-col md:flex-row-reverse justify-between items-center gap-5">
           <Button
             type="primary"
