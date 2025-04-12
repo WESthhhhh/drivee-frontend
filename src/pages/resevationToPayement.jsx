@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import ProgressBar from '../components/layouts/ProgressBar';
+import ProgressBar from '../components/UI/ProgressBar';
 import ReservationStep from '../components/layouts/ReservationStep';
 import ReservationConfirmation from '../components/layouts/ReservationConfirmation';
 import PaymentForm from '../components/layouts/PaymentForm';
@@ -40,7 +40,7 @@ function ReservationToPayement() {
   };
 
   return (
-    <div className="min-h-scree flex flex-col">
+    <div className="min-h-screen flex flex-col z-[9999999999999]">
       
       <main className="flex-grow">
         <ProgressBar 

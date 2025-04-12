@@ -4,7 +4,7 @@ import { Check } from "lucide-react"
 const SuccessPopup = ({ schoolName = "Excellence Driving School", onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-20 backdrop-blur-sm flex items-center justify-center z-50 px-4">
-      <div className="bg-white rounded-3xl p-8 max-w-md w-full text-center shadow-md">
+      <div className="bg-light rounded-3xl p-8 max-w-md w-full text-center shadow-md">
         {/* Custom styled checkmark to match the image */}
         <div className="flex justify-center mb-8">
           <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">

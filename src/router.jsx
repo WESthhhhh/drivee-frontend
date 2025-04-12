@@ -56,6 +56,7 @@ import ContactPage from "./pages/ContactPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import DrivingSchools from "./pages/DrivingSchools.jsx";
 import HowItWorks from './pages/howitWorks.jsx';
+import ReservationToPayement from './pages/resevationToPayement.jsx';
 import Login from './pages/Auth/LoginPage.jsx';
 import Signup from './pages/Auth/SignupPage.jsx';
 // import Signup from './components/layouts/auth/signupForm.jsx';
@@ -77,6 +78,7 @@ export const router = createBrowserRouter([
       { path: 'contact', element: <ContactPage /> },
       { path: 'drivingschools', element: <DrivingSchools /> },
       { path: 'howitworks', element: <HowItWorks/> },
+      { path: 'reservation', element: <ReservationToPayement/> },
     ]
   },
   {

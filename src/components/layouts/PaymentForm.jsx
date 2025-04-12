@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Calendar } from "lucide-react"
 
-import SuccessPopup from "./SuccessPopup"
+import SuccessPopup from "../modals/SuccessPopup"
 
 
 const PaymentForm = ({
