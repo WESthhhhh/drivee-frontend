@@ -70,7 +70,7 @@ const StudentSignupForm = () => {
           setSignupSuccess(true); // Set success state
           toast.success('Signup successful!');
           setTimeout(() => {
-            navigate('/student/dashboard');
+            navigate('/login');
           }, 1500);
         }
     } catch (error) {

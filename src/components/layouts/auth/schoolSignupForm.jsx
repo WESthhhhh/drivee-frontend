@@ -15,7 +15,7 @@ const SchoolSignupForm = () => {
       register, 
       handleSubmit, 
       reset,
-      formState: { errors, isValid }
+      formState: { errors }
     } = useForm({
       mode: "onChange",
       defaultValues: {
@@ -55,7 +55,7 @@ const SchoolSignupForm = () => {
           setSignupSuccess(true); 
           toast.success('Signup successful!');
           setTimeout(() => {
-            navigate('/verification');
+            navigate('/login');
           }, 1500);
         }
       } catch (error) {
