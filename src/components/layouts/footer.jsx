@@ -3,7 +3,8 @@ import logo from '/logo/Logolight.svg';
 import logosm from '/logo/Logolightsm.svg';
 export default function Footer() {
     return (
-      <footer className="text-light  text-center items-center p-[70px]  bg-[url('../images/footer.png')] bg-cover bg-center space-y-[50px]">
+      <footer className="text-light  text-center items-center p-[70px]  bg-[url('../images/footer.png')] bg-cover bg-center ">
+       <div className='max-w-7xl mx-auto space-y-[50px]'>
         <Link to={'/'} className="flex items-center justify-center">
           <img src={logo} className="hidden md:block" alt="Drive logo" />
           <img src={logosm} className="block md:hidden w-[100px]" alt="Mobile logo" />
@@ -15,6 +16,7 @@ export default function Footer() {
           <Link to={'/contact'} className="text-light text-[14px] no-underline md:text-[16px]">Contact</Link>
         </nav>
         <p>© {new Date().getFullYear()} Drivee. All rights reserved.</p>
+        </div> 
       </footer>
     );
   }
