@@ -68,7 +68,7 @@ const VerificationForm = () => {
     formData.append('schoolName', data.schoolName.trim());
     formData.append('proof', selectedFile);
 
-    // DEBUG: Log all data being sent
+   
     console.log('--- Data being submitted ---');
     console.log('School Name:', data.schoolName.trim());
     console.log('File Info:', {
@@ -78,7 +78,7 @@ const VerificationForm = () => {
       lastModified: new Date(selectedFile.lastModified).toLocaleString()
     });
 
-    // DEBUG: Log FormData contents
+    
     console.log('--- FormData Contents ---');
     for (let [key, value] of formData.entries()) {
       if (value instanceof File) {
