@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { IoMdClose } from 'react-icons/io';
 import { IoChevronDown } from 'react-icons/io5';
-import { BiMenu } from 'react-icons/bi';
+import { RxHamburgerMenu } from "react-icons/rx";
 import { TbLogout } from 'react-icons/tb';
 import Button from '../UI/button';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import logo from '/logo/Logo.svg';
 import logo2 from '/logo/Logosm.svg';
@@ -17,6 +17,7 @@ const Navbar = () => {
   const [opendrop, setOpendrop] = useState(false);
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const navRef = useRef(null);
   const dropRef = useRef(null);
@@ -26,15 +27,23 @@ const Navbar = () => {
     setOpendrop((prev) => !prev);
   };
 
-  // Check if user is logged in when component mounts
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsLoggedIn(true);
-    }
+    const checkAuthStatus = async () => {
+      try {
+        await axios.get('http://localhost:5000/users/me', { 
+          withCredentials: true // This sends cookies automatically
+        });
+        setIsLoggedIn(true);
+      } catch (error) {
+        setIsLoggedIn(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuthStatus();
   }, []);
 
-  // Prevent scrolling when menu is open
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';
@@ -63,11 +72,22 @@ const Navbar = () => {
     return () => document.removeEventListener('click', closeMenus);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setIsLoggedIn(false);
-    setOpendrop(false);
+  const handleLogout = async () => {
+    try {
+      await axios.post('http://localhost:5000/users/logout', {}, {
+        withCredentials: true
+      });
+      setIsLoggedIn(false);
+      setOpendrop(false);
+      navigate('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
+
+  if (isLoading) {
+    return <div className="h-[80px]"></div>; // Loading state
+  }
 
   return (
     <>
@@ -78,15 +98,14 @@ const Navbar = () => {
         />
       )}
 
-      {/* Blur effect for main content */}
       <div className={`fixed inset-0 backdrop-blur-sm z-[999999997] pointer-events-none transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}></div>
 
       <header 
         ref={navRef}
         className="w-full max-w-7xl fixed top-[50px] left-1/2 transform -translate-x-1/2 bg-light px-5 py-3 shadow-primary-4 rounded-large-md z-[9999999] flex justify-between items-center"
       >
-        <BiMenu 
-          className="block md:hidden text-4xl text-text cursor-pointer" 
+        <RxHamburgerMenu 
+          className="block md:hidden text-2xl text-primary cursor-pointer" 
           onClick={toggleMenu} 
         />
         
@@ -103,7 +122,6 @@ const Navbar = () => {
         </nav>
         
         {isLoggedIn ? (
-          // Show profile dropdown for authenticated users
           <div 
             className="flex items-center gap-2 relative cursor-pointer" 
             onClick={toggleDropdown} 
@@ -123,7 +141,6 @@ const Navbar = () => {
             )}
           </div>
         ) : (
-          // Show login button for non-authenticated users
           <Button
             type='primary'
             icon='icons/login.svg'
@@ -146,7 +163,6 @@ const Navbar = () => {
         <Link to={'/howitworks'} className="block text-light no-underline text-lg">How it works</Link>
         <Link to={'/contact'} className="block text-light no-underline text-lg">Contact</Link>
         
-        {/* Add authentication-related items to mobile menu */}
         {isLoggedIn ? (
           <div>
             <Link to={'/profile'} className="block text-light no-underline text-lg">Profile</Link>
