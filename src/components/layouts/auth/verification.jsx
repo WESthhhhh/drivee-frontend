@@ -74,7 +74,7 @@ const VerificationForm = () => {
     console.log('File Info:', {
       name: selectedFile.name,
       type: selectedFile.type,
-      size: ${(selectedFile.size / 1024).toFixed(2)} KB,
+      size: `${(selectedFile.size / 1024).toFixed(2)} KB`,
       lastModified: new Date(selectedFile.lastModified).toLocaleString()
     });
 
