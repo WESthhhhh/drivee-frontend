@@ -31,7 +31,7 @@ const Navbar = () => {
     const checkAuthStatus = async () => {
       try {
         await axios.get('http://localhost:5000/users/me', { 
-          withCredentials: true // This sends cookies automatically
+          withCredentials: true
         });
         setIsLoggedIn(true);
       } catch (error) {
