@@ -5,14 +5,20 @@ import { Outlet } from 'react-router-dom';
 
 export default function RootLayout() {
   return (
-    <div className="min-h-screen flex flex-col  max-w-7xl mx-auto font-poppins">
-      <Navbar/>
-      
-      <main className="flex-1">
+    <div className="min-h-screen flex flex-col font-poppins">
+    <div className="w-full">
+      <div className="max-w-7xl mx-auto">
+        <Navbar/>
+      </div>
+    </div>
+    
+    <div className="flex-1 max-w-7xl w-full mx-auto ">
+      <main>
         <Outlet />
       </main>
-
-      <Footer />
     </div>
+
+    <Footer />
+  </div>
   );
 }
