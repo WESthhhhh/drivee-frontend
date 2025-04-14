@@ -10,8 +10,8 @@ const SuccessPopup = ({
   onClose
 }) => {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-20 backdrop-blur-sm flex items-center justify-center z-50 px-4">
-      <div className="bg-white rounded-3xl p-8 max-w-md w-full text-center shadow-md">
+    <div className="fixed inset-0 bg-primary bg-opacity-20 backdrop-blur-sm flex items-center justify-center z-50 px-4">
+      <div className="bg-light rounded-large-md p-10 max-w-md text-center shadow-primary-9 border-[0.2px] border-success">
         {/* Customizable icon section */}
         <div className="flex justify-center mb-8">
           {icon || (
@@ -21,26 +21,26 @@ const SuccessPopup = ({
           )}
         </div>
 
-        <h2 className="text-xl font-bold text-gray-800 mb-6">
+        <h2 className="text-xl font-bold text-b200 mb-6">
           {title}
         </h2>
 
         {mainMessage && (
-          <p className="text-gray-600 mb-1">
+          <p className="text-text mb-1">
             {mainMessage}
           </p>
         )}
 
         {highlightedText && (
           <p className="mb-8">
-            <span className="text-[#0F34AE] font-semibold">
+            <span className="text-text  font-semibold">
               {highlightedText}
             </span>
           </p>
         )}
 
         {secondaryMessage && (
-          <p className="text-xs text-[#454D59] mb-10">
+          <p className="text-xs text-inputtext mb-10">
             {secondaryMessage}
           </p>
         )}
