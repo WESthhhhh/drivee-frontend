@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Button from '../../UI/button';
 import { PrimaryInput, FileInput } from '../../UI/formInputs';
-import { FiFile } from 'react-icons/fi';
-
+import SuccessPopup from '../../modals/SuccessPopup';
 axios.defaults.withCredentials = true;
 
 const VerificationForm = () => {
@@ -24,12 +23,18 @@ const VerificationForm = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileName, setFileName] = useState('');
   const [fileError, setFileError] = useState('');
   const [formError, setFormError] = useState(null);
 
+  const handleCloseSuccess = () => {
+    setShowSuccessPopup(false);
+    navigate('/profile'); // Navigate after closing
+  };
+  
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setFileError('');
@@ -198,6 +203,15 @@ const VerificationForm = () => {
           </Button>
         </div>
       </form>
+      {showSuccessPopup && (
+        <SuccessPopup
+          title="Your verification request has been submitted!"
+          mainMessage="We will verify your details and notify you within 24-48 hours.
+          Check your email for updates. We'll contact you once your school is verified."
+          onClose={handleCloseSuccess}
+          buttonText="Ok, Got it"
+        />
+      )}
     </div>
   );
 };

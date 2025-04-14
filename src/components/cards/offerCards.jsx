@@ -61,7 +61,7 @@ const OfferCard = ({ offer }) => {
 
           <Button
             type='primary'
-            onClick={() => navigate('/book')}
+            onClick={() => navigate('/reservation')}
             
             >Book Offer</Button>
         </div>
