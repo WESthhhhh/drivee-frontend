@@ -60,7 +60,7 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
         {/* Modal Content - Scrollable area */}
         <div className="p-5 flex-1 overflow-y-auto">
           {/* Header */}
-          <h1 className="text-b200 font-bold text-xl text-center pt-4 pb-1">Offer Details</h1>
+          <h1 className="text-b200 font-bold text-xl text-center pt-4 pb-8">Offer Details</h1>
           
           {/* Profile Section */}
           <div className="flex justify-between items-center gap-3 mt-3 mb-2 p-2 rounded-lg">
@@ -84,7 +84,7 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
           </div>
           
           {/* Course Title and Description */}
-          <div className="text-center mb-4">
+          <div className="text-center mb-10">
             <h2 className="text-b500 font-semibold text-base">{title}</h2>
             <div className="flex justify-center items-center gap-2 mt-1">
               <div className="flex">
@@ -104,7 +104,7 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
           </div>
 
           {/* Info Cards - Horizontal layout with 4 cards including location */}
-          <div className="grid grid-cols-4 gap-1 my-2 border-t border-b border-blue-50 py-2 mb-4">
+          <div className="grid grid-cols-4 gap-1 my-2 border-t border-b border-blue-50 py-2 mb-10">
             <div className="text-center">
               <div className="flex items-center justify-center gap-1 mb-1">
                 <FaRegClock className="text-b500 text-xs" />
@@ -142,7 +142,7 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
           </div>
 
           {/* Map container */}
-          <div className="mb-4">
+          <div className="mb-10">
             <a 
               href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location || 'Agadir Morocco')}`}
               target="_blank"
