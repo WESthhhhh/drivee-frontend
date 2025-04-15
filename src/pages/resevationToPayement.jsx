@@ -40,7 +40,7 @@ function ReservationToPayement() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col z-[9999999999999]">
+    <div className="pt-12  flex flex-col z-[9999999999999] ">
       
       <main className="flex-grow">
         <ProgressBar 
