@@ -18,9 +18,22 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
 
   const navRef = useRef(null);
   const dropRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [scrolled]);
 
   const toggleDropdown = (e) => {
     e.stopPropagation(); 
@@ -86,7 +99,7 @@ const Navbar = () => {
   };
 
   if (isLoading) {
-    return <div className="h-[80px]"></div>; // Loading state
+    return <div className="h-[80px]"></div>;
   }
 
   return (
@@ -102,7 +115,9 @@ const Navbar = () => {
 
       <header 
         ref={navRef}
-        className="w-full max-w-7xl fixed top-[50px] left-1/2 transform -translate-x-1/2 bg-light px-5 py-3 shadow-primary-4 rounded-large-md z-[9999999] flex justify-between items-center"
+        className={`w-full max-w-7xl fixed left-1/2 transform -translate-x-1/2 bg-light px-5 py-3 shadow-primary-4 rounded-large-md z-[9999999] flex justify-between items-center transition-all duration-300 ${
+          scrolled ? 'top-0' : 'top-[20px]'
+        }`}
       >
         <HiMenuAlt1
           className="block md:hidden text-3xl text-primary cursor-pointer" 
@@ -150,92 +165,91 @@ const Navbar = () => {
           </Button>
         )}
       </header>
+
+      {/* Spacer with conditional height */}
+      <div className={`transition-all duration-300 ${scrolled ? 'h-[80px]' : 'h-[100px]'}`}></div>
       
       {/* Mobile Menu */}
       <div 
-  className={`fixed top-0 left-0 w-[280px] h-full z-[999999999] bg-light shadow-xl transition-transform duration-300 ease-in-out -translate-x-full md:hidden ${
-    open ? "translate-x-0" : ""
-  }`}
->
-  <div className="h-full flex flex-col ">
-    {/* Header with close button */}
-    <div className="flex justify-between items-center p-4 ">
-      <Link to="/" onClick={() => setOpen(false)}>
-        <img src={logo3} className="w-[70px]" alt="Mobile logo" />
-      </Link>
-      <IoMdClose
-        className="text-2xl text-primary cursor-pointer hover:text-primary"
-        onClick={() => setOpen(false)}
-      />
-    </div>
-
-    {/* Menu items */}
-    <div className="flex-1 overflow-y-auto p-4 space-y-4">
-      <Link
-        to="/offers"
-        className="block py-3 px-4 rounded-small-md text-primary hover:bg-cayan50 transition-colors"
-        onClick={() => setOpen(false)}
+        className={`fixed top-0 left-0 w-[280px] h-full z-[999999999] bg-light shadow-xl transition-transform duration-300 ease-in-out ${
+          open ? "translate-x-0" : "-translate-x-full"
+        } md:hidden`}
       >
-        Offers
-      </Link>
-      <Link
-        to="/drivingschools"
-        className="block py-3 px-4 rounded-small-md text-primary hover:bg-cayan50 transition-colors"
-        onClick={() => setOpen(false)}
-      >
-        Driving School
-      </Link>
-      <Link
-        to="/howitworks"
-        className="block py-3 px-4 rounded-small-md text-primary hover:bg-cayan50 transition-colors"
-        onClick={() => setOpen(false)}
-      >
-        How it works
-      </Link>
-      <Link
-        to="/contact"
-        className="block py-3 px-4 rounded-small-md text-primary hover:bg-cayan50 transition-colors"
-        onClick={() => setOpen(false)}
-      >
-        Contact
-      </Link>
-    </div>
-
-    {/* Auth section */}
-    <div className="p-4">
-      {isLoggedIn ? (
-        <>
-          <div className="flex items-center gap-3 mb-4 p-3 bg-cayan50 rounded-small-md">
-            <img 
-              src={profile} 
-              alt="Profile" 
-              className="w-8 h-8 rounded-full object-cover" 
+        <div className="h-full flex flex-col">
+          <div className="flex justify-between items-center p-4">
+            <Link to="/" onClick={() => setOpen(false)}>
+              <img src={logo3} className="w-[70px]" alt="Mobile logo" />
+            </Link>
+            <IoMdClose
+              className="text-2xl text-primary cursor-pointer hover:text-primary"
+              onClick={() => setOpen(false)}
             />
-            <div>
-
-              <p className="text-sm text-primary font-medium">View Profile</p>
-            </div>
           </div>
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center  gap-2 p-3 rounded-small-md text-error bg-red-50 transition-colors"
-          >
-            <TbLogout className="text-xl" />
-            <span>Logout</span>
-          </button>
-        </>
-      ) : (
-        <Link
-          to="/login"
-          className="block w-full text-center py-3 px-4 rounded-lg bg-primary text-light hover:bg-primary-dark transition-colors"
-          onClick={() => setOpen(false)}
-        >
-          Login
-        </Link>
-      )}
-    </div>
-  </div>
-</div>
+
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <Link
+              to="/offers"
+              className="block py-3 px-4 rounded-small-md text-primary hover:bg-cayan50 transition-colors"
+              onClick={() => setOpen(false)}
+            >
+              Offers
+            </Link>
+            <Link
+              to="/drivingschools"
+              className="block py-3 px-4 rounded-small-md text-primary hover:bg-cayan50 transition-colors"
+              onClick={() => setOpen(false)}
+            >
+              Driving School
+            </Link>
+            <Link
+              to="/howitworks"
+              className="block py-3 px-4 rounded-small-md text-primary hover:bg-cayan50 transition-colors"
+              onClick={() => setOpen(false)}
+            >
+              How it works
+            </Link>
+            <Link
+              to="/contact"
+              className="block py-3 px-4 rounded-small-md text-primary hover:bg-cayan50 transition-colors"
+              onClick={() => setOpen(false)}
+            >
+              Contact
+            </Link>
+          </div>
+
+          <div className="p-4">
+            {isLoggedIn ? (
+              <>
+                <div className="flex items-center gap-3 mb-4 p-3 bg-cayan50 rounded-small-md">
+                  <img 
+                    src={profile} 
+                    alt="Profile" 
+                    className="w-8 h-8 rounded-full object-cover" 
+                  />
+                  <div>
+                    <p className="text-sm text-primary font-medium">View Profile</p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2 p-3 rounded-small-md text-error bg-red-50 transition-colors"
+                >
+                  <TbLogout className="text-xl" />
+                  <span>Logout</span>
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="block w-full text-center py-3 px-4 rounded-lg bg-primary text-light hover:bg-primary-dark transition-colors"
+                onClick={() => setOpen(false)}
+              >
+                Login
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
     </>
   );
 };
