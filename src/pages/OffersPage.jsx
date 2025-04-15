@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FaChevronDown, FaChevronLeft, FaChevronRight, FaTimes, FaSync } from 'react-icons/fa';
+import { FaChevronDown, FaChevronLeft, FaChevronRight, FaTimes} from 'react-icons/fa';
 import OfferCard from '../components/cards/offerCards';
 import { useOffers } from '../context/fetchOffers';
+import LoadingSpinner from '../components/UI/loadingSpinner';
 
 const OffersPage = () => {
   // First call all hooks unconditionally at the top
@@ -15,7 +16,6 @@ const OffersPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  // Then call useEffect
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (!e.target.closest('.dropdown_container')) {
@@ -26,8 +26,9 @@ const OffersPage = () => {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  // Only after all hooks can you have conditional returns
-  if (loading) return <div className="text-center py-12">Loading offers...</div>;
+ 
+  if (loading) return <LoadingSpinner message="Loading offers..." />;
+
   if (error) return <div className="text-red-500 text-center py-12">Error: {error}</div>;
 
   // Filter offers with safe price handling
@@ -245,7 +246,7 @@ const OffersPage = () => {
       <div className="flex flex-wrap justify-center gap-8 mb-12 z-[999999999999999]">
         {paginatedOffers.length > 0 ? (
           paginatedOffers.map(offer => (
-            <div key={offer.id} className="w-full md:w-1/2 lg:w-1/3 px-2">
+            <div key={offer.id} className="w-full md:w-1/2 lg:w-1/3 ">
               <OfferCard 
                 offer={offer}
                 // school={offer.school}

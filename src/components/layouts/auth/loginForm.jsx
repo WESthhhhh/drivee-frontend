@@ -52,36 +52,37 @@ const Login = () => {
         setLoginSuccess(true);
         toast.success("Login successful!");
         
-        // More reliable role extraction
         const userRole = response.data.role || 
                         response.data.user?.role || 
                         (data.email.includes('admin@') ? 'ADMIN' : null);
         
-        console.log("Full response data:", response.data); // Debug full response
-        console.log("Determined role:", userRole); // Debug final role
+        console.log("Full response data:", response.data);
+        console.log("Determined role:", userRole);
   
         if (!userRole) {
           console.error("Role not found in response");
-          navigate("/");
+          setTimeout(() => navigate("/"), 1500);
           return;
         }
   
         const upperRole = userRole.toUpperCase();
         
-        if (upperRole === "SCHOOL") {
-          const isVerified = await checkVerificationStatus();
-          navigate(isVerified ? "/school/dashboard" : "/verification");
-        } 
-        else if (upperRole === "ADMIN") {
-          navigate("/admin/dashboard"); 
-        }
-        else if (upperRole === "STUDENT") {
-          navigate("/student/dashboard");
-        }
-        else {
-          console.warn("Unknown role:", upperRole);
-          navigate("/");
-        }
+        setTimeout(() => {
+          if (upperRole === "SCHOOL") {
+            checkVerificationStatus().then(isVerified => {
+              navigate(isVerified ? "/school/dashboard" : "/verification");
+            });
+          } 
+          else if (upperRole === "ADMIN") {
+            navigate("/admin/dashboard"); 
+          }
+          else if (upperRole === "STUDENT") {
+            navigate("/student/dashboard");
+          }
+          else {
+            navigate("/");
+          }
+        }, 1500);
       }
     } catch (error) {
       setLoginSuccess(false);

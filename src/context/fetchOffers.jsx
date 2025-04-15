@@ -11,7 +11,7 @@ export const OffersDataProvider = ({ children }) => {
   const fetchUser = async (userId) => {
     try {
       const response = await fetch(`http://localhost:5000/users/${userId}`, {
-        credentials: 'include'
+        credentials: 'include' // Keep authenticated for user data
       });
       if (!response.ok) return null;
       return await response.json();
@@ -25,26 +25,27 @@ export const OffersDataProvider = ({ children }) => {
     try {
       setLoading(true);
       
-      // Fetch offers
-      const offersRes = await fetch('http://localhost:5000/offres', {
-        credentials: 'include'
-      });
+      
+      const offersRes = await fetch('http://localhost:5000/offres');
       if (!offersRes.ok) throw new Error('Failed to fetch offers');
       const offersData = await offersRes.json();
 
-      // Get unique user IDs
+     
       const userIds = [...new Set(offersData.map(offer => offer.schoolId))];
       
-      // Fetch users in parallel
-      const usersData = await Promise.all(
-        userIds.map(id => fetchUser(id))
-      );
-
-      // Create users map
-      const usersMap = usersData.reduce((acc, user) => {
-        if (user) acc[user.id] = user;
-        return acc;
-      }, {});
+      // Try to fetch users if possible (won't fail the whole request if this fails)
+      let usersMap = {};
+      try {
+        const usersData = await Promise.all(
+          userIds.map(id => fetchUser(id))
+        );
+        usersMap = usersData.reduce((acc, user) => {
+          if (user) acc[user.id] = user;
+          return acc;
+        }, {});
+      } catch (err) {
+        console.log("Couldn't fetch user details, using empty user data");
+      }
 
       setOffers(offersData);
       setUsers(usersMap);
@@ -66,11 +67,11 @@ export const OffersDataProvider = ({ children }) => {
   );
 };
 
-// Make sure this is exported
-export const useOffers = () => {
+// Add this hook definition and export
+export function useOffers() {
   const context = useContext(OffersContext);
   if (!context) {
     throw new Error('useOffers must be used within an OffersDataProvider');
   }
   return context;
-};
+}
