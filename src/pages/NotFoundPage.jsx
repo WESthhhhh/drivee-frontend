@@ -144,7 +144,6 @@ export default function NotFoundPage() {
           </motion.div>
         </div>
         
-        {/* Centered Button */}
         <div className="w-full flex justify-center">
           <Button
             type="primary"
