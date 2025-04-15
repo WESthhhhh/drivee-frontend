@@ -13,6 +13,7 @@
     "@stripe/stripe-js": "^6.0.0",
     "axios": "^1.8.4",
     "lucide-react": "^0.487.0",
+    "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.55.0",

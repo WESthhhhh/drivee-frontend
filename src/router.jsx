@@ -52,6 +52,7 @@ import AuthLayout from './authLayout';
 // import ProfileLayout from './layouts/profileLayout';
 import HomePage from "./pages/HomePage.jsx";
 import OffersPage from "./pages/OffersPage.jsx";
+import { OffersDataProvider } from './context/fetchOffers.jsx';
 import ContactPage from "./pages/ContactPage.jsx";
 import NotFoundPage from "./pages/NotFoundPage.jsx";
 import DrivingSchools from "./pages/DrivingSchools.jsx";
@@ -73,8 +74,8 @@ export const router = createBrowserRouter([
     element: <MainLayout />,
     errorElement: <NotFoundPage />,
     children: [
-      { index: true, element: <HomePage /> },
-      { path: 'offers', element: <OffersPage /> },
+      { index: true, element:(<OffersDataProvider> <HomePage /></OffersDataProvider>)  },
+      { path: 'offers', element: (<OffersDataProvider> <OffersPage /></OffersDataProvider>) },
       { path: 'contact', element: <ContactPage /> },
       { path: 'drivingschools', element: <DrivingSchools /> },
       { path: 'howitworks', element: <HowItWorks/> },

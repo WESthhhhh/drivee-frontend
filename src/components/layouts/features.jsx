@@ -1,5 +1,5 @@
 import React from 'react';
-import { offers } from '../../offers';
+import { useOffers } from '../../context/fetchOffers';
 import { FaArrowRightLong } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 import big_circle from '/images/phone-ellipse.png';
@@ -9,7 +9,10 @@ import OfferCard from '../cards/offerCards';
 import Button from '../UI/button';
 const Features = () => {
   const navigate = useNavigate();
+  const { offers, loading, error } = useOffers();
 
+  if (loading) return <div className="text-center py-12">Loading featured offers...</div>;
+  if (error) return <div className="text-red-500 text-center py-12">Error loading offers: {error}</div>;
   return (
     <div className="max-w-7xl mx-auto px-4 py-20 text-center relative overflow-hidden mb-[50px]">
     
@@ -28,8 +31,8 @@ const Features = () => {
 
 
       <div className="grid sm:grid-cols-1 justify-center md:flex md:flex-row   gap-8 mb-12">
-        {offers.slice(0, 2).map((offer, index) => (
-          <OfferCard key={index} offer={offer} />
+        {offers.slice(0, 2).map((offer) => (
+         <OfferCard key={offer.id} offer={offer} />
         ))}
       </div>
 
