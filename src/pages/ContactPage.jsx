@@ -7,7 +7,7 @@ import sm from '/images/contact-sm.png';
 const Contact = () => {
   return (
     <>
-      <div className="relative z-10 mx-auto w-full  overflow-x-hidden xl:pt-12 pt-12 pb-[17rem] ">
+      <div className="relative z-10 mx-auto w-full  overflow-x-hidden  pt-12 pb-[17rem] ">
         <div className='max-w-6xl md:flex mx-auto justify-between'>
           <Getintouch />
           <Contactform />

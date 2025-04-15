@@ -5,7 +5,7 @@ const HeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative flex justify-center items-center text-center pb-20 mb-[50px] xl:pt-12 lg:pt-12 ">
+    <section className="relative flex justify-center items-center text-center pb-20 mb-[50px]  pt-12 ">
       {/* Background elements */}
       <img 
         src="/images/home-ellipse.png" 

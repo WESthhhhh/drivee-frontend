@@ -93,7 +93,7 @@ const OffersPage = () => {
   };
 
   return (
-    <div className="max-w-6xl w-full mx-auto overflow-x-hidden px-4 xl:pt-12 lg:pt-12">
+    <div className="max-w-6xl w-full mx-auto overflow-x-hidden px-4 pt-12">
       {/* Header */}
       <h1 className="text-[2.5rem] text-center font-normal mb-12 z-[999999999999999]">
         Limited-Time <span className="font-semibold text-primary">Offers</span> on Driving Packages!
