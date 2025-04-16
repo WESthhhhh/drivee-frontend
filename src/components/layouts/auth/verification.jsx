@@ -114,8 +114,9 @@ const VerificationForm = () => {
 
       if (response.status === 201) {
         setSignupSuccess(true);
+        setShowSuccessPopup(true);
         toast.success('Verification submitted successfully!');
-        setTimeout(() => navigate('/profile'), 1500);
+        // setTimeout(() => navigate('/profile'), 1500);
       }
     } catch (error) {
       console.error('--- Full Error Details ---', {
