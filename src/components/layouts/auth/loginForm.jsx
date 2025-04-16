@@ -11,7 +11,7 @@ const Login = () => {
     register, 
     handleSubmit, 
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting},
     setError,
     clearErrors
   } = useForm({
@@ -23,6 +23,7 @@ const Login = () => {
   });
 
   const [loginSuccess, setLoginSuccess] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const navigate = useNavigate();
 
   const checkVerificationStatus = async () => {
@@ -40,6 +41,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     clearErrors(['email', 'password', 'root']);
     setLoginSuccess(false);
+    setIsRedirecting(false);
     
     try {
       const response = await axios.post('http://localhost:5000/users/login', data, {
@@ -50,6 +52,7 @@ const Login = () => {
       
       if (response.status === 200) {
         setLoginSuccess(true);
+        setIsRedirecting(true)
         toast.success("Login successful!");
         
         const userRole = response.data.role || 
@@ -82,7 +85,7 @@ const Login = () => {
           else {
             navigate("/");
           }
-        }, 1500);
+        }, 1000);
       }
     } catch (error) {
       setLoginSuccess(false);
@@ -187,9 +190,11 @@ const Login = () => {
             type='primary' 
             htmlType='submit' 
             className='w-full mt-2'
-            disabled={isSubmitting}
+            disabled={isSubmitting || isRedirecting}
           >
-            {isSubmitting ? 'Logging in...' : 'Log In'}
+            {isSubmitting ? 'Logging in...' : 
+            isRedirecting ? 'Redirecting...' : 'Log In'}
+
           </Button>
 
           <div className='text-center mt-2'>

@@ -3,10 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { IoMdClose } from 'react-icons/io';
 import { IoChevronDown } from 'react-icons/io5';
 import { HiMenuAlt1 } from "react-icons/hi";
-import { TbLogout } from 'react-icons/tb';
 import Button from '../UI/button';
 import axios from 'axios';
-
+import LogoutButton from '../UI/logoutButton';
 import logo from '/logo/Logo.svg';
 import logo2 from '/logo/Logosm.svg';
 import logo3 from '/logo/Logolightsm.svg';
@@ -19,10 +18,12 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [scrolled, setScrolled] = useState(false);
+  const [userData, setUserData] = useState(null);
 
   const navRef = useRef(null);
   const dropRef = useRef(null);
 
+  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       const isScrolled = window.scrollY > 10;
@@ -35,28 +36,31 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled]);
 
-  const toggleDropdown = (e) => {
-    e.stopPropagation(); 
-    setOpendrop((prev) => !prev);
-  };
-
+  // Check authentication status
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        await axios.get('http://localhost:5000/users/me', { 
+        const { data } = await axios.get('http://localhost:5000/users/me', { 
           withCredentials: true
         });
         setIsLoggedIn(true);
+        setUserData(data.user); // Store user data if needed
       } catch (error) {
         setIsLoggedIn(false);
+        setUserData(null);
       } finally {
         setIsLoading(false);
       }
     };
 
     checkAuthStatus();
+
+    // Set up interval to check auth status periodically (every 5 minutes)
+    const intervalId = setInterval(checkAuthStatus, 300000);
+    return () => clearInterval(intervalId);
   }, []);
 
+  // Handle mobile menu body overflow
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';
@@ -65,11 +69,7 @@ const Navbar = () => {
     }
   }, [open]);
 
-  const toggleMenu = (e) => {
-    e.stopPropagation();
-    setOpen(true);
-  };
-
+  // Close menus when clicking outside
   useEffect(() => {
     const closeMenus = (e) => {
       if (
@@ -85,25 +85,32 @@ const Navbar = () => {
     return () => document.removeEventListener('click', closeMenus);
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await axios.post('http://localhost:5000/users/logout', {}, {
-        withCredentials: true
-      });
-      setIsLoggedIn(false);
-      setOpendrop(false);
-      navigate('/');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
+  const toggleDropdown = (e) => {
+    e.stopPropagation(); 
+    setOpendrop(prev => !prev);
   };
 
+  const toggleMenu = (e) => {
+    e.stopPropagation();
+    setOpen(true);
+  };
+
+  const handleSuccessfulLogout = () => {
+    setIsLoggedIn(false);
+    setUserData(null);
+    setOpendrop(false);
+    setOpen(false);
+    navigate('/'); // Redirect to home after logout
+  };
+
+  // Show loading state
   if (isLoading) {
     return <div className="h-[80px]"></div>;
   }
 
   return (
     <>
+      {/* Mobile menu backdrop */}
       {open && (
         <div 
           className="fixed inset-0 bg-b500 bg-opacity-30 z-[999999998] md:hidden"
@@ -111,58 +118,102 @@ const Navbar = () => {
         />
       )}
 
+      {/* Blur effect */}
       <div className={`fixed inset-0 backdrop-blur-sm z-[999999997] pointer-events-none transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}></div>
 
+      {/* Main header */}
       <header 
         ref={navRef}
         className={`w-full max-w-7xl fixed left-1/2 transform -translate-x-1/2 bg-light px-5 py-3 shadow-primary-4 rounded-large-md z-[9999999] flex justify-between items-center transition-all duration-300 ${
           scrolled ? 'top-0' : 'top-[20px]'
         }`}
       >
+        {/* Mobile menu button */}
         <HiMenuAlt1
           className="block md:hidden text-3xl text-primary cursor-pointer" 
           onClick={toggleMenu} 
         />
         
+        {/* Logo */}
         <Link to={'/'} className="flex items-center">
           <img src={logo} className="hidden md:block md:w-[100px] md:h-[36px]" alt="Drive logo" />
           <img src={logo2} className="block md:hidden w-[80px]" alt="Mobile logo" />
         </Link>
         
+        {/* Desktop navigation */}
         <nav className="hidden md:flex items-center gap-12">
-          <Link to={'/offers'} className="text-gray-800 text-[1.05rem] no-underline">Offers</Link>
-          <Link to={'/drivingschools'} className="text-gray-800 text-[1.05rem] no-underline">Driving School</Link>
-          <Link to={'/howitworks'} className="text-gray-800 text-[1.05rem] no-underline">How it works</Link>
-          <Link to={'/contact'} className="text-gray-800 text-[1.05rem] no-underline">Contact</Link>
+          <Link to={'/offers'} className="text-gray-800 text-[1.05rem] no-underline hover:text-primary transition-colors">Offers</Link>
+          <Link to={'/drivingschools'} className="text-gray-800 text-[1.05rem] no-underline hover:text-primary transition-colors">Driving School</Link>
+          <Link to={'/howitworks'} className="text-gray-800 text-[1.05rem] no-underline hover:text-primary transition-colors">How it works</Link>
+          <Link to={'/contact'} className="text-gray-800 text-[1.05rem] no-underline hover:text-primary transition-colors">Contact</Link>
         </nav>
         
+        {/* Auth section */}
         {isLoggedIn ? (
           <div 
             className="flex items-center gap-2 relative cursor-pointer" 
             onClick={toggleDropdown} 
             ref={dropRef}
           >
-            <img src={profile} alt="Profile" className="w-[35px] h-[35px] object-cover rounded-full" />
+            <img 
+              src={userData?.profilePicture || profile} 
+              alt="Profile" 
+              className="w-[35px] h-[35px] object-cover rounded-full" 
+            />
             <IoChevronDown className={`text-accent transition-transform duration-300 ${opendrop ? 'rotate-180' : ''}`} />
             
+            {/* Dropdown menu */}
             {opendrop && (
-              <div className="absolute top-[110%] right-0 bg-light shadow-primary-4 w-[150px] border border-stroke rounded-small-md py-2 px-5">
-                <Link to={'/profile'} className="block text-primary no-underline text-[1.2rem] my-4 pb-2 border-b border-stroke">Profile</Link>
-                <div className="flex items-center gap-2 text-primary cursor-pointer" onClick={handleLogout}>
-                  <TbLogout className="text-xl" />
-                  <span>Logout</span>
+              <div className="absolute top-[110%] right-0 bg-light shadow-primary-4 w-[200px] border border-stroke rounded-small-md py-2 px-5">
+                <div className="flex items-center gap-3 mb-3 pb-3 border-b border-stroke">
+                  <img 
+                    src={userData?.profilePicture || profile} 
+                    alt="Profile" 
+                    className="w-10 h-10 rounded-full object-cover" 
+                  />
+                  <div>
+                    <p className="text-sm font-medium text-primary">{userData?.name || 'User'}</p>
+                    <p className="text-xs text-gray-500">{userData?.email || ''}</p>
+                  </div>
                 </div>
+                <Link 
+                  to={'/profile'} 
+                  className="block text-primary no-underline text-[1rem] py-2 hover:bg-gray-50 rounded-small-md px-2"
+                >
+                  My Profile
+                </Link>
+                <Link 
+                  to={'/settings'} 
+                  className="block text-primary no-underline text-[1rem] py-2 hover:bg-gray-50 rounded-small-md px-2"
+                >
+                  Settings
+                </Link>
+                <LogoutButton 
+                  onLogoutSuccess={handleSuccessfulLogout}
+                  className="w-full mt-2 text-left text-primary hover:bg-gray-50 rounded-small-md px-2 py-2"
+                  iconClassName="text-lg"
+                  text="Log Out"
+                />
               </div>
             )}
           </div>
         ) : (
-          <Button
-            type='primary'
-            icon='icons/login.svg'
-            onClick={() => navigate('/login')}
-          >
-            Login
-          </Button>
+          <div className="flex items-center gap-4">
+            {/* <Button
+              type='secondary'
+              className="hidden sm:inline-flex"
+              onClick={() => navigate('/register')}
+            >
+              Sign Up
+            </Button> */}
+            <Button
+              type='primary'
+              icon='icons/login.svg'
+              onClick={() => navigate('/login')}
+            >
+              Login
+            </Button>
+          </div>
         )}
       </header>
 
@@ -222,30 +273,51 @@ const Navbar = () => {
               <>
                 <div className="flex items-center gap-3 mb-4 p-3 bg-cayan50 rounded-small-md">
                   <img 
-                    src={profile} 
+                    src={userData?.profilePicture || profile} 
                     alt="Profile" 
-                    className="w-8 h-8 rounded-full object-cover" 
+                    className="w-10 h-10 rounded-full object-cover" 
                   />
                   <div>
-                    <p className="text-sm text-primary font-medium">View Profile</p>
+                    <p className="text-sm font-medium text-primary">{userData?.name || 'User'}</p>
+                    <p className="text-xs text-gray-500">{userData?.email || ''}</p>
                   </div>
                 </div>
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center gap-2 p-3 rounded-small-md text-error bg-red-50 transition-colors"
+                <Link
+                  to="/profile"
+                  className="block w-full text-center py-3 px-4 rounded-lg bg-gray-100 text-primary hover:bg-gray-200 transition-colors mb-2"
+                  onClick={() => setOpen(false)}
                 >
-                  <TbLogout className="text-xl" />
-                  <span>Logout</span>
-                </button>
+                  My Profile
+                </Link>
+                <LogoutButton 
+                  onLogoutSuccess={handleSuccessfulLogout}
+                  variant="danger"
+                  className="w-full p-3"
+                />
               </>
             ) : (
-              <Link
-                to="/login"
-                className="block w-full text-center py-3 px-4 rounded-lg bg-primary text-light hover:bg-primary-dark transition-colors"
-                onClick={() => setOpen(false)}
-              >
-                Login
-              </Link>
+              <>
+                <Button
+                  type='primary'
+                  className="w-full mb-2"
+                  onClick={() => {
+                    navigate('/login');
+                    setOpen(false);
+                  }}
+                >
+                  Login
+                </Button>
+                {/* <Button
+                  type='secondary'
+                  className="w-full"
+                  onClick={() => {
+                    navigate('/register');
+                    setOpen(false);
+                  }}
+                >
+                  Sign Up
+                </Button> */}
+              </>
             )}
           </div>
         </div>

@@ -11,7 +11,7 @@ export const OffersDataProvider = ({ children }) => {
   const fetchUser = async (userId) => {
     try {
       const response = await fetch(`http://localhost:5000/users/${userId}`, {
-        credentials: 'include' // Keep authenticated for user data
+        credentials: 'include' 
       });
       if (!response.ok) return null;
       return await response.json();

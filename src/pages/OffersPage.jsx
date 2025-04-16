@@ -243,7 +243,7 @@ const OffersPage = () => {
       </button> */}
 
       {/* Offers Grid */}
-      <div className="flex flex-wrap justify-center gap-8 mb-12 z-[999999999999999]">
+      <div className="grid md:grid-cols-2 justify-center gap-8 mb-12 z-[999999999999999]">
         {paginatedOffers.length > 0 ? (
           paginatedOffers.map(offer => (
             <div key={offer.id} className="w-full md:w-1/2 lg:w-1/3 ">
