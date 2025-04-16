@@ -59,8 +59,6 @@ import DrivingSchools from "./pages/DrivingSchools.jsx";
 import HowItWorks from './pages/howitWorks.jsx';
 import ReservationToPayement from './pages/resevationToPayement.jsx';
 import Login from './pages/Auth/LoginPage.jsx';
-import Signup from './pages/Auth/SignupPage.jsx';
-// import Signup from './components/layouts/auth/signupForm.jsx';
 import SelectUserType from './components/layouts/auth/selectUser.jsx';
 import Verification from './pages/Auth/VerificationPage.jsx';
 import SchoolSignup from './pages/Auth/SchoolSignup.jsx';
@@ -86,7 +84,6 @@ export const router = createBrowserRouter([
     element: <AuthLayout />,
     children: [
       { path: 'login', element: <Login /> },
-      // { path: 'signup', element: <Signup /> },
       { path: 'select-user', element: <SelectUserType /> },
       { path: 'signup/school', element: <SchoolSignup /> },
       { path: 'signup/student', element: <StudentSignup/> },
