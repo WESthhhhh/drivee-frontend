@@ -216,16 +216,27 @@ export const FileInput = ({
     );
   };
 
-export const TextArea = ({ label, placeholder }) => {
-    return (
-        <div className=" ">
-            <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
-            <textarea
-                placeholder={placeholder}
-                className="w-full p-2 text-[14px] border border-border-b50 rounded-small-md h-24 focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75"
-            />
-        </div>
-    );
+export const TextArea = ({ 
+  label, 
+  placeholder, 
+  error = null,
+  ...props 
+}) => {
+  return (
+    <div className="">
+      <label className="block text-sm font-medium mb-[12px] text-primary">{label}</label>
+      <textarea
+        placeholder={placeholder}
+        className={`w-full p-2 text-[14px] border ${
+          error ? 'border-error' : 'border-border-b50'
+        } rounded-small-md h-24 focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75`}
+        {...props}
+      />
+      {error && (
+        <p className="text-[13px] text-error mt-1">{error}</p>
+      )}
+    </div>
+  );
 };
 
 
