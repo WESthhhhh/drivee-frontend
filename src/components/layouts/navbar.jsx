@@ -122,7 +122,7 @@ const Navbar = () => {
       
       <header 
         ref={navRef}
-        className={`w-full max-w-7xl fixed left-1/2 transform -translate-x-1/2 bg-light px-5 py-3 shadow-primary-4 rounded-large-md z-[9999999] flex justify-between items-center transition-all duration-300 ${
+        className={`w-full max-w-7xl fixed left-1/2 transform -translate-x-1/2 bg-light px-5 py-3 shadow-primary-4 rounded-b-large-md z-[9999999] flex justify-between items-center transition-all duration-300 ${
           scrolled ? 'top-0' : 'top-[20px]'
         }`}
       >
@@ -180,12 +180,6 @@ const Navbar = () => {
                 >
                   My Profile
                 </Link>
-                <Link 
-                  to={'/settings'} 
-                  className="block text-primary no-underline text-[1rem] py-2 hover:bg-gray-50 rounded-small-md px-2"
-                >
-                  Settings
-                </Link>
                 <LogoutButton 
                   onLogoutSuccess={handleSuccessfulLogout}
                   className="w-full mt-2 text-left text-primary hover:bg-gray-50 rounded-small-md px-2 py-2"
@@ -197,13 +191,6 @@ const Navbar = () => {
           </div>
         ) : (
           <div className="flex items-center gap-4">
-            {/* <Button
-              type='secondary'
-              className="hidden sm:inline-flex"
-              onClick={() => navigate('/register')}
-            >
-              Sign Up
-            </Button> */}
             <Button
               type='primary'
               icon='icons/login.svg'
