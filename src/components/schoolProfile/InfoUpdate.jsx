@@ -1,5 +1,5 @@
 
-import { PrimaryInput, TextArea, PasswordInput, EmailInput } from "../UI/formInputs"
+import { PrimaryInput, TextArea, PasswordInput, EmailInput, TimeInput } from "../UI/formInputs"
 export default function InfoUpdate() {
   return (
     <form className="space-y-12 px-5">
@@ -41,6 +41,12 @@ export default function InfoUpdate() {
             </div>
 
             <div className="">
+            <TimeInput
+                label="Appointment Time"
+                placeholder="Select time"
+                icon="user" // Optional
+                // error={errors.time ? "Time is required" : null}
+                />
                 <label>Working Hours</label>
                 <select  className="w-full border border-stroke rounded-lg h-12 px-6" />
             </div>
