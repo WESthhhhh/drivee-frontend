@@ -2,9 +2,9 @@ import {React, useState} from 'react';
 import { useForm } from 'react-hook-form';
 import { EmailInput } from '../../UI/formInputs';
 import Button from '../../UI/button';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import api from '../../../utils/axios';
 
 const ForgotPassword = () => {
   const {
@@ -16,8 +16,8 @@ const ForgotPassword = () => {
   const [forgotSuccess, setForgotSuccess] = useState(false);
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post(
-        'http://localhost:5000/users/forgot-password',
+      const response = await api.post(
+        'users/forgot-password',
         { email: data.email }
       );
       // toast.success(response.data.message); 

@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { PasswordInput } from '../../UI/formInputs';
 import Button from '../../UI/button';
-import axios from 'axios';
+import api from '../../../utils/axios';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 
@@ -26,8 +26,8 @@ const ResetPassword = () => {
     }
 
     try {
-      const response = await axios.post(
-        'http://localhost:5000/users/reset-password',
+      const response = await api.post(
+        '/users/reset-password',
         { 
           token,
           newPassword: data.password 

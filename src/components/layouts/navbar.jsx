@@ -4,12 +4,12 @@ import { IoMdClose } from 'react-icons/io';
 import { IoChevronDown } from 'react-icons/io5';
 import { HiMenuAlt1 } from "react-icons/hi";
 import Button from '../UI/button';
-import axios from 'axios';
 import LogoutButton from '../UI/logoutButton';
 import logo from '/logo/Logo.svg';
 import logo2 from '/logo/Logosm.svg';
 import logo3 from '/logo/Logolightsm.svg';
 import profile from '../../assets/avatar.png';
+import api from '../../utils/axios';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -40,11 +40,11 @@ const Navbar = () => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const { data } = await axios.get('http://localhost:5000/users/me', { 
+        const { data } = await api.get('/users/me', { 
           withCredentials: true
         });
         setIsLoggedIn(true);
-        setUserData(data.user); // Store user data if needed
+        setUserData(data.user); 
       } catch (error) {
         setIsLoggedIn(false);
         setUserData(null);
@@ -55,12 +55,11 @@ const Navbar = () => {
 
     checkAuthStatus();
 
-    // Set up interval to check auth status periodically (every 5 minutes)
     const intervalId = setInterval(checkAuthStatus, 300000);
     return () => clearInterval(intervalId);
   }, []);
 
-  // Handle mobile menu body overflow
+  
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';
@@ -69,7 +68,7 @@ const Navbar = () => {
     }
   }, [open]);
 
-  // Close menus when clicking outside
+  
   useEffect(() => {
     const closeMenus = (e) => {
       if (
@@ -109,7 +108,7 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Mobile menu backdrop */}
+    
       {open && (
         <div 
           className="fixed inset-0 bg-b500 bg-opacity-30 z-[999999998] md:hidden"
@@ -117,7 +116,7 @@ const Navbar = () => {
         />
       )}
 
-      {/* Blur effect */}
+     
       <div className={`fixed inset-0 backdrop-blur-sm z-[999999997] pointer-events-none transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}></div>
 
       
@@ -133,13 +132,13 @@ const Navbar = () => {
           onClick={toggleMenu} 
         />
         
-        {/* Logo */}
+        
         <Link to={'/'} className="flex items-center">
           <img src={logo} className="hidden md:block md:w-[100px] md:h-[36px]" alt="Drive logo" />
           <img src={logo2} className="block md:hidden w-[80px]" alt="Mobile logo" />
         </Link>
         
-        {/* Desktop navigation */}
+        
         <nav className="hidden md:flex items-center gap-12">
           <Link to={'/offers'} className="text-gray-800 text-[1.05rem] no-underline hover:text-primary transition-colors">Offers</Link>
           <Link to={'/drivingschools'} className="text-gray-800 text-[1.05rem] no-underline hover:text-primary transition-colors">Driving School</Link>
@@ -147,7 +146,7 @@ const Navbar = () => {
           <Link to={'/contact'} className="text-gray-800 text-[1.05rem] no-underline hover:text-primary transition-colors">Contact</Link>
         </nav>
         
-        {/* Auth section */}
+        
         {isLoggedIn ? (
           <div 
             className="flex items-center gap-2 relative cursor-pointer" 
@@ -161,7 +160,7 @@ const Navbar = () => {
             />
             <IoChevronDown className={`text-accent transition-transform duration-300 ${opendrop ? 'rotate-180' : ''}`} />
             
-            {/* Dropdown menu */}
+            
             {opendrop && (
               <div className="absolute top-[110%] right-0 bg-light shadow-primary-4 w-[200px] border border-stroke rounded-small-md py-2 px-5">
                 <div className="flex items-center gap-3 mb-3 pb-3 border-b border-stroke">
@@ -216,10 +215,10 @@ const Navbar = () => {
         )}
       </header>
 
-      {/* Spacer with conditional height */}
+     
       <div className={`transition-all duration-300 ${scrolled ? 'h-[80px]' : 'h-[100px]'}`}></div>
       
-      {/* Mobile Menu */}
+      
       <div 
         className={`fixed top-0 left-0 w-[280px] h-full z-[999999999] bg-light shadow-xl transition-transform duration-300 ease-in-out ${
           open ? "translate-x-0" : "-translate-x-full"

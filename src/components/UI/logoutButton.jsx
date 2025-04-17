@@ -1,8 +1,8 @@
 import { TbLogout } from 'react-icons/tb';
 import { useState } from 'react'; 
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
+import api from '../../utils/axios';
 
 const LogoutButton = ({ 
   className = '', 
@@ -17,7 +17,7 @@ const LogoutButton = ({
   const handleLogout = async () => {
     setIsLoading(true);
     try {
-      await axios.post('http://localhost:5000/users/logout', {}, {
+      await api.post('/users/logout', {}, {
         withCredentials: true
       });
       if (onLogoutSuccess) onLogoutSuccess();

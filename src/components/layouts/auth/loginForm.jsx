@@ -3,8 +3,8 @@ import { useForm } from 'react-hook-form';
 import Button from '../../UI/button';
 import { EmailInput, PasswordInput } from '../../UI/formInputs';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { toast } from 'react-toastify';
+import api from '../../../utils/axios';
 
 const Login = () => {
   const { 
@@ -28,7 +28,7 @@ const Login = () => {
 
   const checkVerificationStatus = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/verifications/status', {
+      const response = await api.get('/verifications/status', {
         withCredentials: true
       });
       return response.data.verified;
@@ -44,7 +44,7 @@ const Login = () => {
     setIsRedirecting(false);
     
     try {
-      const response = await axios.post('http://localhost:5000/users/login', data, {
+      const response = await api.post('/users/login', data, {
         withCredentials: true
       });
       

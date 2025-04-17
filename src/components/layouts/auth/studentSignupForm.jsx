@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../../utils/axios';
 import Button from '../../UI/button';
 import { toast } from 'react-toastify'
 import RadioButton from '../../UI/radioButton';
@@ -63,7 +63,7 @@ const StudentSignupForm = () => {
 
         console.log("Sending payload:", payload); // Debug log
 
-        const response = await axios.post('http://localhost:5000/users/signupLearner', payload);
+        const response = await api.post('/users/signupLearner', payload);
         reset();
 
         if (response.data.success) {
