@@ -1,5 +1,5 @@
 
-import { PrimaryInput,  } from "../UI/formInputs"
+import { PrimaryInput, TextArea, PasswordInput, EmailInput } from "../UI/formInputs"
 export default function InfoUpdate() {
   return (
     <form className="space-y-12 px-5">
@@ -7,25 +7,39 @@ export default function InfoUpdate() {
         <div className="text-[#0F34AE] text-[25px] font-bold">Account Details</div>
         <div className="grid grid-cols-2 gap-x-14 gap-y-6">
             <div className="">
-                <label>First Name</label>
-                <input type="text" className="w-full border border-stroke rounded-lg h-12 px-6" />
+                <PrimaryInput
+                    label="First Name"
+                    placeholder="Enter Your First Name"
+                />
             </div>
             <div className="">
-                <label>Last Name</label>
-                <input type="text" className="w-full border border-stroke rounded-lg h-12 px-6" />
+                <PrimaryInput
+                    label="Last Name"
+                    placeholder="Enter Your Last Name"
+                />
             </div>
+           
             <div className="">
-                <label>Email Address</label>
-                <input type="text" className="w-full border border-stroke rounded-lg h-12 px-6" />
+                <EmailInput
+                    label="Email Address"
+                    placeholder="Enter Your Email Address"
+                />
             </div>
+
             <div className="">
-                <label>Phone Number</label>
-                <input type="text" className="w-full border border-stroke rounded-lg h-12 px-6" />
+                <PrimaryInput
+                     label="Phone Number"
+                    placeholder="Enter Your Phone Number"
+                />           
             </div>
+
             <div className="">
-                <label>Description of the school</label>
-                <textarea  className="w-full border border-stroke rounded-lg h-[120px] px-6" />
+                <TextArea
+                    label="Description of the school"
+                    placeholder="Enter Description of the schoo"
+                />  
             </div>
+
             <div className="">
                 <label>Working Hours</label>
                 <select  className="w-full border border-stroke rounded-lg h-12 px-6" />
