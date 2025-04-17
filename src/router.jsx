@@ -49,7 +49,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from './mainLayout.jsx';
 import AuthLayout from './authLayout';
-// import ProfileLayout from './layouts/profileLayout';
+import ProfileLayout from './profileLayout';
 import HomePage from "./pages/HomePage.jsx";
 import OffersPage from "./pages/OffersPage.jsx";
 import { OffersDataProvider } from './context/fetchOffers.jsx';
@@ -65,6 +65,11 @@ import SchoolSignup from './pages/Auth/SchoolSignup.jsx';
 import StudentSignup from './pages/Auth/StudentSignup.jsx';
 import ForgotPassword from './pages/Auth/ForgotPassword.jsx';
 import ResetPassword from './pages/Auth/ResetPassword.jsx';
+
+import ManageOffers from './pages/profiles/manageOffers.jsx';
+import SchoolReservations from './pages/profiles/schoolReservations.jsx';
+import SchoolReviews from './pages/profiles/schoolReviews.jsx';
+import UserInfo from './pages/profiles/userInfo.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -90,6 +95,15 @@ export const router = createBrowserRouter([
       { path: '/verification', element: <Verification /> },
       { path: '/forgot-password', element: <ForgotPassword /> },
       { path: '/reset-password', element: <ResetPassword /> },
+    ]
+  },
+  {
+    element: <ProfileLayout />,
+    children: [
+      { path: 'offers-management', element: <ManageOffers /> },
+      { path: 'school-reservation', element: <SchoolReservations /> },
+      { path: 'school-review', element: <SchoolReviews /> },
+      { path: 'school-info', element: <UserInfo /> },
     ]
   },
 ]);

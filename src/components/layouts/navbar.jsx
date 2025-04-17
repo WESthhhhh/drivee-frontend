@@ -100,10 +100,9 @@ const Navbar = () => {
     setUserData(null);
     setOpendrop(false);
     setOpen(false);
-    navigate('/'); // Redirect to home after logout
+    navigate('/'); 
   };
 
-  // Show loading state
   if (isLoading) {
     return <div className="h-[80px]"></div>;
   }
@@ -121,14 +120,14 @@ const Navbar = () => {
       {/* Blur effect */}
       <div className={`fixed inset-0 backdrop-blur-sm z-[999999997] pointer-events-none transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}></div>
 
-      {/* Main header */}
+      
       <header 
         ref={navRef}
         className={`w-full max-w-7xl fixed left-1/2 transform -translate-x-1/2 bg-light px-5 py-3 shadow-primary-4 rounded-large-md z-[9999999] flex justify-between items-center transition-all duration-300 ${
           scrolled ? 'top-0' : 'top-[20px]'
         }`}
       >
-        {/* Mobile menu button */}
+        
         <HiMenuAlt1
           className="block md:hidden text-3xl text-primary cursor-pointer" 
           onClick={toggleMenu} 
