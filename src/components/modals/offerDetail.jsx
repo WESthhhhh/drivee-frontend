@@ -8,10 +8,8 @@ import { useNavigate } from 'react-router-dom';
 const OfferDetail = ({ isOpen, closeModal, offer }) => {
   const navigate = useNavigate();
 
-  // Early return if modal shouldn't be open
   if (!isOpen) return null;
 
-  // Safely handle missing offer data
   if (!offer) {
     return (
       <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-8">
@@ -24,7 +22,6 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
     );
   }
 
-  // Safely destructure with defaults
   const {
     img = '',
     title = 'Driving Course',
@@ -34,37 +31,37 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
     durationHours = '0',
     startDate = new Date().toISOString(),
     endDate = new Date().toISOString(),
-    school = {}, // Ensure school is always an object
+    school = {},
     stars = [],
     reviews = 0,
     graph = '/images/map.svg'
   } = offer;
 
   const schoolName = school?.firstName 
-  ? `${school.firstName} ${school.lastName || ''}` 
-  : 'Unknown School';
-  
-  console.log('Offer data:', offer);
-  return (
-    
-    <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-4">
-      <div className="bg-light rounded-large-md max-w-lg w-full max-h-[90vh] flex flex-col relative">
-        {/* Close Button */}
-        <button 
-          onClick={closeModal}
-          className="absolute right-4 top-4 w-8 h-8 flex justify-center items-center bg-b50 hover:bg-blue-100 rounded-small-sm text-b500 font-bold text-xl z-10 transition-colors"
-        >
-          <IoMdClose />
-        </button>
+    ? `${school.firstName} ${school.lastName || ''}` 
+    : 'Unknown School';
 
-        {/* Modal Content - Scrollable area */}
+  return (
+    <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-4">
+      <div className="bg-light rounded-large-md max-w-lg w-full max-h-[90vh] flex flex-col relative overflow-hidden">
+        {/* Fixed Header with centered title and close button */}
+        <div className="sticky top-0 bg-light z-10 pt-5 px-5 pb-4 border-b border-stroke">
+          <div className="relative flex justify-center items-center">
+            <h1 className="text-b200 font-bold text-xl text-center mt-4">Offer Details</h1>
+            <button 
+              onClick={closeModal}
+              className="absolute right-0 w-8 h-8 flex justify-center items-center bg-b50 hover:bg-blue-100 rounded-small-sm text-b500 font-bold text-xl transition-colors"
+            >
+              <IoMdClose />
+            </button>
+          </div>
+        </div>
+
+        {/* Scrollable Content Area */}
         <div className="p-5 flex-1 overflow-y-auto">
-          {/* Header */}
-          <h1 className="text-b200 font-bold text-xl text-center pt-4 pb-8">Offer Details</h1>
-          
           {/* Profile Section */}
-          <div className="flex justify-between items-center gap-3 mt-3 mb-2 p-2 rounded-lg">
-            <div className="flex items-center gap-3">
+          <div className="flex justify-between  gap-3 mt-3 mb-2 p-2 rounded-lg">
+            <div className="flex  gap-3">
               <img 
                 src={school?.profileImage || img} 
                 alt={schoolName} 
@@ -103,43 +100,46 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
             <p className="text-xs text-gray-600 line-clamp-2 mx-auto max-w-xs">{description}</p>
           </div>
 
-          {/* Info Cards - Horizontal layout with 4 cards including location */}
-          <div className="grid grid-cols-4 gap-1 my-2 border-t border-b border-blue-50 py-2 mb-10">
-            <div className="text-center">
-              <div className="flex items-center justify-center gap-1 mb-1">
-                <FaRegClock className="text-b500 text-xs" />
-                <span className="text-b500 font-semibold text-xs">Duration</span>
-              </div>
-              <p className="text-xs text-inputtext">{durationHours} hours</p>
-            </div>
+          {/* Info Cards */}
+            <div className="my-2 border-t border-b border-stroke py-4">
+              
+              <div className="grid grid-cols-3 gap-1 mb-4">
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-1 mb-1">
+                    <FaRegClock className="text-b500 text-xs" />
+                    <span className="text-b500 font-semibold text-xs">Duration</span>
+                  </div>
+                  <p className="text-xs text-inputtext">{durationHours} hours</p>
+                </div>
 
-            <div className="text-center border-l border-blue-50">
-              <div className="flex items-center justify-center gap-1 mb-1">
-                <FaDollarSign className="text-b500 text-xs" />
-                <span className="text-b500 font-semibold text-xs">Price</span>
-              </div>
-              <p className="text-xs text-inputtext">{price} dh</p>
-            </div>
+                <div className="text-center border-l border-stroke">
+                  <div className="flex items-center justify-center gap-1 mb-1">
+                    <FaDollarSign className="text-b500 text-xs" />
+                    <span className="text-b500 font-semibold text-xs">Price</span>
+                  </div>
+                  <p className="text-xs text-inputtext">{price} dh</p>
+                </div>
 
-            <div className="text-center border-l border-blue-50">
-              <div className="flex items-center justify-center gap-1 mb-1">
-                <IoCalendarClearOutline className="text-b500 text-xs" />
-                <span className="text-b500 font-semibold text-xs">Expires</span>
+                <div className="text-center border-l border-stroke">
+                  <div className="flex items-center justify-center gap-1 mb-1">
+                    <IoCalendarClearOutline className="text-b500 text-xs" />
+                    <span className="text-b500 font-semibold text-xs">Expires</span>
+                  </div>
+                  <p className="text-xs text-inputtext">
+                    {new Date(endDate).toLocaleDateString()}
+                  </p>
+                </div>
               </div>
-              <p className="text-xs text-inputtext">
-                {new Date(endDate).toLocaleDateString()}
-              </p>
-            </div>
-            
-            <div className="text-center border-l border-stroke">
-              <div className="flex items-center justify-center gap-1 mb-1">
-                <FaMapMarkerAlt className="text-b500 text-xs" />
-                <span className="text-b500 font-semibold text-xs">Location</span>
+              
+              {/* Second row with location */}
+              <div className="text-center pt-4 border-t border-stroke">
+                <div className="flex items-center justify-center gap-1 mb-1">
+                  <FaMapMarkerAlt className="text-b500 text-xs" />
+                  <span className="text-b500 font-semibold text-xs">Location</span>
+                </div>
+                <p className="text-xs text-inputtext">{location || 'Agadir, Morocco'}</p>
               </div>
-              {/* <p className="text-xs text-inputtext">{location || 'Agadir, Morocco'}</p> */}
-              <p className="text-xs text-inputtext">Agadir</p>
             </div>
-          </div>
 
           {/* Map container */}
           <div className="mb-10">
@@ -166,8 +166,8 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
           </div>
         </div>
         
-        {/* Button fixed at bottom */}
-        <div className="p-5 pt-2 border-t border-blue-50">
+        {/* Fixed Button at Bottom */}
+        <div className="p-5 pt-2 border-t border-stroke">
           <Button
             type='primary'
             onClick={() => navigate('/reservation', { state: { offer } })}

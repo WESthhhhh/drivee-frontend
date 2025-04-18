@@ -51,7 +51,7 @@ const HeroSection = () => {
           </Button>
           <Button
             type="secondary"
-            onClick={() => navigate('/offers')}
+            onClick={() => navigate('/offers-management')}
           >
             List Your Offers
           </Button>
