@@ -3,8 +3,8 @@ import Button from "../UI/button";
 import { useNavigate } from "react-router-dom";
 
 
-const navigate = useNavigate();
 export default function Offers() {
+    const navigate = useNavigate();
   return (
     <div className=" space-y-20">
         <div className="space-y-12 mt-20">
