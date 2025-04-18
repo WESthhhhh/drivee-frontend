@@ -31,7 +31,7 @@ const Login = () => {
 
   const checkVerificationStatus = async () => {
     try {
-      const response = await api.get('/verifications/status', {
+      const response = await api.get('/verifications', {
         withCredentials: true
       });
       return response.data.verified;

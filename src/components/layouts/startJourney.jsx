@@ -23,7 +23,7 @@ const Journey = () => {
         </Button>
         <Button
         type='secondary'
-        onClick={() => navigate('/list')}
+        onClick={() => navigate('/offers-management')}
         className='mb-10 md:mb-0'
         >
           List Your Offers
