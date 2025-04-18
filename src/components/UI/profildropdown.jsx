@@ -3,7 +3,7 @@ import React from "react";
 const ProfilDropdown = () => {
 
     return (
-        <div className="bg-white shadow-md rounded-[12px] p-4 max-w-[138px] border-[1px] border-stroke ">
+        <div className="bg-light shadow-md rounded-[12px] p-4 max-w-[138px] border-[1px] border-stroke ">
             <ul className="space-y-[10px] text-sm text-[#0B247A]">
                 <li className="py-[8px] border-b-[0.3px] border-[#9AD4DB] cursor-pointer">Dashboard</li>
                 <li className=" py-[8px] border-b-[0.3px] border-[#9AD4DB] cursor-pointer">Manage Offers</li>

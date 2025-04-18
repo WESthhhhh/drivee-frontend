@@ -45,9 +45,9 @@ export default function Offers() {
                   <div className="basis-2/12">undefined</div>
                   <div className="basis-2/12">undefined</div>
                   <div className="basis-1/12 flex items-center gap-2">
-                    <div><Trash /></div>
+                    <button><Trash /></button>
                     <div className="h-[22px] w-0.25 bg-[#6E6E6A]" />
-                    <div><Pencil /></div>
+                    <button><Pencil /></button>
                   </div>
                 </div>
               </div>

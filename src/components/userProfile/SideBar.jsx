@@ -1,5 +1,4 @@
 import { Calendar, Logout, Offers, Star, User } from "../UI/icons";
-import Img from '/images/of-2.png';
 import { Link } from "react-router-dom";
 
 export default function SideBar() {
@@ -9,15 +8,20 @@ export default function SideBar() {
         <div className="space-y-[65px]">
           {/* Logo */}
           <div className="relative w-[104.23px] h-[32.14px]">
-          <Link to={'/'} className="flex items-center">
-          <img src='/logo/Logo.svg' className="hidden md:block md:w-[100px] md:h-[36px]" alt="Drive logo" />
-          {/* <img src={logo2} className="block md:hidden w-[80px]" alt="Mobile logo" /> */}
-        </Link>
+          <img 
+                src="/logo/Logo.svg" 
+                alt="Profile" 
+                className="md:w-[100px] md:h-[36px]" 
+          /> 
           </div>
           {/* Profile  */}
           <div className="flex items-center gap-2">
             <div className="relative w-[29px] h-[29px]">
-              <img src="/images/of-2.png" alt="" className="object-cover rounded-full" />
+            <img 
+                src="/images/of-2.png" 
+                alt="Profile" 
+                className="w-full h-full object-cover rounded-full"
+              /> 
             </div>
             <div className="font-semibold text-base text-[#0B247A]">Auto Ecole Saada</div>
           </div>
@@ -25,7 +29,7 @@ export default function SideBar() {
         <div className="mt-[37px] space-y-5">
           {/* Account details */}
           <a
-            href={"/account-info"}
+            href={"/user-info"}
             className="flex items-center gap-2 p-2 group hover:bg-[#F5FBFB]"
           >
             <div className="w-4 h-4 flex items-center justify-center">
@@ -37,7 +41,7 @@ export default function SideBar() {
           </a>
           {/* Offers */}
           <a
-            href={"/account-offer"}
+            href={"/user-offers"}
             className="flex items-center gap-2 p-2 group hover:bg-[#F5FBFB]"
           >
             <div className="w-4 h-4 flex items-center justify-center">
@@ -49,7 +53,7 @@ export default function SideBar() {
           </a>
           {/* Reviews */}
           <a
-            href={"/account-review"}
+            href={"/user-reviews"}
             className="flex items-center gap-2 p-2 group hover:bg-[#F5FBFB]"
           >
             <div className="w-4 h-4 flex items-center justify-center">

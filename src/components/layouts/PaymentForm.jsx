@@ -151,7 +151,7 @@ const PaymentForm = ({
             </div>
 
             {/* Right panel - 70% width */}
-            <div className="w-full md:w-[65%] bg-white md:rounded-l-none p-5">
+            <div className="w-full md:w-[65%] bg-light md:rounded-l-none p-5">
               <h2 className="text-xl font-semibold text-[#1E1B48] mb-5">Offer Payment</h2>
               <div className="space-y-4">
                 <div>
@@ -161,7 +161,7 @@ const PaymentForm = ({
                       <div
                         key={method.id}
                         className={`border ${
-                          selectedPaymentMethod === method.id ? "border-[#0A1172] bg-white" : "border-gray-200 bg-gray-50"
+                          selectedPaymentMethod === method.id ? "border-[#0A1172] bg-light" : "border-gray-200 bg-gray-50"
                         } p-2 rounded-lg transition-colors flex items-center justify-center w-20 h-10 cursor-pointer`}
                         onClick={() => setSelectedPaymentMethod(method.id)}
                       >
@@ -227,7 +227,7 @@ const PaymentForm = ({
                     <div
                       className={`w-full p-3 border ${
                         errors.expiryDate ? "border-red-500" : "border-gray-200"
-                      } rounded-lg bg-white flex items-center`}
+                      } rounded-lg bg-light flex items-center`}
                     >
                       <Calendar className="w-4 h-4 text-[#0A1172] mr-2" />
                       <div className="flex space-x-2 w-full">
@@ -262,7 +262,7 @@ const PaymentForm = ({
 
                 <button
                   type="submit"
-                  className="w-full bg-[#0A1172] text-white py-3 px-4 rounded-lg hover:bg-blue-900 transition-colors text-base font-medium mt-4"
+                  className="w-full bg-[#0A1172] text-light py-3 px-4 rounded-lg hover:bg-blue-900 transition-colors text-base font-medium mt-4"
                 >
                   Pay Now
                 </button>

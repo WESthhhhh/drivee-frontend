@@ -69,7 +69,10 @@ import ResetPassword from './pages/Auth/ResetPassword.jsx';
 import ManageOffers from './pages/profiles/manageOffers.jsx';
 import SchoolReservations from './pages/profiles/schoolReservations.jsx';
 import SchoolReviews from './pages/profiles/schoolReviews.jsx';
-import UserInfo from './pages/profiles/userInfo.jsx';
+import SchoolInfo from './pages/profiles/schoolInfo.jsx';
+import Userinfo from './pages/profiles/userInfo.jsx';
+import MyReservations from './pages/profiles/PurchasedOffers.jsx';
+import MyReviews from './pages/profiles/reviewsUser.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -103,7 +106,14 @@ export const router = createBrowserRouter([
       { path: 'offers-management', element: <ManageOffers /> },
       { path: 'school-reservation', element: <SchoolReservations /> },
       { path: 'school-review', element: <SchoolReviews /> },
-      { path: 'school-info', element: <UserInfo /> },
+      { path: 'school-info', element: <SchoolInfo /> },
+      { path: 'offers-management', element: <ManageOffers /> },
+      { path: 'school-reservation', element: <SchoolReservations /> },
+      { path: 'school-review', element: <SchoolReviews /> },
+      { path: 'user-info', element: <Userinfo /> },
+      { path: 'user-offers', element: <MyReservations /> },
+      { path: 'user-reviews', element: <MyReviews /> },
     ]
+
   },
 ]);

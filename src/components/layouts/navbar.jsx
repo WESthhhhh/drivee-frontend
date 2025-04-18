@@ -23,7 +23,7 @@ const Navbar = () => {
   const navRef = useRef(null);
   const dropRef = useRef(null);
 
-  // Handle scroll effect
+ 
   useEffect(() => {
     const handleScroll = () => {
       const isScrolled = window.scrollY > 10;

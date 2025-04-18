@@ -5,8 +5,11 @@ import { EmailInput, PasswordInput } from '../../UI/formInputs';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../../utils/axios';
+import { useSearchParams } from 'react-router-dom';
 
 const Login = () => {
+  const [searchParams] = useSearchParams();
+  const redirectPath = searchParams.get('redirect') || '/';
   const { 
     register, 
     handleSubmit, 
@@ -64,7 +67,7 @@ const Login = () => {
   
         if (!userRole) {
           console.error("Role not found in response");
-          setTimeout(() => navigate("/"), 1500);
+          setTimeout(() => navigate(redirectPath), 1500);
           return;
         }
   
@@ -73,14 +76,14 @@ const Login = () => {
         setTimeout(() => {
           if (upperRole === "SCHOOL") {
             checkVerificationStatus().then(isVerified => {
-              navigate(isVerified ? "/school/dashboard" : "/verification");
+              navigate(isVerified ? redirectPath : "/verification");
             });
           } 
           else if (upperRole === "ADMIN") {
-            navigate("/admin/dashboard"); 
+            navigate(redirectPath); 
           }
           else if (upperRole === "STUDENT") {
-            navigate("/student/dashboard");
+            navigate(redirectPath);
           }
           else {
             navigate("/");

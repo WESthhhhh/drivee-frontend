@@ -1,45 +1,93 @@
 import { FaRegClock, FaDollarSign, FaMapMarkerAlt } from 'react-icons/fa';
 import { IoCalendarClearOutline } from "react-icons/io5";
 import { IoMdClose } from 'react-icons/io';
-import React, { useState } from 'react';
+import React from 'react';
+import { useState, useEffect } from 'react';
 import Button from '../UI/button';
 import { PrimaryInput, TextArea } from '../UI/formInputs';
+import api from '../../utils/axios'; 
+import { useAuth } from '../../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
-const AddOfferModal = ({ isOpen, closeModal, onSubmit }) => {
+const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
+  
+  const { isAuthenticated, isLoading } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    duration: '',
+    durationHours: '',
     price: '',
     startDate: '',
     endDate: '',
-    location: ''
+    city: '',
+    address: ''
   });
-
   const [errors, setErrors] = useState({
     title: '',
     description: '',
-    duration: '',
+    durationHours: '',
     price: '',
     startDate: '',
     endDate: '',
-    location: ''
+    city: '',
+    address: ''
   });
-
+  const [cities, setCities] = useState([]);
+  const [isLoadingCities, setIsLoadingCities] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  
+  useEffect(() => {
+    if (!isAuthenticated && !isLoading) {
+      navigate('/login');
+    }
+  }, [isAuthenticated, isLoading, navigate]);
+
+  /////         FETCH CITIESS        ////////////
+  useEffect(() => {
+    const fetchCities = async () => {
+      if (!isOpen) return;
+      
+      setIsLoadingCities(true);
+      try {
+        const response = await api.get('/locations/cities');
+        setCities(response.data);
+      } catch (error) {
+        console.error('Failed to fetch cities:', error);
+      } finally {
+        setIsLoadingCities(false);
+      }
+    };
+    
+    fetchCities();
+  }, [isOpen]);
+
+  
   if (!isOpen) return null;
+
+  
+  if (isLoading || isLoadingCities) {
+    return (
+      <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-4">
+        <div className="bg-light rounded-large-md p-8">
+          <div>Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
   const validateForm = () => {
     let isValid = true;
     const newErrors = {
       title: '',
       description: '',
-      duration: '',
+      durationHours: '',
       price: '',
       startDate: '',
       endDate: '',
-      location: ''
+      city: '',
+      address: ''
     };
 
     if (!formData.title.trim()) {
@@ -55,28 +103,45 @@ const AddOfferModal = ({ isOpen, closeModal, onSubmit }) => {
       isValid = false;
     }
 
-    if (!formData.duration) {
-      newErrors.duration = "Duration is required";
+    if (!formData.durationHours) {
+      newErrors.durationHours = "Duration is required";
+      isValid = false;
+    } else if (isNaN(formData.durationHours)) {
+      newErrors.durationHours = "Duration must be a number";
       isValid = false;
     }
 
     if (!formData.price) {
       newErrors.price = "Price is required";
       isValid = false;
+    } else if (isNaN(formData.price)) {
+      newErrors.price = "Price must be a number";
+      isValid = false;
     }
 
     if (!formData.startDate) {
       newErrors.startDate = "Start date is required";
+      isValid = false;
+    } else if (new Date(formData.startDate) < new Date()) {
+      newErrors.startDate = "Start date cannot be in the past";
       isValid = false;
     }
 
     if (!formData.endDate) {
       newErrors.endDate = "End date is required";
       isValid = false;
+    } else if (new Date(formData.endDate) < new Date(formData.startDate)) {
+      newErrors.endDate = "End date must be after start date";
+      isValid = false;
     }
 
-    if (!formData.location.trim()) {
-      newErrors.location = "Location is required";
+    if (!formData.city) {
+      newErrors.city = "City is required";
+      isValid = false;
+    }
+
+    if (!formData.address.trim()) {
+      newErrors.address = "Address is required";
       isValid = false;
     }
 
@@ -92,35 +157,48 @@ const AddOfferModal = ({ isOpen, closeModal, onSubmit }) => {
     setIsSubmitting(true);
     
     try {
-      
-      const payload = {
+      // First create or find the location
+      const locationResponse = await api.post('/locations/find-or-create', {
+        city: formData.city,
+        address: formData.address.trim()
+      });
+
+     
+      const response = await api.post('/offres', {
         title: formData.title.trim(),
         description: formData.description.trim(),
-        duration: parseInt(formData.duration),
+        durationHours: parseInt(formData.durationHours),
         price: parseFloat(formData.price),
-        startDate: formData.startDate,
-        endDate: formData.endDate,
-        location: formData.location.trim()
-      };
+        startDate: new Date(formData.startDate).toISOString(),
+        endDate: new Date(formData.endDate).toISOString(),
+        locationId: locationResponse.data.id
+      });
       
-      
-      await onSubmit(payload);
-      
-     
+      // Reset form
       setFormData({
         title: '',
         description: '',
-        duration: '',
+        durationHours: '',
         price: '',
         startDate: '',
         endDate: '',
-        location: ''
+        city: '',
+        address: ''
       });
       
+      onOfferCreated(response.data);
       closeModal();
     } catch (error) {
-      console.error('Submission error:', error);
-      
+      if (error.response?.status === 401) {
+        navigate('/login');
+      } else {
+        console.error('Error creating offer:', error);
+        alert(
+          error.response?.data?.error || 
+          error.response?.data?.details || 
+          "Failed to create offer"
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -135,17 +213,20 @@ const AddOfferModal = ({ isOpen, closeModal, onSubmit }) => {
 
   return (
     <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-4">
-      <div className="bg-light rounded-large-md max-w-lg w-full max-h-[90vh] flex flex-col relative">
-        <button 
-          onClick={closeModal}
-          className="absolute right-4 top-4 w-8 h-8 flex justify-center items-center bg-b50 hover:bg-blue-100 rounded-small-sm text-b500 font-bold text-xl z-10 transition-colors"
-        >
-          <IoMdClose />
-        </button>
-
+      <div className="bg-light rounded-large-md max-w-lg w-full max-h-[90vh] flex flex-col relative overflow-hidden">
+        <div className="sticky top-0 bg-light z-10 pt-5 px-5 pb-4 border-b border-stroke">
+          <div className="relative flex justify-center items-center">
+            <h1 className="text-b200 font-bold text-xl text-center mt-4">Add New Offer</h1>
+            <button 
+              onClick={closeModal}
+              className="absolute right-0 w-8 h-8 flex justify-center items-center bg-b50 hover:bg-blue-100 rounded-small-sm text-b500 font-bold text-xl transition-colors"
+            >
+              <IoMdClose />
+            </button>
+          </div>
+        </div>
+  
         <div className="p-5 flex-1 overflow-y-auto">
-          <h1 className="text-b200 font-bold text-xl text-center pt-8 pb-8">Add New Offer</h1>
-          
           <form onSubmit={handleSubmit} className="space-y-5">
             <PrimaryInput
               label="Offer Title"
@@ -164,27 +245,27 @@ const AddOfferModal = ({ isOpen, closeModal, onSubmit }) => {
               error={errors.description}
             />
 
-            <div className="grid grid-cols-2 gap-3 my-2 border-t border-b border-blue-50 py-4">
+            <div className="grid grid-cols-2 gap-3 my-2 border-t border-b border-stroke py-4">
               <PrimaryInput
                 label={
                   <div className="flex items-center gap-1">
-                    <FaRegClock className="text-xs" />
-                    <span>Duration (hours)</span>
+                    <FaRegClock className="text-b500 text-xs" />
+                    <span className="text-b500 font-semibold text-xs">Duration (hours)</span>
                   </div>
                 }
                 type="number"
                 placeholder="0"
-                value={formData.duration}
-                onChange={(e) => handleChange('duration', e.target.value)}
-                error={errors.duration}
+                value={formData.durationHours}
+                onChange={(e) => handleChange('durationHours', e.target.value)}
+                error={errors.durationHours}
                 min="1"
               />
 
               <PrimaryInput
                 label={
                   <div className="flex items-center gap-1">
-                    <FaDollarSign className="text-xs" />
-                    <span>Price (dh)</span>
+                    <FaDollarSign className="text-b500 text-xs" />
+                    <span className="text-b500 font-semibold text-xs">Price (dh)</span>
                   </div>
                 }
                 type="number"
@@ -199,8 +280,8 @@ const AddOfferModal = ({ isOpen, closeModal, onSubmit }) => {
               <PrimaryInput
                 label={
                   <div className="flex items-center gap-1">
-                    <IoCalendarClearOutline className="text-xs" />
-                    <span>Start Date</span>
+                    <IoCalendarClearOutline className="text-b500 text-xs" />
+                    <span className="text-b500 font-semibold text-xs">Start Date</span>
                   </div>
                 }
                 type="date"
@@ -213,8 +294,8 @@ const AddOfferModal = ({ isOpen, closeModal, onSubmit }) => {
               <PrimaryInput
                 label={
                   <div className="flex items-center gap-1">
-                    <IoCalendarClearOutline className="text-xs" />
-                    <span>End Date</span>
+                    <IoCalendarClearOutline className="text-b500 text-xs" />
+                    <span className="text-b500 font-semibold text-xs">End Date</span>
                   </div>
                 }
                 type="date"
@@ -224,33 +305,63 @@ const AddOfferModal = ({ isOpen, closeModal, onSubmit }) => {
                 min={formData.startDate || new Date().toISOString().split('T')[0]}
               />
 
-              <div className="col-span-2">
+              <div className="col-span-1">
+                <label className="flex items-center gap-1 text-b500 font-semibold text-xs mb-1">
+                  <FaMapMarkerAlt className="text-b500 text-xs" />
+                  <span>City</span>
+                </label>
+                <select
+                  value={formData.city}
+                  onChange={(e) => handleChange('city', e.target.value)}
+                  className={`w-full p-2 border rounded-md ${
+                    errors.city ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  disabled={isLoadingCities}
+                >
+                  <option value="">Select a city</option>
+                  {isLoadingCities ? (
+                    <option>Loading cities...</option>
+                  ) : (
+                    cities.map(city => (
+                      <option key={city} value={city}>
+                        {city}
+                      </option>
+                    ))
+                  )}
+                </select>
+                {errors.city && (
+                  <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+                )}
+              </div>
+
+              <div className="col-span-1">
                 <PrimaryInput
                   label={
                     <div className="flex items-center gap-1">
-                      <FaMapMarkerAlt className="text-xs" />
-                      <span>Location</span>
+                      <FaMapMarkerAlt className="text-b500 text-xs" />
+                      <span className="text-b500 font-semibold text-xs">Address</span>
                     </div>
                   }
-                  placeholder="Enter location"
-                  value={formData.location}
-                  onChange={(e) => handleChange('location', e.target.value)}
-                  error={errors.location}
+                  placeholder="Enter exact address"
+                  value={formData.address}
+                  onChange={(e) => handleChange('address', e.target.value)}
+                  error={errors.address}
                 />
               </div>
             </div>
-
-            <div className="p-5 pt-2 border-t border-blue-50">
-              <Button
-                htmlType="submit"
-                type="primary"
-                className="w-full py-2 text-sm"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Creating...' : 'Create Offer'}
-              </Button>
-            </div>
           </form>
+        </div>
+        
+        <div className="p-5 pt-2 border-t border-stroke">
+          <Button
+            htmlType="submit"
+            type="primary"
+            onClick={handleSubmit}
+            className="w-full py-2 text-sm"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Creating...' : 'Create Offer'}
+          </Button>
         </div>
       </div>
     </div>
