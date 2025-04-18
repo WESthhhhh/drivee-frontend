@@ -10,7 +10,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
 const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
-  // 1. First call all hooks unconditionally
+  
   const { isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -37,9 +37,18 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
   const [isLoadingCities, setIsLoadingCities] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 2. Then add effects
+  
+  useEffect(() => {
+    if (!isAuthenticated && !isLoading) {
+      navigate('/login');
+    }
+  }, [isAuthenticated, isLoading, navigate]);
+
+  /////         FETCH CITIESS        ////////////
   useEffect(() => {
     const fetchCities = async () => {
+      if (!isOpen) return;
+      
       setIsLoadingCities(true);
       try {
         const response = await api.get('/locations/cities');
@@ -51,16 +60,14 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
       }
     };
     
-    if (isOpen) {
-      fetchCities();
-    }
+    fetchCities();
   }, [isOpen]);
 
-  // 3. Now handle conditional rendering
-  if (!isOpen) return null;
   
-  // Loading state - render a simple loader
-  if (isLoading) {
+  if (!isOpen) return null;
+
+  
+  if (isLoading || isLoadingCities) {
     return (
       <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-4">
         <div className="bg-light rounded-large-md p-8">
@@ -69,32 +76,6 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
       </div>
     );
   }
-
-  // Handle unauthenticated state
-  if (!isAuthenticated) {
-    useEffect(() => {
-      navigate('/login');
-    }, [navigate]);
-    return null;
-  }
-  // Fetch cities when modal opens
-  useEffect(() => {
-    const fetchCities = async () => {
-      setIsLoadingCities(true);
-      try {
-        const response = await api.get('/locations/cities');
-        setCities(response.data);
-      } catch (error) {
-        console.error('Failed to fetch cities:', error);
-      } finally {
-        setIsLoadingCities(false);
-      }
-    };
-    
-    if (isOpen) {
-      fetchCities();
-    }
-  }, [isOpen]);
 
   const validateForm = () => {
     let isValid = true;
@@ -182,7 +163,7 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
         address: formData.address.trim()
       });
 
-      // Then create the offer with the location ID
+     
       const response = await api.post('/offres', {
         title: formData.title.trim(),
         description: formData.description.trim(),
