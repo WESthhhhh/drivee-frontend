@@ -95,7 +95,7 @@ const ReservationStep = ({
         <div
           key={`day-${day}`}
           className={`h-5 w-5 flex items-center justify-center rounded-full cursor-pointer text-[10px]
-            ${isSelected ? "bg-[#0B247A] text-white" : ""}
+            ${isSelected ? "bg-[#0B247A] text-light" : ""}
             ${isToday && !isSelected ? "border border-[#0B247A] text-[#0B247A]" : ""}
             ${isPast && !isToday ? "text-gray-300 cursor-not-allowed" : "hover:bg-gray-100"}
           `}
@@ -107,7 +107,7 @@ const ReservationStep = ({
     }
     
     return (
-      <div className="bg-white p-2 rounded-lg shadow-lg text-xs w-52">
+      <div className="bg-light p-2 rounded-lg shadow-lg text-xs w-52">
         <div className="flex justify-between items-center mb-1">
           <button 
             className="p-0.5 rounded-full hover:bg-gray-100"
@@ -177,7 +177,7 @@ const ReservationStep = ({
         </div>
 
         {/* Right panel - remaining width on desktop, full width on mobile (top) */}
-        <div className="w-full md:w-[617px] bg-white md:rounded-l-none md:py-20 p-6 py-8">
+        <div className="w-full md:w-[617px] bg-light md:rounded-l-none md:py-20 p-6 py-8">
           <div className="w-full max-w-md mx-auto">
             <h2 className="text-xl font-semibold text-[#1E1B48] mb-6">{offerReservationTitle}</h2>
 
@@ -185,7 +185,7 @@ const ReservationStep = ({
               <div>
                 <label className="block text-base font-medium text-[#1E1B48] mb-3">{chooseDateLabel}</label>
                 <div className="relative">
-                  <div className="w-full p-3 border border-[#E5E7EB] rounded-lg bg-white flex items-center">
+                  <div className="w-full p-3 border border-[#E5E7EB] rounded-lg bg-light flex items-center">
                     <Calendar 
                       className="w-4 h-4 text-[#0B247A] mr-2 cursor-pointer" 
                       onClick={() => setIsCalendarOpen(!isCalendarOpen)}
@@ -209,7 +209,7 @@ const ReservationStep = ({
                 className={`w-full py-3 px-4 rounded-lg text-base font-medium
                   ${
                     selectedDate
-                      ? "bg-[#0B247A] text-white hover:bg-blue-900"
+                      ? "bg-[#0B247A] text-light hover:bg-blue-900"
                       : "bg-gray-200 text-gray-500 cursor-not-allowed"
                   }
                   transition-colors`}

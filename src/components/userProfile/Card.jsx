@@ -7,7 +7,7 @@ export default function Card() {
         {/* <div className="bg-[#F5FBFB] rounded-lg py-2 px-6 absolute right-5 bottom-4 cursor-pointer">Edit Cover</div> */}
     </div>
       <div className="flex items-center gap-2 pl-6 relative">
-        <div className="relative w-[60px] h-[60px] border-2 border-white rounded-full">
+        <div className="relative w-[60px] h-[60px] border-2 border-light rounded-full">
         <img src="/images/of-2.png" alt="Profile" className="w-full h-full object-cover rounded-full"/>
         </div>
        <div className="font-semibold text-[#0B247A]">

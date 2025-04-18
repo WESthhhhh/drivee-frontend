@@ -44,8 +44,8 @@ const ProgressBar = ({ currentStep, onStepClick, canProceed }) => {
                 className={`w-8 h-8 text-base font-bold rounded-full flex items-center justify-center border-2 transition-all duration-300
                   ${
                     isActive
-                      ? "bg-[#0A1172] text-white border-[#0A1172]"
-                      : "bg-[#C4E6EA] text-white border-[#C4E6EA] cursor-default"
+                      ? "bg-[#0A1172] text-light border-[#0A1172]"
+                      : "bg-[#C4E6EA] text-light border-[#C4E6EA] cursor-default"
                   }
                   ${canClick && !isActive ? "cursor-pointer hover:bg-[#b3d9de]" : ""}
                 `}

@@ -14,7 +14,7 @@ export default function Offers() {
                 <PurchasedOffers/>
             </div>
             <Button type="primary"onClick={() => navigate('/offers')} >Get More Offers</Button>
-        <button className="bg-[#0B247A] rounded-lg px-6 py-2 text-white "></button>
+        <button className="bg-[#0B247A] rounded-lg px-6 py-2 text-light "></button>
         </div>
         
     </div>

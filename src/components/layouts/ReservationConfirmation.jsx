@@ -34,7 +34,7 @@ const ReservationConfirmation = ({ schoolName, offer, startDate, price, location
 
       <button
         onClick={() => onProceed?.()}
-        className="w-full mt-6 sm:mt-auto bg-[#0A1172] text-white py-3 px-6 rounded-lg hover:bg-blue-900 transition-colors"
+        className="w-full mt-6 sm:mt-auto bg-[#0A1172] text-light py-3 px-6 rounded-lg hover:bg-blue-900 transition-colors"
       >
         Proceed To Payment
       </button>
