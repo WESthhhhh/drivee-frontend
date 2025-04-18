@@ -7,6 +7,7 @@ const HeroSection = () => {
   return (
     <section className="relative flex justify-center items-center text-center pb-20 mb-[50px]  pt-12 ">
       {/* Background elements */}
+      {/* hel */}
       <img 
         src="/images/home-ellipse.png" 
         className="absolute top-0 right-0 w-auto h-auto" 
