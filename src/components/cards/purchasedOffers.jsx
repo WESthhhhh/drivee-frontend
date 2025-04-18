@@ -3,7 +3,7 @@ import Button from '../UI/button';
 const purchasedOffers = () => {
   return (
     <>
-      <div className="border border-stroke rounded-lg p-6 space-y-6">
+      <div className="border border-stroke rounded-large-md p-6 space-y-6">
                     <div className="space-y-3">
                         <div className="text-text text-xl font-semibold">Highway & City Training</div>
                         <div className="text-inputtext">Master both **city and highway driving** with real-world experience alongside expert instructors.</div>

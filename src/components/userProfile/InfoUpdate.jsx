@@ -46,22 +46,9 @@ export default function InfoUpdate() {
                 />           
             </div>
 
-            <div className="">
-                <TextArea
-                    label="Description of the school"
-                    placeholder="Enter Description of the schoo"
-                />  
-            </div>
+            
 
-            <div className="">
-                <TimeRangeInput
-                    label="Select Working Hours"
-                    fromValue={timeRange.from}
-                    toValue={timeRange.to}
-                    onFromChange={handleFromChange}
-                    onToChange={handleToChange}
-                />
-            </div>
+           
         </div>
       </div>
       <div className="space-y-10">

@@ -1,7 +1,5 @@
 import UserSidebar from "../../userProfile/SideBar"
-import SchoolSidebar from "../../schoolProfile/SideBar"
-import Picprofile from "../../UI/picprofile";
-import Cover from "../../userProfile/Card"
+import Cover from "../../cards/cover";
 import InfoUpdate from "../../userProfile/InfoUpdate";
 export default function Home() {
   return (

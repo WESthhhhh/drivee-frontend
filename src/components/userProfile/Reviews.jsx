@@ -13,7 +13,7 @@ export default function Reviews() {
   return (
     <div className="space-y-12 px-5 mt-9 font-poppins">
         <div className="space-y-10">
-            <div className="text-[#0F34AE] text-[25px] font-bold">Reviews</div>
+            <div className="text-b200 text-[25px] font-bold">My Reviews</div>
             <div className="">
               {/* list */}
               <div className="grid grid-cols-2 gap-7">
@@ -24,7 +24,7 @@ export default function Reviews() {
                   />
                           </div>
                           <div className="space-y-2">
-                              <div className="text-[#0F34AE] text-[16px] font-bold">Maren Bergson</div>
+                              <div className="text-b200 text-[16px] font-bold">Maren Bergson</div>
                               <p className="text-[#454D59]">I entrusted Drivee to sell my TAG Heuer, and the outcome was fantastic.</p>
                               <div className="flex items-center gap-2">
                                   {/* star */}
@@ -33,7 +33,6 @@ export default function Reviews() {
                           </div>
 
                       </div>
-                      <button className="bg-[#F5FBFB] py-2 px-5 text-[#0B247A] w-fit rounded-small-md">Reply to this Review</button>
                   </div>
                 </div>
             </div>
