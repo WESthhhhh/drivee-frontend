@@ -6,6 +6,10 @@ import axios from 'axios';
 import Button from '../../UI/button';
 import { PrimaryInput, FileInput } from '../../UI/formInputs';
 import SuccessPopup from '../../modals/SuccessPopup';
+import api from '../../../utils/axios';
+
+
+
 axios.defaults.withCredentials = true;
 
 const VerificationForm = () => {
@@ -101,8 +105,8 @@ const VerificationForm = () => {
       setIsSubmitting(true);
       setFormError(null);
       
-      const response = await axios.post(
-        'http://localhost:5000/verifications', 
+      const response = await api.post(
+        '/verifications', 
         formData,
         {
           headers: { 

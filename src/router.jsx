@@ -49,7 +49,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from './mainLayout.jsx';
 import AuthLayout from './authLayout';
-// import ProfileLayout from './layouts/profileLayout';
+import ProfileLayout from './profileLayout';
 import HomePage from "./pages/HomePage.jsx";
 import OffersPage from "./pages/OffersPage.jsx";
 import { OffersDataProvider } from './context/fetchOffers.jsx';
@@ -59,14 +59,17 @@ import DrivingSchools from "./pages/DrivingSchools.jsx";
 import HowItWorks from './pages/howitWorks.jsx';
 import ReservationToPayement from './pages/resevationToPayement.jsx';
 import Login from './pages/Auth/LoginPage.jsx';
-import Signup from './pages/Auth/SignupPage.jsx';
-// import Signup from './components/layouts/auth/signupForm.jsx';
 import SelectUserType from './components/layouts/auth/selectUser.jsx';
 import Verification from './pages/Auth/VerificationPage.jsx';
 import SchoolSignup from './pages/Auth/SchoolSignup.jsx';
 import StudentSignup from './pages/Auth/StudentSignup.jsx';
 import ForgotPassword from './pages/Auth/ForgotPassword.jsx';
 import ResetPassword from './pages/Auth/ResetPassword.jsx';
+
+import ManageOffers from './pages/profiles/manageOffers.jsx';
+import SchoolReservations from './pages/profiles/schoolReservations.jsx';
+import SchoolReviews from './pages/profiles/schoolReviews.jsx';
+import UserInfo from './pages/profiles/userInfo.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -86,13 +89,21 @@ export const router = createBrowserRouter([
     element: <AuthLayout />,
     children: [
       { path: 'login', element: <Login /> },
-      // { path: 'signup', element: <Signup /> },
       { path: 'select-user', element: <SelectUserType /> },
       { path: 'signup/school', element: <SchoolSignup /> },
       { path: 'signup/student', element: <StudentSignup/> },
       { path: '/verification', element: <Verification /> },
       { path: '/forgot-password', element: <ForgotPassword /> },
       { path: '/reset-password', element: <ResetPassword /> },
+    ]
+  },
+  {
+    element: <ProfileLayout />,
+    children: [
+      { path: 'offers-management', element: <ManageOffers /> },
+      { path: 'school-reservation', element: <SchoolReservations /> },
+      { path: 'school-review', element: <SchoolReviews /> },
+      { path: 'school-info', element: <UserInfo /> },
     ]
   },
 ]);

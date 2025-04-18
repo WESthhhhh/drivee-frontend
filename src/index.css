@@ -4,3 +4,23 @@
 @tailwind utilities;
 
 
+Nuclear option for react-time-picker
+.time-picker-custom .react-time-picker__wrapper {
+  border: none !important;
+  padding: 0 !important;
+}
+
+.time-picker-custom .react-time-picker__inputGroup {
+  padding: 0 !important;
+  border: none !important;
+}
+
+.time-picker-custom .react-time-picker__inputGroup__input {
+  outline: none !important;
+}
+
+.time-picker-custom .react-time-picker__inputGroup__input:focus {
+  outline: none !important;
+  
+}
+

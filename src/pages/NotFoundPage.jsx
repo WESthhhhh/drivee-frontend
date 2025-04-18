@@ -7,7 +7,6 @@ export default function NotFoundPage() {
 
   return (
     <div className="min-h-screen bg-light flex flex-col items-center justify-center p-6 text-center font-poppins relative overflow-hidden">
-      {/* Animated Ellipses */}
       <motion.img 
         src="/images/home-ellipse.png" 
         className="absolute top-0 right-0 w-auto h-auto" 
@@ -103,46 +102,6 @@ export default function NotFoundPage() {
         <p className="text-xl text-inputtext mb-8 max-w-md mx-auto">
           The page you're looking for doesn't exist or has been moved.
         </p>
-        
-        {/* Floating car elements */}
-        <div className="relative mb-10 w-full flex justify-center">
-          <motion.div
-            animate={{
-              x: [-50, 50, -50],
-              y: [0, -20, 0],
-              rotate: [0, 15, 0]
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              repeatType: "reverse"
-            }}
-            className="absolute left-1/4"
-          >
-          </motion.div>
-          
-          <motion.div
-            animate={{
-              x: [50, -50, 50],
-              y: [0, 20, 0],
-              rotate: [0, -15, 0]
-            }}
-            transition={{
-              duration: 7,
-              repeat: Infinity,
-              repeatType: "reverse",
-              delay: 0.5
-            }}
-            className="absolute right-1/4"
-          >
-            {/* <img 
-              src="/images/car-icon-2.png" 
-              alt="Car icon" 
-              className="w-12 h-12"
-              onError={(e) => e.target.src = '/images/default-car.png'}
-            /> */}
-          </motion.div>
-        </div>
         
         <div className="w-full flex justify-center">
           <Button

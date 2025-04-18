@@ -10,8 +10,8 @@ export const OffersDataProvider = ({ children }) => {
 
   const fetchUser = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:5000/users/${userId}`, {
-        credentials: 'include' // Keep authenticated for user data
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/${userId}`, {
+        credentials: 'include' 
       });
       if (!response.ok) return null;
       return await response.json();
@@ -26,7 +26,7 @@ export const OffersDataProvider = ({ children }) => {
       setLoading(true);
       
       
-      const offersRes = await fetch('http://localhost:5000/offres');
+      const offersRes = await fetch(`${import.meta.env.VITE_API_BASE_URL}/offres`);
       if (!offersRes.ok) throw new Error('Failed to fetch offers');
       const offersData = await offersRes.json();
 

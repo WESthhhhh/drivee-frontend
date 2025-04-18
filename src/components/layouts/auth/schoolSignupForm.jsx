@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify'
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../../utils/axios';
 import Button from '../../UI/button';
 import { EmailInput, PasswordInput, PrimaryInput } from '../../UI/formInputs';
 
@@ -48,7 +48,7 @@ const SchoolSignupForm = () => {
         setApiError('');
         setIsLoading(true);
         console.log("[DEBUG] Payload being sent:", JSON.stringify(payload, null, 2));
-        const response = await axios.post('http://localhost:5000/users/signupSchool', payload);
+        const response = await api.post('/users/signupSchool', payload);
         reset();
 
         if (response.status === 201) {
