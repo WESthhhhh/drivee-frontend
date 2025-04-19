@@ -6,7 +6,7 @@ export default function reviewsSchool() {
   return (
     <div className="flex">
       <SchoolSidebar />
-      <div className="border border-stroke rounded-large-md flex-1 mt-7.5 p-10 space-y-5 mb-12">
+      <div className="border border-stroke rounded-large-md flex-1  p-10 space-y-5 mb-12">
         <Picprofile/>
         <Reviews />
       </div>

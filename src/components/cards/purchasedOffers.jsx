@@ -30,7 +30,6 @@ const PurchasedOffers = ({ offer = defaultOffer }) => {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedOfferId, setSelectedOfferId] = useState(offer.id);
 
-  // Merge provided offer with defaults
   const fullOfferDetails = {
     ...defaultOffer,
     ...offer,

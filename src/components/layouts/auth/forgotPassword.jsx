@@ -38,10 +38,10 @@ const ForgotPassword = () => {
 
   return (
     <div className="w-full max-w-lg md:ml-30 xl:ml-30">
-      <h1 className="text-4xl font-regular mb-8 text-text text-center md:text-start">
+      <h1 className="text-[35px] md:text-4xl  font-regular mb-8 text-text text-center md:text-start">
         Did You Forget Your Password?
       </h1>
-      <h3 className="text-inputtext text-center mb-8">
+      <h3 className="text-inputtext mb-8">
         Enter your email address to receive a reset link.
       </h3>
       {forgotSuccess && (

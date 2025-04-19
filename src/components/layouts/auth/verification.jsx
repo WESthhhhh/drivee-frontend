@@ -149,7 +149,7 @@ const VerificationForm = () => {
 
   return (
     <div className="max-w-lg mx-auto md:ml-30 xl:ml-30">
-      <h1 className="text-4xl font-regular mb-8 text-text text-center md:text-start">
+      <h1 className="text-[35px] md:text-4xl  font-regular mb-8 text-text text-center md:text-start">
         Verify Your Profile to Start <span className='text-primary font-bold'>Listing Offers</span>
       </h1>
       
