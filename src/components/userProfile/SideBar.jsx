@@ -1,5 +1,5 @@
 import { Calendar, Logout, Offers, Star, User } from "../UI/icons";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 export default function SideBar() {
   return (
@@ -8,70 +8,94 @@ export default function SideBar() {
         <div className="space-y-[65px]">
           {/* Logo */}
           <div className="relative w-[104.23px] h-[32.14px]">
-          <img 
+            <Link to="/">
+              <img 
                 src="/logo/Logo.svg" 
                 alt="Profile" 
                 className="md:w-[100px] md:h-[36px]" 
-          /> 
+              />
+            </Link>
           </div>
           {/* Profile  */}
           <div className="flex items-center gap-2">
             <div className="relative w-[29px] h-[29px]">
-            <img 
+              <img 
                 src="/images/of-2.png" 
                 alt="Profile" 
                 className="w-full h-full object-cover rounded-full"
               /> 
             </div>
-            <div className="font-semibold text-base text-[#0B247A]">Auto Ecole Saada</div>
+            <div className="font-semibold text-base text-primary">Auto Ecole Saada</div>
           </div>
         </div>
         <div className="mt-[37px] space-y-5">
           {/* Account details */}
-          <a
-            href={"/user-info"}
-            className="flex items-center gap-2 p-2 group hover:bg-[#F5FBFB]"
+          <NavLink
+            to="/user-info"
+            className={({ isActive }) => 
+              `flex items-center gap-2 p-2 group transition-all duration-300 rounded-small-md ${
+                isActive 
+                  ? 'bg-cayan50 text-primary font-semibold [&>div>svg>path]:fill-primary'
+                  : 'text-[#454D59] hover:bg-cayan50'
+              }`
+            }
           >
             <div className="w-4 h-4 flex items-center justify-center">
               <User />
             </div>
-            <div className="text-base text-[#454D59] group-hover:text-[#0B247A]">
+            <div className="text-base">
               Account Details
             </div>
-          </a>
+          </NavLink>
+          
           {/* Offers */}
-          <a
-            href={"/user-offers"}
-            className="flex items-center gap-2 p-2 group hover:bg-[#F5FBFB]"
+          <NavLink
+            to="/user-offers"
+            className={({ isActive }) => 
+              `flex items-center gap-2 p-2 group transition-all duration-300 rounded-small-md ${
+                isActive 
+                  ? 'bg-cayan50 text-primary font-semibold [&>div>svg>path]:fill-primary'
+                  : 'text-[#454D59] hover:bg-cayan50'
+              }`
+            }
           >
             <div className="w-4 h-4 flex items-center justify-center">
               <Offers />
             </div>
-            <div className="text-base text-[#454D59] group-hover:text-[#0B247A] group-hover:font-semibold">
+            <div className="text-base">
               My Offers
             </div>
-          </a>
+          </NavLink>
+
           {/* Reviews */}
-          <a
-            href={"/user-reviews"}
-            className="flex items-center gap-2 p-2 group hover:bg-[#F5FBFB]"
+          <NavLink
+            to="/user-reviews"
+            className={({ isActive }) => 
+              `flex items-center gap-2 p-2 group transition-all duration-300 rounded-small-md ${
+                isActive 
+                  ? 'bg-cayan50 text-primary font-semibold  [&>div>svg>path]:fill-primary'
+                  : 'text-[#454D59] hover:bg-cayan50'
+              }`
+            }
           >
             <div className="w-4 h-4 flex items-center justify-center">
               <Star />
             </div>
-            <div className="text-base text-[#454D59] group-hover:text-[#0B247A] group-hover:font-semibold">
+            <div className="text-base">
               My Reviews
             </div>
-          </a>
+          </NavLink>
         </div>
-        <a href={"/"} className="flex items-center gap-2 p-2 group  mt-[66px]">
+        
+        {/* Logout - Keep as regular Link */}
+        <Link to="/" className="flex items-center gap-2 p-2 group mt-[66px]">
           <div className="w-4 h-4 flex items-center justify-center">
             <Logout />
           </div>
-          <div className="text-base text-[#F16965] group-hover:font-semibold">
+          <div className="text-base text-error group-hover:font-semibold">
             Logout
           </div>
-        </a>
+        </Link>
       </div>
     </div>
   );

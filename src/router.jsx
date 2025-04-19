@@ -65,7 +65,6 @@ import SchoolSignup from './pages/Auth/SchoolSignup.jsx';
 import StudentSignup from './pages/Auth/StudentSignup.jsx';
 import ForgotPassword from './pages/Auth/ForgotPassword.jsx';
 import ResetPassword from './pages/Auth/ResetPassword.jsx';
-
 import ManageOffers from './pages/profiles/manageOffers.jsx';
 import SchoolReservations from './pages/profiles/schoolReservations.jsx';
 import SchoolReviews from './pages/profiles/schoolReviews.jsx';
@@ -74,7 +73,9 @@ import Userinfo from './pages/profiles/userInfo.jsx';
 import MyReservations from './pages/profiles/PurchasedOffers.jsx';
 import MyReviews from './pages/profiles/reviewsUser.jsx';
 import ManageSchools from './pages/profiles/manageSchools.jsx';
+import ManageUsers from './pages/profiles/manageUsers.jsx';
 import Admininfo from './pages/profiles/adminInfo.jsx';
+import AdminOffers from './pages/profiles/manageOffersAdmin.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -105,7 +106,7 @@ export const router = createBrowserRouter([
   {
     element: <ProfileLayout />,
     children: [
-      { path: 'offers-management', element: <ManageOffers /> },
+      // { path: 'offers-management', element: <ManageOffers /> },
       { path: 'school-reservation', element: <SchoolReservations /> },
       { path: 'school-review', element: <SchoolReviews /> },
       { path: 'school-info', element: <SchoolInfo /> },
@@ -116,7 +117,9 @@ export const router = createBrowserRouter([
       { path: 'user-offers', element: <MyReservations /> },
       { path: 'user-reviews', element: <MyReviews /> },
       { path: 'admin-schools', element: <ManageSchools /> },
+      { path: 'admin-users', element: <ManageUsers /> },
       { path: 'admin-info', element: <Admininfo /> },
+      { path: 'admin-offers', element: <AdminOffers /> },
     ]
 
   },

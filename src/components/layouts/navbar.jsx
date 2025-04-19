@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, NavLink } from 'react-router-dom';
 import { IoMdClose } from 'react-icons/io';
 import { IoChevronDown } from 'react-icons/io5';
 import { HiMenuAlt1 } from "react-icons/hi";
@@ -139,12 +139,58 @@ const Navbar = () => {
         </Link>
         
         
+        
         <nav className="hidden md:flex items-center gap-12">
-          <Link to={'/offers'} className="text-gray-800 text-[1.05rem] no-underline hover:text-primary transition-colors">Offers</Link>
-          <Link to={'/drivingschools'} className="text-gray-800 text-[1.05rem] no-underline hover:text-primary transition-colors">Driving School</Link>
-          <Link to={'/howitworks'} className="text-gray-800 text-[1.05rem] no-underline hover:text-primary transition-colors">How it works</Link>
-          <Link to={'/contact'} className="text-gray-800 text-[1.05rem] no-underline hover:text-primary transition-colors">Contact</Link>
+          <NavLink 
+            to={'/offers'} 
+            className={({ isActive }) => 
+              `text-[1.05rem] no-underline transition-colors duration-300 ${
+                isActive 
+                  ? 'text-primary font-semibold' 
+                  : 'text-text hover:text-primary'
+              }`
+            }
+          >
+            Offers
+          </NavLink>
+          <NavLink 
+            to={'/drivingschools'} 
+            className={({ isActive }) => 
+              `text-[1.05rem] no-underline transition-colors duration-300 ${
+                isActive 
+                  ? 'text-primary font-semibold' 
+                  : 'text-text hover:text-primary'
+              }`
+            }
+          >
+            Driving School
+          </NavLink>
+          <NavLink 
+            to={'/howitworks'} 
+            className={({ isActive }) => 
+              `text-[1.05rem] no-underline transition-colors duration-300 ${
+                isActive 
+                  ? 'text-primary font-semibold' 
+                  : 'text-text hover:text-primary'
+              }`
+            }
+          >
+            How it works
+          </NavLink>
+          <NavLink 
+            to={'/contact'} 
+            className={({ isActive }) => 
+              `text-[1.05rem] no-underline transition-colors duration-300 ${
+                isActive 
+                  ? 'text-primary font-semibold' 
+                  : 'text-text hover:text-primary'
+              }`
+            }
+          >
+            Contact
+          </NavLink>
         </nav>
+       
         
         
         {isLoggedIn ? (
@@ -170,7 +216,7 @@ const Navbar = () => {
                     className="w-10 h-10 rounded-full object-cover" 
                   />
                   <div>
-                    <p className="text-sm font-medium text-primary">{userData?.name || 'User'}</p>
+                    <p className="text-sm font-semibold text-primary">{userData?.name || 'User'}</p>
                     <p className="text-xs text-gray-500">{userData?.email || ''}</p>
                   </div>
                 </div>
@@ -223,34 +269,58 @@ const Navbar = () => {
           </div>
 
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            <Link
+            <NavLink
               to="/offers"
-              className="block py-3 px-4 rounded-small-md text-primary hover:bg-cayan50 transition-colors"
+              className={({ isActive }) => 
+                `block py-3 px-4 rounded-small-md transition-colors duration-300 ${
+                  isActive 
+                    ? 'text-primary font-semibold bg-cayan50' 
+                    : 'text-primary hover:bg-cayan50'
+                }`
+              }
               onClick={() => setOpen(false)}
             >
               Offers
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/drivingschools"
-              className="block py-3 px-4 rounded-small-md text-primary hover:bg-cayan50 transition-colors"
+              className={({ isActive }) => 
+                `block py-3 px-4 rounded-small-md transition-colors duration-300 ${
+                  isActive 
+                    ? 'text-primary font-semibold bg-cayan50' 
+                    : 'text-primary hover:bg-cayan50'
+                }`
+              }
               onClick={() => setOpen(false)}
             >
               Driving School
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/howitworks"
-              className="block py-3 px-4 rounded-small-md text-primary hover:bg-cayan50 transition-colors"
+              className={({ isActive }) => 
+                `block py-3 px-4 rounded-small-md transition-colors duration-300 ${
+                  isActive 
+                    ? 'text-primary font-semibold bg-cayan50' 
+                    : 'text-primary hover:bg-cayan50'
+                }`
+              }
               onClick={() => setOpen(false)}
             >
               How it works
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/contact"
-              className="block py-3 px-4 rounded-small-md text-primary hover:bg-cayan50 transition-colors"
+              className={({ isActive }) => 
+                `block py-3 px-4 rounded-small-md transition-colors duration-300 ${
+                  isActive 
+                    ? 'text-primary font-semibold bg-cayan50' 
+                    : 'text-primary hover:bg-cayan50'
+                }`
+              }
               onClick={() => setOpen(false)}
             >
               Contact
-            </Link>
+            </NavLink>
           </div>
 
           <div className="p-4">
@@ -263,7 +333,7 @@ const Navbar = () => {
                     className="w-10 h-10 rounded-full object-cover" 
                   />
                   <div>
-                    <p className="text-sm font-medium text-primary">{userData?.name || 'User'}</p>
+                    <p className="text-sm font-semibold text-primary">{userData?.name || 'User'}</p>
                     <p className="text-xs text-gray-500">{userData?.email || ''}</p>
                   </div>
                 </div>

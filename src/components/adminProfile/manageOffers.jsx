@@ -1,10 +1,9 @@
 import { Pencil, Trash } from "../UI/icons";
 import Button from "../UI/button";
-import AddOfferModal from "../modals/addOffer";
 import { useState } from "react";
 
 export default function Offers() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  
   return (
     <div className="space-y-12 px-5 mt-9 font-poppins">
         <div className="space-y-10">
@@ -12,13 +11,6 @@ export default function Offers() {
             <div className="">
             <div className="flex justify-end">
           </div>
-          
-          {/* Modal */}
-          <AddOfferModal 
-            isOpen={isModalOpen} 
-            closeModal={() => setIsModalOpen(false)}
-          />
-
               {/* list */}
               <div className="mt-4">
                 <div className="bg-cayan50 flex gap-4 px-2 py-4 font-semibold text-[#0B247A]">

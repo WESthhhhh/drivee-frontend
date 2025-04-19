@@ -1,12 +1,12 @@
 import AdminSidebar from "../../adminProfile/SideBar"
-import SchoolsTable from "../../adminProfile/manageSchools"
+import UsersTable from "../../adminProfile/manageUsers"
 import Picprofile from "../../UI/picprofile";
 
 
 
 // import Image from "/images/of-2.png";
 
-export default function ManageSchools() {
+export default function ManageUsers() {
   return (
     <div className="flex">
       <AdminSidebar/>
@@ -14,7 +14,7 @@ export default function ManageSchools() {
     
         <Picprofile/>
         {/* list */}
-        <SchoolsTable />
+        <UsersTable />
       </div>
     </div>
   );
