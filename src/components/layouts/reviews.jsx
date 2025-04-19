@@ -1,6 +1,6 @@
 import ReviewSwiper from '../cards/review';
-import { review } from '../../review'; // Your reviews data
-import rainbow from '/images/rainbow.png'; // Your image
+import { review } from '../../review'; 
+import rainbow from '/images/rainbow.png'; 
 import { useNavigate, Link } from 'react-router-dom';
 
 const ReviewsPage = () => {
