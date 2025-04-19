@@ -95,9 +95,9 @@ const OffersPage = () => {
   return (
     <div className="max-w-6xl w-full mx-auto overflow-x-hidden px-4 pt-12">
       {/* Header */}
-      <h1 className="text-[2.5rem] text-center font-normal mb-12 z-[999999999999999]">
+      {/* <h1 className="text-[2.5rem] text-center font-normal mb-12 z-[999999999999999]">
         Limited-Time <span className="font-semibold text-primary">Offers</span> on Driving Packages!
-      </h1>
+      </h1> */}
       
         <img 
           src="/images/home-ellipse.png" 
@@ -244,35 +244,34 @@ const OffersPage = () => {
       </button> */}
 
       {/* Offers Grid */}
-      <div className="grid md:grid-cols-2 justify-center  mb-12 ">
-        {paginatedOffers.length > 0 ? (
-          paginatedOffers.map(offer => (
-            <div key={offer.id} className=" ">
-              <OfferCard 
-                offer={offer}
-                // school={offer.school}
-                className="z-[999999999999999]"
-              />
-            </div>
-          ))
-        ) : (
-          <div className="w-full text-center py-12">
-            <p className="text-inputtext mb-4">No offers match your filters</p>
-            <button
-              onClick={() => {
-                setFilters({
-                  location: null,
-                  rating: null,
-                  price: [0, 1000]
-                });
-              }}
-              className="px-4 py-2 text-b200 hover:underline"
-            >
-              Clear all filters
-            </button>
-          </div>
-        )}
+      <div className="grid grid-cols-1 lg:grid-cols-2  justify-items-center mb-12 gap-6  lg:px-14">
+  {paginatedOffers.length > 0 ? (
+    paginatedOffers.map(offer => (
+      <div key={offer.id} className="w-full max-w-md ">
+        <OfferCard 
+          offer={offer}
+          className="z-[999999999999999]"
+        />
       </div>
+    ))
+  ) : (
+    <div className="col-span-2 w-full text-center py-12">
+      <p className="text-inputtext mb-4">No offers match your filters</p>
+      <button
+        onClick={() => {
+          setFilters({
+            location: null,
+            rating: null,
+            price: [0, 1000]
+          });
+        }}
+        className="px-4 py-2 text-b200 hover:underline"
+      >
+        Clear all filters
+      </button>
+    </div>
+  )}
+</div>
 
       {/* Pagination */}
       {totalPages > 1 && (
