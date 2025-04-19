@@ -30,7 +30,7 @@ export default function Reservations() {
                             <div className="basis-2/12">status</div>
                             <div className="basis-2/12">Payment Status</div>
                         </div>
-                        <div className="flex gap-4 px-2 py-4 border-b border-[#9AD4DB]">
+                        <div className="flex gap-4 px-2 py-4 border-b border-b50">
                             <div className="basis-2/12">Offer 20 hrs</div>
                             <div className="basis-2/12 truncate">hehehhheheheh</div>
                             <div className="basis-2/12">undefined</div>

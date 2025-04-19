@@ -1,4 +1,4 @@
-import { Calendar, Logout, Offers, Star, User } from "../UI/icons";
+import { Calendar, Logout, Offers, Users, School, User } from "../UI/icons";
 import { Link } from "react-router-dom";
 
 export default function SideBar() {
@@ -33,7 +33,7 @@ export default function SideBar() {
 
           {/* Offers */}
           <a
-            href={"/offers-management"}
+            href={"/manage-offers"}
             className="flex items-center gap-2 p-2 group hover:bg-[#F5FBFB]"
           >
             <div className="w-4 h-4 flex items-center justify-center">
@@ -45,31 +45,31 @@ export default function SideBar() {
           </a>
           {/* reservation  */}
           <a
-            href={"/school-reservation"}
+            href={"/school-management"}
             className="flex items-center gap-2 p-2 group hover:bg-[#F5FBFB]"
           >
             <div className="w-4 h-4 flex items-center justify-center">
-              <Calendar className=""/>
+              <School />
             </div>
             <div className="text-base text-[#454D59] group-hover:text-[#0B247A] group-hover:font-semibold">
-              Reservations
+                School Management
             </div>
           </a>
           {/* Reviews */}
-          {/* <a
-            href={"/school-review"}
+          <a
+            href={"/user-management"}
             className="flex items-center gap-2 p-2 group hover:bg-[#F5FBFB]"
           >
             <div className="w-4 h-4 flex items-center justify-center">
-              <Star />
+              <Users />
             </div>
             <div className="text-base text-[#454D59] group-hover:text-[#0B247A] group-hover:font-semibold">
-              My Reviews
+            User Management
             </div>
-          </a> */}
+          </a>
           {/* Account details */}
           <a
-            href={"/school-info"}
+            href={"/admin-info"}
             className="flex items-center gap-2 p-2 group hover:bg-[#F5FBFB]"
           >
             <div className="w-4 h-4 flex items-center justify-center">

@@ -76,7 +76,7 @@ const Contactform = () => {
   };
 
   return (
-    <div className="md:w-[45%]  p-8 border shadow-primary-4 border-cayan50 rounded-large-md  relative z-10 mt-10 md:mt-0 ">
+    <div className="md:w-[45%]  p-8 border shadow-primary-4 border-b50 rounded-large-md  relative z-10 mt-10 md:mt-0 ">
       {submitStatus === 'success' && (
         <div className="mb-6 p-4 bg-success/10 text-success bg-light rounded-large-sm">
           Message sent successfully! We'll get back to you soon.

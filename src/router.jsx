@@ -73,6 +73,8 @@ import SchoolInfo from './pages/profiles/schoolInfo.jsx';
 import Userinfo from './pages/profiles/userInfo.jsx';
 import MyReservations from './pages/profiles/PurchasedOffers.jsx';
 import MyReviews from './pages/profiles/reviewsUser.jsx';
+import ManageSchools from './pages/profiles/manageSchools.jsx';
+import Admininfo from './pages/profiles/adminInfo.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -113,6 +115,8 @@ export const router = createBrowserRouter([
       { path: 'user-info', element: <Userinfo /> },
       { path: 'user-offers', element: <MyReservations /> },
       { path: 'user-reviews', element: <MyReviews /> },
+      { path: 'admin-schools', element: <ManageSchools /> },
+      { path: 'admin-info', element: <Admininfo /> },
     ]
 
   },

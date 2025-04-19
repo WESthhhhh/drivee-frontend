@@ -11,12 +11,6 @@ export default function Offers() {
             <div className="text-[#0F34AE] text-[25px] font-bold">Manage Offers</div>
             <div className="">
             <div className="flex justify-end">
-            <Button 
-              type="primary" 
-              onClick={() => setIsModalOpen(true)}
-            >
-              Add offer
-            </Button>
           </div>
           
           {/* Modal */}
@@ -46,8 +40,8 @@ export default function Offers() {
                   <div className="basis-2/12">undefined</div>
                   <div className="basis-1/12 flex items-center gap-2">
                     <button><Trash /></button>
-                    <div className="h-[22px] w-0.25 bg-[#6E6E6A]" />
-                    <button><Pencil /></button>
+                    {/* <div className="h-[22px] w-0.25 bg-[#6E6E6A]" />
+                    <button><Pencil /></button> */}
                   </div>
                 </div>
               </div>

@@ -98,17 +98,18 @@ const OffersPage = () => {
       <h1 className="text-[2.5rem] text-center font-normal mb-12 z-[999999999999999]">
         Limited-Time <span className="font-semibold text-primary">Offers</span> on Driving Packages!
       </h1>
-      <img 
-        src="/images/home-ellipse.png" 
-        className="absolute top-0 right-0 w-auto h-auto" 
-        alt="background circle" 
-      />
-      <img 
-        src="/images/home-elli-b.png" 
-        className="absolute right-[2%] top-1/2 w-auto h-auto" 
-        alt="small decorative element" 
-      />
-
+      
+        <img 
+          src="/images/home-ellipse.png" 
+          className="absolute top-0 right-0 w-auto h-auto -z-10" 
+          alt="background circle" 
+        />
+        <img 
+          src="/images/home-elli-b.png" 
+          className="absolute right-[2%] top-1/2 w-auto h-auto -z-10" 
+          alt="small decorative element" 
+        />
+      
       {/* Filter Controls */}
       <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 mb-8 z-[999999999999999]">
         <h2 className="text-lg font-medium">Filter:</h2>
@@ -243,10 +244,10 @@ const OffersPage = () => {
       </button> */}
 
       {/* Offers Grid */}
-      <div className="grid md:grid-cols-2 justify-center gap-8 mb-12 z-[999999999999999]">
+      <div className="grid md:grid-cols-2 justify-center  mb-12 ">
         {paginatedOffers.length > 0 ? (
           paginatedOffers.map(offer => (
-            <div key={offer.id} className="w-full md:w-1/2 lg:w-1/3 ">
+            <div key={offer.id} className=" ">
               <OfferCard 
                 offer={offer}
                 // school={offer.school}

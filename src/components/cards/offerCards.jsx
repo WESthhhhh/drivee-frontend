@@ -20,7 +20,7 @@ const OfferCard = ({ offer }) => {
   const navigate = useNavigate();
   return (
     <>
-      <div className="bg-light rounded-large-md border border-b50 shadow-primary-4 p-6 max-w-md md:w-[470px] flex flex-col justify-center">
+      <div className="bg-light rounded-large-md border border-b50 shadow-primary-4 p-6 w-[350px] max-w-md md:w-[470px] flex flex-col justify-center h-[402px]">
       <div className="flex items-center gap-4 mb-6">
           <img 
             src={offer.img} 
