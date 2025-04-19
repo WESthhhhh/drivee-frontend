@@ -95,7 +95,7 @@ export default function NotFoundPage() {
           404
         </motion.div>
         
-        <h1 className="text-4xl md:text-5xl font-bold text-text mb-6">
+        <h1 className="text-[35px]  md:text-5xl font-bold text-text mb-6">
           Oops! Page Not Found
         </h1>
         
