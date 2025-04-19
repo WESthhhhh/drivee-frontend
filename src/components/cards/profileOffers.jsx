@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { FaStar } from 'react-icons/fa';
+import { IoLocationOutline } from 'react-icons/io5';
+import { FaDollarSign, FaRegClock } from 'react-icons/fa6';
 import Button from '../UI/button';
-import AddReviewModal from '../modals/addReview';
 import OfferDetail from '../modals/offerDetail';
+import { useNavigate } from 'react-router-dom'; 
 
-// Default offer data to prevent undefined errors
 const defaultOffer = {
   id: 'default-id',
   title: 'Default Offer Title',
@@ -26,7 +26,6 @@ const defaultOffer = {
 };
 
 const PurchasedOffers = ({ offer = defaultOffer }) => {
-  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedOfferId, setSelectedOfferId] = useState(offer.id);
 
@@ -39,28 +38,29 @@ const PurchasedOffers = ({ offer = defaultOffer }) => {
     }
   };
 
-  const handleReviewCreated = (newReview) => {
-    console.log('New review created:', newReview);
-    setIsReviewModalOpen(false);
-  };
-
+  const navigate = useNavigate();
   return (
     <>
       <div className="border border-stroke rounded-large-md p-6 space-y-6">
         <div className="space-y-3">
           <div className="text-text text-xl font-semibold">{fullOfferDetails.title}</div>
           <div className="text-inputtext">{fullOfferDetails.description}</div>
-          {fullOfferDetails.rating > 0 && (
-            <div className="flex items-center gap-1">
-              {Array(Math.floor(fullOfferDetails.rating)).fill(0).map((_, i) => (
-                <FaStar key={i} className="text-yellow-400 text-sm" />
-              ))}
-              <span className="text-xs text-gray-500">
-                ({fullOfferDetails.reviews || 0} reviews)
-              </span>
-            </div>
-          )}
+
         </div>
+        <div className="flex justify-center gap-[40px] mb-6 text-primary">
+                  <div className="flex flex-col justify-center rounded-small-md items-center gap-2 py-2 text-b200 bg-cayan50 w-[90px]">
+                    <IoLocationOutline className="" />
+                    <span className="text-sm ">Agadir</span>
+                  </div>
+                  <div className="flex flex-col justify-center items-center rounded-small-md gap-2 py-2 text-b200 bg-cayan50 w-[90px]">
+                    <FaDollarSign className="" />
+                    <span className="text-sm ">100 dh</span>
+                  </div>
+                  <div className="flex flex-col justify-center items-center rounded-small-md gap-2 py-2 text-b200 bg-cayan50 w-[90px]">
+                    <FaRegClock className="" />
+                    <span className="text-sm ">20 hours</span>
+                  </div>
+                </div>
         <div className="flex items-center gap-6 justify-center">
           <Button 
             type='secondary'
@@ -68,14 +68,11 @@ const PurchasedOffers = ({ offer = defaultOffer }) => {
           >
             View Details
           </Button>
-          <Button 
-            type='ghost'
-            onClick={() => {
-              setSelectedOfferId(fullOfferDetails.id);
-              setIsReviewModalOpen(true);
-            }}
-          >
-            Add Review
+          <Button
+            type='primary'
+            onClick={() => navigate('/reservation')}
+            
+            >Book Offer
           </Button>
         </div>
       </div>
@@ -87,13 +84,7 @@ const PurchasedOffers = ({ offer = defaultOffer }) => {
         offer={fullOfferDetails}
       />
 
-      {/* Review Modal */}
-      <AddReviewModal 
-        isOpen={isReviewModalOpen} 
-        closeModal={() => setIsReviewModalOpen(false)}
-        onReviewCreated={handleReviewCreated}
-        offerId={selectedOfferId}
-      />
+     
     </>
   );
 };

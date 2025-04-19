@@ -1,9 +1,9 @@
-import { div } from "framer-motion/client";
+
 
 export default function picprofile() {
   return (
   <div className="flex gap-2 items-center">
-    <div className="relative w-[50px] h-[50px] border-2 border-light rounded-full">
+    <div className="relative w-[60px] h-[60px] border-2 border-light rounded-full">
               <img src="/images/of-2.png" alt="Profile" className="w-full h-full object-cover rounded-full"
                   />
     </div>

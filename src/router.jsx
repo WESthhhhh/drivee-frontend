@@ -76,6 +76,7 @@ import ManageSchools from './pages/profiles/manageSchools.jsx';
 import ManageUsers from './pages/profiles/manageUsers.jsx';
 import Admininfo from './pages/profiles/adminInfo.jsx';
 import AdminOffers from './pages/profiles/manageOffersAdmin.jsx';
+import ProfileSchool from './pages/profileSchool.jsx';
 
 export const router = createBrowserRouter([
   {
@@ -83,12 +84,14 @@ export const router = createBrowserRouter([
     element: <MainLayout />,
     errorElement: <NotFoundPage />,
     children: [
-      { index: true, element:(<OffersDataProvider> <HomePage /></OffersDataProvider>)  },
+      { index: true , element:(<OffersDataProvider> <HomePage /></OffersDataProvider>)  },
+      { path: 'home' , element:(<OffersDataProvider> <HomePage /></OffersDataProvider>)  },
       { path: 'offers', element: (<OffersDataProvider> <OffersPage /></OffersDataProvider>) },
       { path: 'contact', element: <ContactPage /> },
       { path: 'drivingschools', element: <DrivingSchools /> },
       { path: 'howitworks', element: <HowItWorks/> },
       { path: 'reservation', element: <ReservationToPayement/> },
+      { path: 'profile', element: <ProfileSchool/> },
     ]
   },
   {
