@@ -31,7 +31,7 @@ const Login = () => {
 
   const checkVerificationStatus = async () => {
     try {
-      const response = await api.get('/verifications/status', {
+      const response = await api.get('/verifications', {
         withCredentials: true
       });
       return response.data.verified;
@@ -137,7 +137,7 @@ const Login = () => {
   return (
     <div className=''>
       <div className="w-full max-w-lg md:ml-30 xl:ml-30">
-        <h1 className="text-4xl font-regular mb-8 text-text text-center md:text-start">
+        <h1 className="text-[35px] md:text-4xl font-regular mb-8 text-text text-center md:text-start">
           Welcome back to <span className='text-primary font-bold'>Drivee.</span>
         </h1>
         

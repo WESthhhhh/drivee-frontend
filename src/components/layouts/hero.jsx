@@ -34,7 +34,7 @@ const HeroSection = () => {
           Find. Book. Drive.
         </span>
         
-        <h1 className="my-4 text-4xl font-medium relative z-10  sm:text-3xl">
+        <h1 className="my-4 text-[35px]  md:text-4xl font-medium relative z-10  sm:text-3xl">
           Refine Your Skills with <span className="text-primary font-bold relative z-10">Drivee.</span> <br />
           <b className="font-bold">More Driving,</b> No Theory!
         </h1>
