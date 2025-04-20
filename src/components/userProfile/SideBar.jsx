@@ -1,7 +1,7 @@
 import { Calendar, Logout, Offers, Star, User } from "../UI/icons";
 import { NavLink, Link } from "react-router-dom";
 import api from "../../utils/axios";
-
+import LogoutButton from "../UI/logoutButton";
 export default function SideBar({ userData }) {
   return (
     <div className="font-poppins py-10 px-7.5">
@@ -91,15 +91,11 @@ export default function SideBar({ userData }) {
           </NavLink>
         </div>
         
-        {/* Logout - Keep as regular Link */}
-        <Link to="/" className="flex items-center gap-2 p-2 group mt-[66px]">
-          <div className="w-4 h-4 flex items-center justify-center">
-            <Logout />
-          </div>
-          <div className="text-base text-error group-hover:font-semibold">
-            Logout
-          </div>
-        </Link>
+        
+        <div className="mt-[66px] text-error">
+          <LogoutButton variant="danger" />
+        </div>
+        
       </div>
     </div>
   );
