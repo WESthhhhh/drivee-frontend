@@ -1,7 +1,7 @@
 import { Calendar, Logout, Offers, Users, School, User } from "../UI/icons";
 import { NavLink, Link } from "react-router-dom"; // Import NavLink
 
-export default function SideBar() {
+export default function SideBar({userData}) {
   return (
     <div className="font-poppins py-10 px-7.5">
       <div className="px-[19px] py-[15px] w-[273px]">
@@ -18,14 +18,18 @@ export default function SideBar() {
           </div>
           {/* Profile  */}
           <div className="flex items-center gap-2">
-            <div className="relative w-[29px] h-[29px]">
+          <div className="relative w-[29px] h-[29px]">
               <img 
-                src="/images/of-2.png" 
+               src={userData?.profilePicture || "/images/of-2.png"} 
                 alt="Profile" 
                 className="w-full h-full object-cover rounded-full"
               />            
+          </div>
+          <div className="font-semibold text-base text-primary">
+              {userData?.firstName && userData?.lastName 
+                ? `${userData.firstName} ${userData.lastName}`
+                : userData?.email?.split('@')[0] || 'Auto Ecole Saada'}
             </div>
-            <div className="font-semibold text-base text-primary">Admin Drivee</div>
           </div>
         </div>
         <div className="mt-[37px] space-y-5">

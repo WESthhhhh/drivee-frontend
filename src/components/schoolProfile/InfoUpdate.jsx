@@ -9,8 +9,13 @@ export default function InfoUpdate() {
         firstName: '',
         lastName: '',
         email: '',
-        phone: '' // This will be empty since your backend doesn't provide it
+        phone: '' 
     });
+    
+    const [timeRange, setTimeRange] = useState({
+        from: '09:00',
+        to: '17:00'
+      });
 
     useEffect(() => {
         const fetchUserData = async () => {
