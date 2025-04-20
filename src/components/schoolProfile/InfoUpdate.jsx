@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Button from "../UI/button";
-import { PrimaryInput, TextArea, PasswordInput, EmailInput, TimeRangeInput } from "../UI/formInputs";
+import { PrimaryInput, TextArea, PasswordInput, EmailInput, BasicEmailInput, TimeRangeInput } from "../UI/formInputs";
 import api from '../../utils/axios'; 
 
 
@@ -62,13 +62,13 @@ export default function InfoUpdate() {
                     </div>
                    
                     <div className="">
-                        <EmailInput
-                            name="email"
-                            label="Email Address"
-                            placeholder={userData.email || "Enter Your Email Address"}
-                            value={userData.email}
-                            onChange={handleInputChange}
-                        />
+                    <BasicEmailInput
+                    name="email"
+                    label="Email Address"
+                    placeholder="Enter Your Email Address"
+                    value={userData.email || ""}
+                    onChange={handleInputChange}
+                />
                     </div>
 
                     <div className="">
