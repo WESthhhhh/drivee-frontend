@@ -3,13 +3,13 @@ import React from "react";
 const ProfilDropdown = () => {
 
     return (
-        <div className="bg-white shadow-md rounded-[12px] p-4 max-w-[138px] border-[1px] border-[#E7EBF7] ">
+        <div className="bg-light shadow-md rounded-[12px] p-4 max-w-[138px] border-[1px] border-stroke ">
             <ul className="space-y-[10px] text-sm text-[#0B247A]">
-                <li className="py-[8px] border-b-[0.3px] border-[#9AD4DB] cursor-pointer">Dashboard</li>
-                <li className=" py-[8px] border-b-[0.3px] border-[#9AD4DB] cursor-pointer">Manage Offers</li>
-                <li className="py-[8px] border-b-[0.3px] border-[#9AD4DB] cursor-pointer">Reservations</li>
-                <li className="py-[8px] border-b-[0.3px] border-[#9AD4DB] cursor-pointer">Reviews</li>
-                <li className="py-[8px] border-b-[0.3px] border-[#9AD4DB] cursor-pointer">Account Details</li>
+                <li className="py-[8px] border-b-[0.3px] border-cayan50 cursor-pointer">Dashboard</li>
+                <li className=" py-[8px] border-b-[0.3px] border-cayan50 cursor-pointer">Manage Offers</li>
+                <li className="py-[8px] border-b-[0.3px] border-cayan50 cursor-pointer">Reservations</li>
+                <li className="py-[8px] border-b-[0.3px] border-cayan50 cursor-pointer">Reviews</li>
+                <li className="py-[8px] border-b-[0.3px] border-cayan50 cursor-pointer">Account Details</li>
                 <li className="flex items-center space-x-2 text-error cursor-pointer">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <mask id="mask0_353_1299" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="16">

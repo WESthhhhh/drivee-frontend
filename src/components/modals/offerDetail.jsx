@@ -1,115 +1,180 @@
 import { FaRegClock, FaDollarSign, FaMapMarkerAlt } from 'react-icons/fa';
+import { IoCalendarClearOutline } from "react-icons/io5";
 import { IoMdClose } from 'react-icons/io';
 import React from 'react';
 import Button from '../UI/button';
-import { useNavigate } from 'react-router-dom'; 
+import Img from '/images/of-1.png'
+import { useNavigate } from 'react-router-dom';
+
 const OfferDetail = ({ isOpen, closeModal, offer }) => {
-  if (!isOpen || !offer) return null;
   const navigate = useNavigate();
+
+  if (!isOpen) return null;
+
+  if (!offer) {
+    return (
+      <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-8">
+        <div className="bg-light rounded-xl max-w-md w-full p-6 text-center">
+          <h2 className="text-b200 font-semibold text-2xl">Offer Not Found</h2>
+          <p className="my-4">The offer details could not be loaded.</p>
+          <Button onClick={closeModal}>Close</Button>
+        </div>
+      </div>
+    );
+  }
+
+  const {
+    img = '',
+    title = 'Driving Course',
+    description = 'No description available',
+    location = 'Location not specified',
+    price = '0',
+    durationHours = '0',
+    startDate = new Date().toISOString(),
+    endDate = new Date().toISOString(),
+    school = {},
+    stars = [],
+    reviews = 0,
+    graph = '/images/map.svg'
+  } = offer;
+
+  const schoolName = school?.firstName 
+    ? `${school.firstName} ${school.lastName || ''}` 
+    : 'Unknown School';
+
   return (
-    <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-8">
-      <div className="bg-light rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto relative">
-        {/* Close Button */}
-        <button 
-          onClick={closeModal}
-          className="absolute right-4 top-4 w-8 h-8 flex justify-center items-center bg-b50 rounded-lg text-b500 text-xl z-10"
-        >
-          <IoMdClose />
-        </button>
+    <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-4">
+      <div className="bg-light rounded-large-md max-w-lg w-full max-h-[90vh] flex flex-col relative overflow-hidden">
+        {/* Fixed Header with centered title and close button */}
+        <div className="sticky top-0 bg-light z-10 pt-5 px-5 pb-4 border-b border-stroke">
+          <div className="relative flex justify-center items-center">
+            <h1 className="text-b200 font-bold text-xl text-center mt-4">Offer Details</h1>
+            <button 
+              onClick={closeModal}
+              className="absolute right-0 w-8 h-8 flex justify-center items-center bg-b50 hover:bg-blue-100 rounded-small-sm text-b500 font-bold text-xl transition-colors"
+            >
+              <IoMdClose />
+            </button>
+          </div>
+        </div>
 
-        {/* Modal Content */}
-        <div className="p-6">
-          {/* Header */}
-          <h1 className="text-b200 font-semibold text-2xl text-center pt-8">Offer Details</h1>
-
+        {/* Scrollable Content Area */}
+        <div className="p-5 flex-1 overflow-y-auto">
           {/* Profile Section */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 my-8">
-            <div className="flex items-center gap-4">
+          <div className="flex justify-between  gap-3 mt-4 mb-4 p-2 rounded-lg">
+            <div className="flex  gap-3">
               <img 
-                src={offer.img} 
-                alt={offer.person} 
-                className="w-14 h-14 rounded-full object-cover"
+                src={school?.profileImage || Img} 
+                alt={schoolName} 
+                className="w-10 h-10 rounded-full object-cover"
+                onError={(e) => {
+                  e.target.src = '/images/default-avatar.png';
+                }}
               />
-              <div>
-                <h2 className="text-b500 text-lg font-medium">{offer.person}</h2>
-                <span className="inline-block px-3 py-1 bg-blue-50 text-b500 text-sm font-semibold rounded-md">
-                  {offer.title}
+              <div className='justify-items-start '>
+                <h2 className="text-b500 text-sm font-medium">{schoolName}</h2>
+                <span className="inline-block px-2 py-0.5 text-left bg-blue-100 text-b500 text-xs font-semibold rounded">
+                  Pro
                 </span>
               </div>
             </div>
-            <Button type='ghost'> View Profile</Button>
+            <Button type='ghost' className="text-xs px-2 py-1">View Profile</Button>
+          </div>
+          
+          {/* Course Title and Description */}
+          <div className="text-center my-10 ">
+            <h2 className="text-b500 font-semibold text-base">{title}</h2>
+            <div className="flex justify-center items-center gap-2 mt-2">
+              <div className="flex">
+                {stars.length > 0 ? (
+                  stars.map((star) => (
+                    <star.icon key={star.id} className="text-b500 text-sm" />
+                  ))
+                ) : (
+                  <span className="text-inputtext text-xs my-3">No ratings</span>
+                )}
+              </div>
+              {reviews > 0 && (
+                <span className="text-inputtext text-xs">({reviews})</span>
+              )}
+            </div>
+            <p className="text-xs text-gray-600 line-clamp-2 leading-4 mx-auto max-w-xs">{description}</p>
           </div>
 
-          {/* Offer Details */}
-          <div className="space-y-6">
-            <div className="text-center">
-              <h2 className="text-b500 font-semibold text-xl">{offer.name}</h2>
-              <div className="flex justify-center items-center gap-2 mt-2">
-                <div className="flex">
-                  {offer.stars.map((star) => (
-                    <star.icon key={star.id} className="text-b500 text-xl" />
-                  ))}
+          {/* Info Cards */}
+            <div className="my-2 border-t border-b border-stroke py-4">
+              
+              <div className="grid grid-cols-3 gap-1 mb-4">
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-1 mb-1">
+                    <FaRegClock className="text-b500 text-xs" />
+                    <span className="text-b500 font-semibold text-xs">Duration</span>
+                  </div>
+                  <p className="text-xs text-inputtext">{durationHours} hours</p>
                 </div>
-                <span className="text-inputtext">({offer.reviews})</span>
+
+                <div className="text-center border-l border-stroke">
+                  <div className="flex items-center justify-center gap-1 mb-1">
+                    <FaDollarSign className="text-b500 text-xs" />
+                    <span className="text-b500 font-semibold text-xs">Price</span>
+                  </div>
+                  <p className="text-xs text-inputtext">{price} dh</p>
+                </div>
+
+                <div className="text-center border-l border-stroke">
+                  <div className="flex items-center justify-center gap-1 mb-1">
+                    <IoCalendarClearOutline className="text-b500 text-xs" />
+                    <span className="text-b500 font-semibold text-xs">Expires</span>
+                  </div>
+                  <p className="text-xs text-inputtext">
+                    {new Date(endDate).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+              
+              {/* Second row with location */}
+              <div className="text-center pt-4 border-t border-stroke">
+                <div className="flex items-center justify-center gap-1 mb-1">
+                  <FaMapMarkerAlt className="text-b500 text-xs" />
+                  <span className="text-b500 font-semibold text-xs">Location</span>
+                </div>
+                <p className="text-xs text-inputtext">{location || 'Agadir, Morocco'}</p>
               </div>
             </div>
 
-            {/* Info Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-6 border-t border-b border-blue-50">
-              <div className="text-center p-4">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <FaRegClock className="text-b500 text-xl" />
-                  <span className="text-b500 font-semibold">Duration</span>
-                </div>
-                <p>{offer.duration}</p>
-              </div>
-
-              <div className="text-center p-4 border-t md:border-t-0 md:border-l border-blue-50">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <FaDollarSign className="text-b500 text-xl" />
-                  <span className="text-b500 font-semibold">Price</span>
-                </div>
-                <p>{offer.price}</p>
-              </div>
-
-              <div className="text-center p-4 border-t md:border-t-0 md:border-l border-blue-50">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <FaRegClock className="text-b500 text-xl" />
-                  <span className="text-b500 font-semibold">Expiration</span>
-                </div>
-                <p className="text-gray-500">{offer.expiration}</p>
-              </div>
-            </div>
-
-            {/* Location */}
-            <div className="text-center">
-              <h3 className="flex items-center justify-center gap-2 text-b500 font-semibold">
-                <FaMapMarkerAlt /> Location
-              </h3>
-              <p className="mt-2">123 Avenue Hassan II, Casablanca, Morocco</p>
-              <a 
-                href="https://maps.app.goo.gl/pAifJyL7AmAS8j5J8" 
-                target="_blank" 
-                rel="noreferrer"
-                className="inline-block mt-4"
-              >
+          {/* Map container */}
+          <div className="mb-10">
+            <a 
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location || 'Agadir Morocco')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
+              <div className="relative">
                 <img 
-                  src={offer.graph} 
+                  src={graph} 
                   alt="Location map" 
-                  className="max-w-full h-auto rounded-lg border border-gray-200"
+                  className="w-full h-44 object-cover rounded-lg border border-blue-100"
+                  onError={(e) => {
+                    e.target.src = '/images/map.svg';
+                  }}
                 />
-              </a>
-            </div>
-
-            <Button
-              type='primary'
-              onClick={() => navigate('/reservation')}
-              className='w-full'
-              >
-              Book Now
-            </Button>
-        
+                <div className="absolute bottom-2 right-2 bg-cayan50 px-2 py-1 text-xs rounded shadow-sm text-b500 font-medium">
+                  Open in Google Maps
+                </div>
+              </div>
+            </a>
           </div>
+        </div>
+        
+        {/* Fixed Button at Bottom */}
+        <div className="p-5 pt-2 border-t border-stroke">
+          <Button
+            type='primary'
+            onClick={() => navigate('/reservation', { state: { offer } })}
+            className='w-full py-2 text-sm'>
+            Book Now
+          </Button>
         </div>
       </div>
     </div>

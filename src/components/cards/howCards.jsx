@@ -1,7 +1,7 @@
 import React from 'react';
 const Card = ({ icon, title, description, className = '' }) => {
   return (
-    <div className={`text-center border border-b50 rounded-small-md md:rounded-large-md p-[30px_60px] w-[350px] md:w-[380px] bg-white relative z-10 ${className}`}>
+    <div className={`text-center border border-b50 rounded-small-md md:rounded-large-md p-[30px_60px] w-[350px] md:w-[380px] bg-light relative z-10 ${className}`}>
       <div className="w-[60px] h-[60px] flex justify-center items-center text-primary rounded-[20px] text-[2rem] mx-auto bg-b50">
         {icon}
       </div>

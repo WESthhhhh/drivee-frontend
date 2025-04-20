@@ -1,5 +1,6 @@
 import React from 'react';
 import rect from '/images/Union.svg';
+import rectsm from '/images/Unionsm.svg';
 
 const Union = () => {
   return (
@@ -13,7 +14,12 @@ const Union = () => {
       <img 
         src={rect} 
         alt="" 
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-full w-full z-0" 
+        className="hidden md:block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-full w-full z-0" 
+      />
+      <img 
+        src={rectsm} 
+        alt="" 
+        className="block md:hidden   absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-full w-full z-0" 
       />
     </div>
   );

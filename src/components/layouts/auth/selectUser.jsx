@@ -33,7 +33,7 @@ const UserTypeSelection = () => {
 
   return (
     <div className="max-w-xl mx-auto md:ml-30 xl:ml-30">
-      <h1 className="text-4xl font-regular mb-8 text-center">
+      <h1 className="text-[35px] md:text-4xl  font-regular mb-8 text-center">
         Welcome to <span className="text-primary font-bold">Drivee</span>
       </h1>
       <h3 className="text-text mb-8 text-center">Are you signing up as?</h3>

@@ -10,7 +10,7 @@ import HowCard from '../cards/howCards';
 
 const Howitwork1 = () => {
   return (
-    <div className="min-h-screen pt-[15rem] relative z-10 overflow-x-hidden text-tet">
+    <div className="pt-12 relative z-10 overflow-x-hidden text-text">
       {/* Background elements */}
       <div className="pointer-events-none">
         <img src={big_circle} className="absolute top-0 right-0 z-0" alt="" />
@@ -21,7 +21,7 @@ const Howitwork1 = () => {
 
       {/* Content */}
       <div className="container mx-auto px-4 relative z-10">
-        <h1 className="text-4xl md:text-5xl text-center font-normal mb-16">
+        <h1 className="text-3xl md:text-5xl text-center font-normal mb-16">
           How It Works ?
         </h1>
         

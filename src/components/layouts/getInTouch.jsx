@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 const Getintouch = () => {
   return (
     <div className="text-center md:max-w-[50%] md:text-left ">
-      <h1 className="text-4xl  relative z-10">
+      <h1 className="text-[35px] md:text-4xl relative z-10">
         Get In Touch
       </h1>
       

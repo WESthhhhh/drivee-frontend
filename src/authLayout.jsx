@@ -1,9 +1,10 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-
+import ScrollToTop from './components/scrollToTop';
 const AuthLayout = () => {
   return (
-    <div className="max-w-7xl mx-auto px-4   font-poppins">
+    <div className="max-w-7xl mx-auto md:px-4   font-poppins mb-6">
+      <ScrollToTop />
       <img 
         src="/images/home-ellipse.png" 
         className="absolute top-0 right-0 w-auto h-auto z-[-1]" 
@@ -29,7 +30,7 @@ const AuthLayout = () => {
             className="w-full" 
           />
         </div>
-        <div className="w-full md:w-1/2">
+        <div className="w-[90%] mx-auto md:w-1/2  ">
           <Outlet className="relative z-10"/>
         </div>
       </div>

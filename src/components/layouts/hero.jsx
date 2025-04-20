@@ -5,26 +5,27 @@ const HeroSection = () => {
   const navigate = useNavigate();
 
   return (
-    <section className="relative flex justify-center items-center text-center pt-36 pb-20 mb-[50px] xl:pt-60 lg:pt-52">
+    <section className="relative flex justify-center items-center text-center pb-20 mb-[50px]  pt-12 ">
       {/* Background elements */}
+      {/* hel */}
       <img 
         src="/images/home-ellipse.png" 
-        className="absolute top-0 right-0 w-auto h-auto" 
+        className="absolute top-0 right-0 w-auto h-auto -z-10" 
         alt="background circle" 
       />
       <img 
         src="/images/home-ellipse.png" 
-        className="absolute top-1/5 left-0 transform rotate-180 w-auto h-auto" 
+        className="absolute top-1/5 left-0 transform rotate-180 w-auto h-auto -z-10" 
         alt="background circle" 
       />
       <img 
         src="/images/home-elli-t.png" 
-        className="absolute left-[13%] top-1/5 w-auto h-auto" 
+        className="absolute left-[13%] top-1/5 w-auto h-auto -z-10" 
         alt="small decorative element" 
       />
       <img 
         src="/images/home-elli-b.png" 
-        className="absolute right-[2%] top-1/2 w-auto h-auto" 
+        className="absolute right-[2%] top-1/2 w-auto h-auto -z-10" 
         alt="small decorative element" 
       /> 
       
@@ -33,7 +34,7 @@ const HeroSection = () => {
           Find. Book. Drive.
         </span>
         
-        <h1 className="my-4 text-4xl font-medium relative z-10 sm:text-3xl">
+        <h1 className="my-4 text-[35px]  md:text-4xl font-medium relative z-10   ">
           Refine Your Skills with <span className="text-primary font-bold relative z-10">Drivee.</span> <br />
           <b className="font-bold">More Driving,</b> No Theory!
         </h1>
@@ -51,7 +52,7 @@ const HeroSection = () => {
           </Button>
           <Button
             type="secondary"
-            onClick={() => navigate('/offers')}
+            onClick={() => navigate('/offers-management')}
           >
             List Your Offers
           </Button>

@@ -5,7 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Button from '../../UI/button';
 import { PrimaryInput, FileInput } from '../../UI/formInputs';
-import { FiFile } from 'react-icons/fi';
+import SuccessPopup from '../../modals/SuccessPopup';
+import api from '../../../utils/axios';
+
+
 
 axios.defaults.withCredentials = true;
 
@@ -24,12 +27,18 @@ const VerificationForm = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [signupSuccess, setSignupSuccess] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileName, setFileName] = useState('');
   const [fileError, setFileError] = useState('');
   const [formError, setFormError] = useState(null);
 
+  const handleCloseSuccess = () => {
+    setShowSuccessPopup(false);
+    navigate('/'); 
+  };
+  
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setFileError('');
@@ -68,7 +77,7 @@ const VerificationForm = () => {
     formData.append('schoolName', data.schoolName.trim());
     formData.append('proof', selectedFile);
 
-    // DEBUG: Log all data being sent
+   
     console.log('--- Data being submitted ---');
     console.log('School Name:', data.schoolName.trim());
     console.log('File Info:', {
@@ -78,7 +87,7 @@ const VerificationForm = () => {
       lastModified: new Date(selectedFile.lastModified).toLocaleString()
     });
 
-    // DEBUG: Log FormData contents
+    
     console.log('--- FormData Contents ---');
     for (let [key, value] of formData.entries()) {
       if (value instanceof File) {
@@ -96,8 +105,8 @@ const VerificationForm = () => {
       setIsSubmitting(true);
       setFormError(null);
       
-      const response = await axios.post(
-        'http://localhost:5000/verifications', 
+      const response = await api.post(
+        '/verifications', 
         formData,
         {
           headers: { 
@@ -109,8 +118,9 @@ const VerificationForm = () => {
 
       if (response.status === 201) {
         setSignupSuccess(true);
+        setShowSuccessPopup(true);
         toast.success('Verification submitted successfully!');
-        setTimeout(() => navigate('/profile'), 1500);
+        // setTimeout(() => navigate('/profile'), 1500);
       }
     } catch (error) {
       console.error('--- Full Error Details ---', {
@@ -139,7 +149,7 @@ const VerificationForm = () => {
 
   return (
     <div className="max-w-lg mx-auto md:ml-30 xl:ml-30">
-      <h1 className="text-4xl font-regular mb-8 text-text text-center md:text-start">
+      <h1 className="text-[35px] md:text-4xl  font-regular mb-8 text-text text-center md:text-start">
         Verify Your Profile to Start <span className='text-primary font-bold'>Listing Offers</span>
       </h1>
       
@@ -191,13 +201,22 @@ const VerificationForm = () => {
           
           <Button
             type="ghost"
-            onClick={() => navigate('/profile')}
+            onClick={() => navigate('/')}
             className="w-full md:w-[40%]"
           >
             Skip for Now
           </Button>
         </div>
       </form>
+      {showSuccessPopup && (
+        <SuccessPopup
+          title="Your verification request has been submitted!"
+          mainMessage="We will verify your details and notify you within 24-48 hours.
+          Check your email for updates. We'll contact you once your school is verified."
+          onClose={handleCloseSuccess}
+          buttonText="Ok, Got it"
+        />
+      )}
     </div>
   );
 };

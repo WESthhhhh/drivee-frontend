@@ -18,5 +18,5 @@ export default function Footer() {
         <p>© {new Date().getFullYear()} Drivee. All rights reserved.</p>
         </div> 
       </footer>
-    );
-  }
+);
+}

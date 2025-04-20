@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { FaChevronDown, FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
-import { offers } from '../offers';
+import { FaChevronDown, FaChevronLeft, FaChevronRight, FaTimes} from 'react-icons/fa';
 import OfferCard from '../components/cards/offerCards';
+import { useOffers } from '../context/fetchOffers';
+import LoadingSpinner from '../components/UI/loadingSpinner';
 
 const OffersPage = () => {
-  // State management
+  // First call all hooks unconditionally at the top
+  const { offers, users, loading, error, refreshData } = useOffers();
   const [filters, setFilters] = useState({
     location: null,
     rating: null,
@@ -14,10 +16,36 @@ const OffersPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  // Filter offers
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.dropdown_container')) {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
+ 
+  if (loading) return <LoadingSpinner message="Loading offers..." />;
+
+  if (error) return <div className="text-red-500 text-center py-12">Error: {error}</div>;
+
+  // Filter offers with safe price handling
   const filteredOffers = offers.filter(offer => {
-    const price = parseInt(offer.price.replace('dh', ''));
-    const matchesPrice = price >= filters.price[0] && price <= filters.price[1];
+    let priceValue;
+    
+    try {
+      priceValue = typeof offer.price === 'string' 
+        ? parseInt(offer.price.replace(/[^0-9]/g, '')) 
+        : offer.price;
+    } catch (e) {
+      priceValue = 0;
+    }
+    
+    const matchesPrice = !isNaN(priceValue) && 
+      priceValue >= filters.price[0] && 
+      priceValue <= filters.price[1];
     const matchesLocation = filters.location ? offer.location === filters.location : true;
     const matchesRating = filters.rating ? offer.rating >= parseInt(filters.rating) : true;
     
@@ -64,36 +92,24 @@ const OffersPage = () => {
     }
   };
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (!e.target.closest('.dropdown_container')) {
-        setOpenDropdown(null);
-      }
-    };
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
-
   return (
-    
-    <div className="max-w-6xl w-full mx-auto pt-[15rem] min-h-[200vh] overflow-x-hidden px-4">
-      
-      
+    <div className="max-w-6xl w-full mx-auto overflow-x-hidden px-4 pt-12">
       {/* Header */}
-      <h1 className="text-[2.5rem] text-center font-normal mb-12 z-[999999999999999]">
+      {/* <h1 className="text-[2.5rem] text-center font-normal mb-12 z-[999999999999999]">
         Limited-Time <span className="font-semibold text-primary">Offers</span> on Driving Packages!
-      </h1>
-      <img 
-        src="/images/home-ellipse.png" 
-        className="absolute top-0 right-0 w-auto h-auto" 
-        alt="background circle" 
-      />
-      <img 
-        src="/images/home-elli-b.png" 
-        className="absolute right-[2%] top-1/2 w-auto h-auto" 
-        alt="small decorative element" 
-      /> 
+      </h1> */}
+      
+        <img 
+          src="/images/home-ellipse.png" 
+          className="absolute top-0 right-0 w-auto h-auto -z-10" 
+          alt="background circle" 
+        />
+        <img 
+          src="/images/home-elli-b.png" 
+          className="absolute right-[2%] top-1/2 w-auto h-auto -z-10" 
+          alt="small decorative element" 
+        />
+      
       {/* Filter Controls */}
       <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 mb-8 z-[999999999999999]">
         <h2 className="text-lg font-medium">Filter:</h2>
@@ -220,32 +236,42 @@ const OffersPage = () => {
         </div>
       </div>
 
+      {/* <button 
+        onClick={refreshData}
+        className="flex items-center gap-2 px-4 py-2 bg-b50 text-primary rounded hover:bg-b100 transition-colors mb-4"
+      >
+        <FaSync /> Refresh
+      </button> */}
+
       {/* Offers Grid */}
-      <div className="flex flex-wrap justify-center gap-8 mb-12 z-[999999999999999]">
-        {paginatedOffers.length > 0 ? (
-          paginatedOffers.map(offer => (
-            <div key={offer.id} className="">
-              <OfferCard offer={offer} className="z-[999999999999999]"/>
-            </div>
-          ))
-        ) : (
-          <div className="w-full text-center py-12">
-            <p className="text-inputtext mb-4">No offers match your filters</p>
-            <button
-              onClick={() => {
-                setFilters({
-                  location: null,
-                  rating: null,
-                  price: [0, 1000]
-                });
-              }}
-              className="px-4 py-2 text-b200 hover:underline"
-            >
-              Clear all filters
-            </button>
-          </div>
-        )}
+      <div className="grid grid-cols-1 lg:grid-cols-2  justify-items-center mb-12 gap-6  lg:px-14">
+  {paginatedOffers.length > 0 ? (
+    paginatedOffers.map(offer => (
+      <div key={offer.id} className="w-full max-w-md ">
+        <OfferCard 
+          offer={offer}
+          className="z-[999999999999999]"
+        />
       </div>
+    ))
+  ) : (
+    <div className="col-span-2 w-full text-center py-12">
+      <p className="text-inputtext mb-4">No offers match your filters</p>
+      <button
+        onClick={() => {
+          setFilters({
+            location: null,
+            rating: null,
+            price: [0, 1000]
+          });
+        }}
+        className="px-4 py-2 text-b200 hover:underline"
+      >
+        Clear all filters
+      </button>
+    </div>
+  )}
+</div>
 
       {/* Pagination */}
       {totalPages > 1 && (
@@ -258,19 +284,32 @@ const OffersPage = () => {
             <FaChevronLeft className="text-b200" />
           </button>
           
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => setCurrentPage(i + 1)}
-              className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                currentPage === i + 1 
-                  ? 'bg-primary text-light' 
-                  : 'hover:bg-cayan50 text-b200'
-              } transition-colors`}
-            >
-              {i + 1}
-            </button>
-          ))}
+          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+            let pageNum;
+            if (totalPages <= 5) {
+              pageNum = i + 1;
+            } else if (currentPage <= 3) {
+              pageNum = i + 1;
+            } else if (currentPage >= totalPages - 2) {
+              pageNum = totalPages - 4 + i;
+            } else {
+              pageNum = currentPage - 2 + i;
+            }
+
+            return (
+              <button
+                key={pageNum}
+                onClick={() => setCurrentPage(pageNum)}
+                className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                  currentPage === pageNum 
+                    ? 'bg-primary text-light' 
+                    : 'hover:bg-cayan50 text-b200'
+                } transition-colors`}
+              >
+                {pageNum}
+              </button>
+            );
+          })}
           
           <button
             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
