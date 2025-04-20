@@ -25,10 +25,28 @@ export default function SideBar() {
                 className="w-full h-full object-cover rounded-full"
               />            
             </div>
-            <div className="font-semibold text-base text-primary">Auto Ecole Saada</div>
+            <div className="font-semibold text-base text-primary">Admin Drivee</div>
           </div>
         </div>
         <div className="mt-[37px] space-y-5">
+           {/* Account details */}
+           <NavLink
+            to="/admin-info"
+            className={({ isActive }) => 
+              `flex items-center gap-2 p-2 group transition-all duration-300 rounded-small-md ${
+                isActive 
+                  ? 'bg-cayan50 text-primary font-semibold [&>div>svg>path]:fill-primary'
+                  : 'text-[#454D59] hover:bg-cayan50 '
+              }`
+            }
+          >
+            <div className="w-4 h-4 flex items-center justify-center">
+              <User />
+            </div>
+            <div className="text-base">
+              Account Details
+            </div>
+          </NavLink>
           {/* Offers */}
           <NavLink
             to="/admin-offers"
@@ -94,24 +112,7 @@ export default function SideBar() {
             )}
           </NavLink>
 
-          {/* Account details */}
-          <NavLink
-            to="/admin-info"
-            className={({ isActive }) => 
-              `flex items-center gap-2 p-2 group transition-all duration-300 rounded-small-md ${
-                isActive 
-                  ? 'bg-cayan50 text-primary font-semibold [&>div>svg>path]:fill-primary'
-                  : 'text-[#454D59] hover:bg-cayan50 '
-              }`
-            }
-          >
-            <div className="w-4 h-4 flex items-center justify-center">
-              <User />
-            </div>
-            <div className="text-base">
-              Account Details
-            </div>
-          </NavLink>
+         
         </div>
         
         {/* Logout - Keep as regular Link since it's not part of navigation */}

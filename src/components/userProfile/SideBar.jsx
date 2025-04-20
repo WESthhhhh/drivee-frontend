@@ -25,7 +25,7 @@ export default function SideBar() {
                 className="w-full h-full object-cover rounded-full"
               /> 
             </div>
-            <div className="font-semibold text-base text-primary">Auto Ecole Saada</div>
+            <div className="font-semibold text-base text-primary">User Profile</div>
           </div>
         </div>
         <div className="mt-[37px] space-y-5">

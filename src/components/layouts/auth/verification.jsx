@@ -36,7 +36,7 @@ const VerificationForm = () => {
 
   const handleCloseSuccess = () => {
     setShowSuccessPopup(false);
-    navigate('/profile'); // Navigate after closing
+    navigate('/'); 
   };
   
   const handleFileChange = (e) => {
@@ -201,7 +201,7 @@ const VerificationForm = () => {
           
           <Button
             type="ghost"
-            onClick={() => navigate('/profile')}
+            onClick={() => navigate('/')}
             className="w-full md:w-[40%]"
           >
             Skip for Now

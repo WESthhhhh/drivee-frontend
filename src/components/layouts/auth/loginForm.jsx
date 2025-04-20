@@ -31,13 +31,26 @@ const Login = () => {
 
   const checkVerificationStatus = async () => {
     try {
-      const response = await api.get('/verifications', {
+      const response = await api.get('/verifications/status', {
         withCredentials: true
       });
-      return response.data.verified;
+      
+      
+      if (response.data.status === 'VERIFIED') {
+        return { verified: true, pending: false };
+      } 
+      else if (response.data.status === 'PENDING') {
+        return { verified: false, pending: true };
+      }
+      return { verified: false, pending: false };
+      
     } catch (error) {
       console.error('Verification check failed:', error);
-      return false;
+      
+      if (error.response?.status === 404) {
+        return { verified: false, pending: false };
+      }
+      throw error; 
     }
   };
 
@@ -55,7 +68,7 @@ const Login = () => {
       
       if (response.status === 200) {
         setLoginSuccess(true);
-        setIsRedirecting(true)
+        setIsRedirecting(true);
         toast.success("Login successful!");
         
         const userRole = response.data.role || 
@@ -73,20 +86,39 @@ const Login = () => {
   
         const upperRole = userRole.toUpperCase();
         
-        setTimeout(() => {
-          if (upperRole === "SCHOOL") {
-            checkVerificationStatus().then(isVerified => {
-              navigate(isVerified ? redirectPath : "/verification");
-            });
-          } 
-          else if (upperRole === "ADMIN") {
-            navigate(redirectPath); 
-          }
-          else if (upperRole === "STUDENT") {
-            navigate(redirectPath);
-          }
-          else {
-            navigate("/");
+        setTimeout(async () => {
+          try {
+            if (upperRole === "SCHOOL") {
+              const { verified, pending } = await checkVerificationStatus();
+              
+              if (verified) {
+                navigate(redirectPath);
+              } 
+              else if (pending) {
+                navigate('/verification-pending');
+              }
+              else {
+                navigate("/verification");
+              }
+            } 
+           
+            else if (upperRole === "ADMIN") {
+              navigate(redirectPath); 
+            }
+            else if (upperRole === "STUDENT") {
+              navigate(redirectPath);
+            }
+            else {
+              navigate("/");
+            }
+          } catch (error) {
+            console.error('Post-login check failed:', error);
+            // Fallback for schools if verification check fails
+            if (upperRole === "SCHOOL") {
+              navigate("/verification");
+            } else {
+              navigate(redirectPath);
+            }
           }
         }, 1000);
       }

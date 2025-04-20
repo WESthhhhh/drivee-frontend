@@ -23,7 +23,6 @@ const Navbar = () => {
   const navRef = useRef(null);
   const dropRef = useRef(null);
 
- 
   useEffect(() => {
     const handleScroll = () => {
       const isScrolled = window.scrollY > 10;
@@ -31,34 +30,45 @@ const Navbar = () => {
         setScrolled(isScrolled);
       }
     };
-
+  
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [scrolled]);
-
-  // Check authentication status
+  }, [scrolled]);  // Consider removing scrolled from dependencies if possible
+  
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
         const { data } = await api.get('/users/me', { 
-          withCredentials: true
+          withCredentials: true 
         });
+  
+        console.log('API Response:', data);
+  
+        setUserData({
+          id: data.id,
+          email: data.email,
+          role: data.role,
+          firstName: data.firstName, 
+          lastName: data.lastName,
+          profilePicture: data.profilePicture || null
+        });
+  
         setIsLoggedIn(true);
-        setUserData(data.user); 
       } catch (error) {
+        console.error('Error fetching user:', error);
         setIsLoggedIn(false);
         setUserData(null);
       } finally {
         setIsLoading(false);
       }
     };
-
+  
     checkAuthStatus();
-
-    const intervalId = setInterval(checkAuthStatus, 300000);
+    
+    // Moved inside the useEffect
+    const intervalId = setInterval(checkAuthStatus, 300000); // 5 minutes
     return () => clearInterval(intervalId);
-  }, []);
-
+  }, [navigate]); 
   
   useEffect(() => {
     if (open) {
@@ -67,7 +77,6 @@ const Navbar = () => {
       document.body.style.overflow = 'auto';
     }
   }, [open]);
-
   
   useEffect(() => {
     const closeMenus = (e) => {
@@ -216,12 +225,17 @@ const Navbar = () => {
                     className="w-10 h-10 rounded-full object-cover" 
                   />
                   <div>
-                    <p className="text-sm font-semibold text-primary">{userData?.name || 'User'}</p>
+                    <p className="text-sm font-semibold text-primary">{userData?.firstName || ''} {userData?.lastName || ''}</p>
                     <p className="text-xs text-gray-500">{userData?.email || ''}</p>
                   </div>
                 </div>
                 <Link 
-                  to={'/profile'} 
+                  to={
+                    userData?.role === 'ADMIN' ? '/admin-info' : 
+                    userData?.role === 'SCHOOL' ? '/school-info' : 
+                    userData?.role === 'STUDENT' ? '/user-info' :
+                    '/profile'
+                  } 
                   className="block text-primary no-underline text-[1rem] py-2 hover:bg-gray-50 rounded-small-md px-2"
                 >
                   My Profile
@@ -337,13 +351,19 @@ const Navbar = () => {
                     <p className="text-xs text-gray-500">{userData?.email || ''}</p>
                   </div>
                 </div>
-                <Link
-                  to="/profile"
-                  className="block w-full text-center py-3 px-4 rounded-lg bg-gray-100 text-primary hover:bg-gray-200 transition-colors mb-2"
-                  onClick={() => setOpen(false)}
-                >
-                  My Profile
-                </Link>
+                  <Link
+                    to={
+                      userData?.role === 'ADMIN' ? '/admin-info' : 
+                      userData?.role === 'SCHOOL' ? '/school-info' : 
+                      userData?.role === 'STUDENT' ? '/user-info' : 
+
+                      '/profile'
+                    }
+                    className="block w-full text-center py-3 px-4 rounded-lg bg-gray-100 text-primary hover:bg-gray-200 transition-colors mb-2"
+                    onClick={() => setOpen(false)}
+                  >
+                    My Profile
+                  </Link>
                 <LogoutButton 
                   onLogoutSuccess={handleSuccessfulLogout}
                   variant="danger"
