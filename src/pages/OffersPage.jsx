@@ -5,7 +5,7 @@ import { useOffers } from '../context/fetchOffers';
 import LoadingSpinner from '../components/UI/loadingSpinner';
 
 const OffersPage = () => {
-  // First call all hooks unconditionally at the top
+  
   const { offers, users, loading, error, refreshData } = useOffers();
   const [filters, setFilters] = useState({
     location: null,

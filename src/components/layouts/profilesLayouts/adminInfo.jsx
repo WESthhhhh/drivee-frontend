@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import AdminSideBar from "../../adminProfile/SideBar";
 import Picprofile from "../../UI/picprofile";
 import Cover from "../../cards/cover";
-import InfoUpdate from "../../adminProfile/InfoUpdate";
+import InfoUpdate from "../../userProfile/InfoUpdate";
 import api from "../../../utils/axios";
-import LoadingSpinner from '../../UI/LoadingSpinner';
+import LoadingSpinner from '../../UI/loadingSpinner';
 export default function Home() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);

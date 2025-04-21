@@ -3,7 +3,7 @@ import Cover from "../../cards/cover";
 import InfoUpdate from "../../userProfile/InfoUpdate";
 import api from "../../../utils/axios";
 import { useState, useEffect } from 'react';
-import LoadingSpinner from '../../UI/LoadingSpinner';
+import LoadingSpinner from '../../UI/loadingSpinner';
 
 export default function Home() {
   const [userData, setUserData] = useState(null);
