@@ -35,20 +35,23 @@ const Login = () => {
         withCredentials: true
       });
       
+      console.log('Full API Response:', response); // Log complete response
+      console.log('Response Data:', response.data); // Log response data
+      console.log('✅ Status:', response.data.status || 'NO_STATUS_RECEIVED');
       
-      if (response.data.status === 'VERIFIED') {
-        return { verified: true, pending: false };
+      if (response.data.status === 'APPROVED') {
+        return { approved: true, pending: false };
       } 
       else if (response.data.status === 'PENDING') {
-        return { verified: false, pending: true };
+        return { approved: false, pending: true };
       }
-      return { verified: false, pending: false };
+      return { approved: false, pending: false };
       
     } catch (error) {
       console.error('Verification check failed:', error);
       
       if (error.response?.status === 404) {
-        return { verified: false, pending: false };
+        return { approved: false, pending: false };
       }
       throw error; 
     }
@@ -89,13 +92,13 @@ const Login = () => {
         setTimeout(async () => {
           try {
             if (upperRole === "SCHOOL") {
-              const { verified, pending } = await checkVerificationStatus();
+              const { approved, pending } = await checkVerificationStatus();
               
-              if (verified) {
+              if (approved) {
                 navigate(redirectPath);
               } 
               else if (pending) {
-                navigate('/verification-pending');
+                navigate("/");
               }
               else {
                 navigate("/verification");
@@ -279,7 +282,7 @@ export default Login;
 //       const response = await axios.get('http://localhost:5000/verifications/status', {
 //         withCredentials: true
 //       });
-//       return response.data.verified;
+//       return response.data.approved;
 //     } catch (error) {
 //       console.error('Verification check failed:', error);
 //       return false;
@@ -318,8 +321,8 @@ export default Login;
         
 //         setTimeout(() => {
 //           if (upperRole === "SCHOOL") {
-//             checkVerificationStatus().then(isVerified => {
-//               navigate(isVerified ? "/school/dashboard" : "/verification");
+//             checkVerificationStatus().then(isapproved => {
+//               navigate(isapproved ? "/school/dashboard" : "/verification");
 //             });
 //           } 
 //           else if (upperRole === "ADMIN") {
