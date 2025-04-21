@@ -33,7 +33,7 @@ export default function Home() {
             <img src="/images/cover.svg" alt="" className="rounded-small-md" />
           </div>
           <div className="flex justify-center items-center h-[100px]">
-            <LoadingSpinner /> 
+            {/* <LoadingSpinner />  */}
           </div>
         </div>
       );
