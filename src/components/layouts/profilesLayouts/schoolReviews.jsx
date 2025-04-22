@@ -2,7 +2,7 @@ import SchoolSidebar from "../../schoolProfile/SideBar"
 import Reviews from "../../schoolProfile/Reviews"
 import Picprofile from "../../UI/picprofile";
 import api from "../../../utils/axios";
-import LoadingSpinner from '../../UI/LoadingSpinner';
+import LoadingSpinner from '../../UI/loadingSpinner';
 import { useState, useEffect } from 'react';
 
 export default function Home() {

@@ -5,14 +5,14 @@ import { PrimaryInput, TextArea, PasswordInput, BasicEmailInput } from "../UI/fo
 import api from '../../utils/axios'; 
 
 export default function InfoUpdate() {
-    
     const { 
         register, 
         handleSubmit, 
         formState: { errors, isSubmitting },
         reset,
         setError,
-        clearErrors
+        clearErrors,
+        watch
     } = useForm({
         mode: "onChange"
     });
@@ -22,6 +22,9 @@ export default function InfoUpdate() {
     const [updateSuccess, setUpdateSuccess] = useState(false);
     const [apiError, setApiError] = useState(null);
     
+    const newPassword = watch("newPassword");
+    const confirmPassword = watch("confirmPassword");
+
     useEffect(() => {
         const timers = [];
         
@@ -46,7 +49,8 @@ export default function InfoUpdate() {
         const fetchUserData = async () => {
             try {
                 const response = await api.get('/users/me', { 
-                    withCredentials: true 
+                    withCredentials: true,
+                    timeout: 30000 
                 });
                 const userData = {
                     id: response.data.id,
@@ -54,13 +58,11 @@ export default function InfoUpdate() {
                     lastName: response.data.lastName || '',
                     email: response.data.email || '',
                     phone: response.data.phone || '',
-                    // dateOfBirth: response.data.dateOfBirth || '',
                     address: response.data.address || '',
                     role: response.data.role || '',
-                    // driverLicense: response.data.driverLicense || ''
                 };
                 setInitialData(userData);
-                reset(userData);
+                reset(userData); // This pre-fills all form fields with database values
             } catch (error) {
                 console.error('Error fetching user data:', error);
                 setApiError('Failed to load user data');
@@ -78,24 +80,67 @@ export default function InfoUpdate() {
         setApiError(null);
         
         try {
-            const response = await api.put(`/users/${data.id}`, data, {
+            
+            const payload = {
+                id: data.id,
+                firstName: data.firstName || initialData?.firstName,
+                lastName: data.lastName || initialData?.lastName,
+                email: data.email || initialData?.email,
+                phone: data.phone || initialData?.phone,
+                address: data.address || initialData?.address,
+                role: data.role || initialData?.role
+            };
+
+            // Only include password fields if changing password
+            if (data.newPassword) {
+                if (!data.currentPassword) {
+                    throw new Error("Current password is required to change password");
+                }
+                payload.currentPassword = data.currentPassword;
+                payload.newPassword = data.newPassword;
+            }
+
+            const response = await api.put(`/users/${data.id}`, payload, {
                 withCredentials: true
             });
 
             console.log('API response:', response);
             setUpdateSuccess(true);
-            setInitialData(data);
+            
+            const updatedData = {
+                ...initialData,
+                ...payload
+            };
+            setInitialData(updatedData);
+            
+            if (data.newPassword) {
+                reset({
+                    ...updatedData,
+                    currentPassword: '',
+                    newPassword: '',
+                    confirmPassword: ''
+                });
+            }
         } catch (error) {
             console.error('Update error:', error);
             
             if (error.response) {
-                if (error.response.status === 409) {
+                if (error.response.status === 401) {
+                    setError('currentPassword', {
+                        type: 'manual',
+                        message: 'Current password is incorrect'
+                    });
+                } else if (error.response.status === 409) {
                     setApiError('Email or phone number already exists');
                 } else if (error.response.status === 404) {
                     setApiError('User not found');
+                } else if (error.response.status === 400) {
+                    setApiError(error.response.data.message || 'Invalid request');
                 } else {
                     setApiError('Failed to update user information');
                 }
+            } else if (error.message) {
+                setApiError(error.message);
             } else {
                 setApiError('Network error. Please try again.');
             }
@@ -106,6 +151,7 @@ export default function InfoUpdate() {
 
     return (
         <form className="space-y-12 px-5" onSubmit={handleSubmit(onSubmit)}>
+            
             {updateSuccess && (
                 <div className="text-success bg-green-50 text-sm mb-4 p-2 rounded-small-md">
                     User information updated successfully!
@@ -123,6 +169,8 @@ export default function InfoUpdate() {
                     {errors.root.message}
                 </div>
             )}
+
+            {/* Account Details Section */}
             <div className="space-y-10">
                 <div className="text-[#0F34AE] text-[25px] font-bold">Account Details</div>
                 <div className="grid grid-cols-2 gap-x-14 gap-y-6">
@@ -131,6 +179,7 @@ export default function InfoUpdate() {
                             label="First Name"
                             placeholder="Enter Your First Name"
                             error={errors.firstName?.message}
+                            defaultValue={initialData?.firstName}
                             {...register("firstName")}
                         />
                     </div>
@@ -139,6 +188,7 @@ export default function InfoUpdate() {
                             label="Last Name"
                             placeholder="Enter Your Last Name"
                             error={errors.lastName?.message}
+                            defaultValue={initialData?.lastName}
                             {...register("lastName")}
                         />
                     </div>
@@ -148,6 +198,7 @@ export default function InfoUpdate() {
                             label="Email Address"
                             placeholder="Enter Your Email Address"
                             error={errors.email?.message}
+                            defaultValue={initialData?.email}
                             {...register("email", {
                                 pattern: {
                                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -162,6 +213,7 @@ export default function InfoUpdate() {
                             label="Phone Number"
                             placeholder="Enter Your Phone Number"
                             error={errors.phone?.message}
+                            defaultValue={initialData?.phone}
                             {...register("phone", {
                                 pattern: {
                                     value: /^[0-9+\-\s]+$/,
@@ -171,32 +223,19 @@ export default function InfoUpdate() {
                         />           
                     </div>
 
-                    {/* <div className="">
-                        <PrimaryInput
-                            label="Date of Birth"
-                            type="date"
-                            {...register("dateOfBirth")}
-                        />
-                    </div> */}
-
-                    {/* <div className="">
-                        <PrimaryInput
-                            label="Driver License"
-                            placeholder="Enter Driver License"
-                            {...register("driverLicense")}
-                        />
-                    </div> */}
-
                     <div className="col-span-2">
                         <TextArea
                             label="Address"
                             placeholder="Enter Your Address"
                             rows={3}
+                            defaultValue={initialData?.address}
                             {...register("address")}
                         />
                     </div>
                 </div>
             </div>
+
+            {/* Security Settings Section */}
             <div className="space-y-10">
                 <div className="text-[#0F34AE] text-[25px] font-bold">Security Settings</div>
                 <div className="grid grid-cols-2 gap-x-14 gap-y-6">
@@ -204,7 +243,15 @@ export default function InfoUpdate() {
                         <PasswordInput
                             label="Your Current Password"
                             placeholder="Enter Your Current Password"
-                            {...register("currentPassword")}
+                            error={errors.currentPassword?.message}
+                            {...register("currentPassword", {
+                                validate: (value) => {
+                                    if (newPassword && !value) {
+                                        return "Current password is required to change password";
+                                    }
+                                    return true;
+                                }
+                            })}
                         />
                     </div>
                     <div className="">
@@ -226,14 +273,24 @@ export default function InfoUpdate() {
                             placeholder="Confirm Your New Password"
                             error={errors.confirmPassword?.message}
                             {...register("confirmPassword", {
-                                validate: (value, { newPassword }) => 
-                                    !newPassword || !value || value === newPassword || "Passwords do not match"
+                                validate: (value) => {
+                                    if (newPassword && value !== newPassword) {
+                                        return "Passwords do not match";
+                                    }
+                                    return true;
+                                }
                             })}
                         />
                     </div>
                 </div>
             </div>
-            <Button type="primary" htmlType='submit' disabled={isSubmitting || loading}>
+
+            <Button 
+                type="primary" 
+                htmlType="submit" 
+                disabled={isSubmitting || loading}
+                className="mt-6"
+            >
                 {isSubmitting || loading ? 'Saving...' : 'Save Changes'}
             </Button>
         </form>

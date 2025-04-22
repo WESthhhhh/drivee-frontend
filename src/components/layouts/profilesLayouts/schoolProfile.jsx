@@ -1,5 +1,5 @@
 import ReviewSwiper from '../../cards/review';
-import PicProfile from '../../UI/picprofile';
+import Pic from '../../UI/pic';
 import OfferCard from '../../cards/profileOffers';
 import ProfileReviews from "../../cards/profileReviews";
 import { useNavigate, Link } from 'react-router-dom';
@@ -33,7 +33,7 @@ const Profile = () => {
      <div className='flex gap-10'>
       {/* Side Section */}
         <div className=''>
-        <PicProfile/>
+        <Pic/>
             <h2 className='text-b200 text-[25px] font-bold mt-12'>School Details</h2>
 
             {/* location */}

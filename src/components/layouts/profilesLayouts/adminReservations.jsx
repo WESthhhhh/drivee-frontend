@@ -1,5 +1,5 @@
-import SchoolSidebar from "../../schoolProfile/SideBar"
-import OffersTable from "../../schoolProfile/OffersTable"
+import AdminSidebar from "../../adminProfile/SideBar"
+import ReservationsTable from "../../adminProfile/reservations"
 import Picprofile from "../../UI/picprofile";
 import api from "../../../utils/axios";
 import LoadingSpinner from '../../UI/loadingSpinner';
@@ -38,15 +38,13 @@ export default function Home() {
         </div>
       );
     }
-  
   return (
     <div className="flex">
-      <SchoolSidebar userData={userData}/>
-      <div className="border border-stroke rounded-large-md flex-1 mt-7.5 p-10 space-y-5 mb-12">
-    
+      <AdminSidebar userData={userData}/>
+      <div className="border border-stroke rounded-large-md flex-1 mt-7.5 p-8 space-y-5 mb-12">
+        
         <Picprofile/>
-        {/* list */}
-        <OffersTable />
+        <ReservationsTable />
       </div>
     </div>
   );

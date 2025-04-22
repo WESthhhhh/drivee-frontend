@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../../utils/axios'; 
-import LoadingSpinner from '../UI/LoadingSpinner';
+import LoadingSpinner from '../UI/loadingSpinner';
 
 export default function Cover() {
   const [userData, setUserData] = useState(null);

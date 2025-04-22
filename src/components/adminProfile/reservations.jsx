@@ -1,39 +1,36 @@
 'use client'
 import { useState, useEffect } from "react";
+import LoadingSpinner from '../UI/loadingSpinner';
 
 export default function Reservations() {
     const [reservations, setReservations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     
-    useEffect(() => {
-        const fetchReservations = async () => {
-            try {
-                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/reservations/school`, {
-                    credentials: 'include'
-                });
-                
-                console.log('Response status:', response.status);
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Error response:', errorText);
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                console.log('Received mock data:', data);
-                setReservations(data);
-            } catch (err) {
-                console.error('Full error:', err);
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-        
-        fetchReservations();
-    }, []);
+    const fetchReservations = async () => {
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/reservations`, {
+                credentials: 'include'
+          });
+          
+          console.log('Response status:', response.status);
+          
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Error response:', errorText);
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
+          const data = await response.json();
+          console.log('Received data:', data);
+          setReservations(data);
+        } catch (err) {
+          console.error('Full error:', err);
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
 
     const getStatusStyle = (status) => {
         switch(status.toLowerCase()) {
@@ -95,12 +92,14 @@ export default function Reservations() {
 
     if (loading) {
         return (
-            <div className="space-y-12 px-5 mt-9 font-poppins">
-                <div className="text-[#0F34AE] text-[25px] font-bold">Reservations</div>
-                <div>Loading...</div>
+          <div className="-space-y-4">
+            <div className="text-[#0F34AE] text-[25px] font-bold">Reservations</div>
+            <div className="flex justify-center items-center h-[100px]">
+              <LoadingSpinner /> 
             </div>
+          </div>
         );
-    }
+      }
 
     if (error) {
         return (
@@ -114,45 +113,39 @@ export default function Reservations() {
     return (
         <div className="space-y-12 px-5 mt-9 font-poppins">
             <div className="space-y-10">
-                <div className="text-[#0F34AE] text-[25px] font-bold">School Reservations</div>
+                <div className="text-[#0F34AE] text-[25px] font-bold">Reservations</div>
                 <div className="">
                     <div className="mt-4">
                         <div className="bg-[#F5FBFB] flex gap-4 px-2 py-4 font-semibold text-[#0B247A]">
-                            <div className="basis-2/12">Student</div>
+                            <div className="basis-2/12">User name</div>
                             <div className="basis-2/12">Offer</div>
                             <div className="basis-2/12">Reservation date</div>
-                            <div className="basis-2/12">Start Date</div>
+                            <div className="basis-2/12">StartDate</div>
                             <div className="basis-2/12">Status</div>
                             <div className="basis-2/12">Payment Status</div>
                         </div>
                         
                         {reservations.length === 0 ? (
                             <div className="py-8 text-center text-gray-500">
-                                No reservations found for your school yet
+                                No reservations found
                             </div>
                         ) : (
                             reservations.map((reservation) => (
                                 <div key={reservation.id} className="flex gap-4 px-2 py-4 border-b border-b50">
-                                    <div className="basis-2/12">
-                                        <div>{reservation.student?.name || 'N/A'}</div>
-                                        <div className="text-sm text-gray-500">{reservation.student?.email || ''}</div>
-                                    </div>
-                                    <div className="basis-2/12">
-                                        <div>{reservation.offre?.title || 'N/A'}</div>
-                                        <div className="text-sm text-gray-500">${reservation.offre?.price || '0'}</div>
-                                    </div>
-                                    <div className="basis-2/12">{new Date(reservation.reservationDate).toLocaleDateString()}</div>
+                                    <div className="basis-2/12">{reservation.student?.name || 'N/A'}</div>
+                                    <div className="basis-2/12 truncate">{reservation.offre?.name || 'N/A'}</div>
+                                    <div className="basis-2/12">{new Date(reservation.createdAt).toLocaleDateString()}</div>
                                     <div className="basis-2/12">{new Date(reservation.startDate).toLocaleDateString()}</div>
                                     <div className="basis-2/12">
                                         <div className={`${getStatusStyle(reservation.status).bg} p-2 flex items-center gap-3 ${getStatusStyle(reservation.status).text} w-fit rounded-lg`}>
                                             <div className={`w-3 h-3 rounded-full border ${getStatusStyle(reservation.status).border}`}></div>
-                                            <div className="capitalize">{reservation.status.toLowerCase()}</div>
+                                            <div>{reservation.status}</div>
                                         </div>
                                     </div>
                                     <div className="basis-2/12">
                                         <div className={`${getPaymentStatusStyle(reservation.paymentStatus).bg} p-2 flex items-center gap-3 ${getPaymentStatusStyle(reservation.paymentStatus).text} w-fit rounded-lg`}>
                                             <div className={`w-3 h-3 rounded-full border ${getPaymentStatusStyle(reservation.paymentStatus).border}`}></div>
-                                            <div className="capitalize">{reservation.paymentStatus.toLowerCase()}</div>
+                                            <div>{reservation.paymentStatus}</div>
                                         </div>
                                     </div>
                                 </div>

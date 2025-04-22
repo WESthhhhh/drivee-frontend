@@ -117,6 +117,25 @@ export default function SideBar({userData}) {
             )}
           </NavLink>
 
+           {/* Reservations */}
+           <NavLink
+            to="/admin-reservations"
+            className={({ isActive }) => 
+              `flex items-center gap-2 p-2 group transition-all duration-300 rounded-small-md ${
+                isActive 
+                  ? 'bg-cayan50 text-primary font-semibold [&>div>svg>path]:fill-primary'
+                  : 'text-[#454D59] hover:bg-cayan50 '
+              }`
+            }
+          >
+            <div className="w-4 h-4 flex items-center justify-center">
+              <Calendar />
+            </div>
+            <div className="text-base">
+              Reservations
+            </div>
+          </NavLink>
+
          
         </div>
         

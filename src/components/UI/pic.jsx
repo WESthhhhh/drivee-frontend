@@ -37,8 +37,8 @@ export default function PicProfile() {
   }
 
   return (
-    <div className="-space-y-4">
-      <div className="flex items-end gap-2 pl-6 relative">
+    <div className="-space-y-4 items-center">
+      <div className="flex items-center gap-2 pl-6 relative">
         <div className="relative w-[60px] h-[60px] border-4 border-light rounded-full">
           <img 
             src={userData?.profilePicture || "/images/of-2.png"} 
@@ -56,20 +56,10 @@ export default function PicProfile() {
               ? `${userData.firstName} ${userData.lastName}`
               : userData?.email?.split('@')[0] || 'User'}
           </div>
-          {userData?.role && (
-          <div className={`
-            px-2 py-1 w-fit rounded-md text-[10px] font-bold
-            ${
-              userData.role === 'SCHOOL' ? 'bg-b50 text-b200 ' :
-              userData.role === 'ADMIN' ? 'bg-purple-100 text-purple-800' :
-              'bg-gray-100 text-primary'
-            }
-          `}>
-            {userData.role === 'SCHOOL' ? 'Pro ' : 
-            userData.role === 'ADMIN' ? 'Administrator' : 
-            'Member'}
+
+          <div className=' px-2 py-1 w-fit rounded-md text-[10px] font-bold bg-b50 text-b200 '>
+                Pro
           </div>
-        )}
         </div>
       </div>
     </div>
