@@ -16,8 +16,8 @@ const VerificationModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-4">
-      <div className="bg-light rounded-large-md max-w-lg w-full max-h-[90vh] flex flex-col relative overflow-hidden">
+    <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center mt-25 p-4">
+      <div className="bg-light rounded-large-md max-w-lg w-full  flex flex-col relative overflow-hidden">
         <div className="sticky top-0 bg-light z-10 pt-5 px-5 pb-4 border-b border-stroke">
           <div className="relative flex justify-center items-center">
             <h1 className="text-b200 font-bold text-xl text-center mt-5 mb-5">School Verification</h1>

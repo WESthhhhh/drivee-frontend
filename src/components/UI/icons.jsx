@@ -110,7 +110,7 @@ export const Users = ({ fill = "#454D59" }) => (
     </g>
     <defs>
       <clipPath id="clip0_1661_4471">
-        <rect width="16" height="16" fill="white" transform="translate(0 0.140961)"/>
+        <rect width="16" height="16" fill="light" transform="translate(0 0.140961)"/>
       </clipPath>
     </defs>
   </svg>
@@ -125,7 +125,7 @@ export const School = ({ fill = "#454D59" }) => (
     </g>
     <defs>
       <clipPath id="clip0_1661_2356">
-        <rect width="16" height="16" fill="white" transform="translate(0 0.140991)"/>
+        <rect width="16" height="16" fill="light" transform="translate(0 0.140991)"/>
       </clipPath>
     </defs>
   </svg>

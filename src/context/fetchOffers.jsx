@@ -32,8 +32,7 @@ export const OffersDataProvider = ({ children }) => {
 
      
       const userIds = [...new Set(offersData.map(offer => offer.schoolId))];
-      
-      // Try to fetch users if possible (won't fail the whole request if this fails)
+
       let usersMap = {};
       try {
         const usersData = await Promise.all(
@@ -67,7 +66,7 @@ export const OffersDataProvider = ({ children }) => {
   );
 };
 
-// Add this hook definition and export
+
 export function useOffers() {
   const context = useContext(OffersContext);
   if (!context) {

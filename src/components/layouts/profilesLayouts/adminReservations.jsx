@@ -41,7 +41,7 @@ export default function Home() {
   return (
     <div className="flex">
       <AdminSidebar userData={userData}/>
-      <div className="border border-stroke rounded-large-md flex-1 mt-7.5 p-8 space-y-5 mb-12">
+      <div className="border border-stroke rounded-large-md flex-1 mt-7.5 py-8 px-4 space-y-5 mb-12">
         
         <Picprofile/>
         <ReservationsTable />

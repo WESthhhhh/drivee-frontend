@@ -38,7 +38,7 @@ export default function PicProfile() {
 
   return (
     <div className="-space-y-4">
-      <div className="flex items-end gap-2 pl-6 relative">
+      <div className="flex items-center gap-2 pl-6 relative">
         <div className="relative w-[60px] h-[60px] border-4 border-light rounded-full">
           <img 
             src={userData?.profilePicture || "/images/of-2.png"} 
