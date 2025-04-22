@@ -9,10 +9,9 @@ export default function Reservations() {
     useEffect(() => {
         const fetchReservations = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/reservations/school`, {
-                    credentials: 'include'
-                });
-                
+          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/reservations/school`, {
+    credentials: 'include'
+});
                 console.log('Response status:', response.status);
                 
                 if (!response.ok) {
@@ -33,8 +32,7 @@ export default function Reservations() {
         };
         
         fetchReservations();
-    }, []);
-
+    }, []);
     const getStatusStyle = (status) => {
         switch(status.toLowerCase()) {
             case 'pending':
