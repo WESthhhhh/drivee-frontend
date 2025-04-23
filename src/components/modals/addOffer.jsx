@@ -38,30 +38,37 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   
-  useEffect(() => {
-    if (!isAuthenticated && !isLoading) {
-      navigate('/login');
-    }
-  }, [isAuthenticated, isLoading, navigate]);
-
-  /////         FETCH CITIESS        ////////////
-  useEffect(() => {
-    const fetchCities = async () => {
-      if (!isOpen) return;
-      
-      setIsLoadingCities(true);
-      try {
-        const response = await api.get('/locations/cities');
-        setCities(response.data);
-      } catch (error) {
-        console.error('Failed to fetch cities:', error);
-      } finally {
-        setIsLoadingCities(false);
-      }
-    };
+// In AddOfferModal
+useEffect(() => {
+  const fetchCities = async () => {
+    if (!isOpen || cities.length > 0) return; // Skip if already fetched
     
-    fetchCities();
-  }, [isOpen]);
+    setIsLoadingCities(true);
+    try {
+      const response = await api.get('/locations/cities', {
+        headers: {
+          'Cache-Control': 'max-age=3600' // Cache for 1 hour
+        }
+      });
+      
+      const cityNames = response.data.map(item => 
+        typeof item === 'string' ? item : item.value || item.label || item.name
+      ).filter(Boolean);
+      
+      setCities([...new Set(cityNames)]);
+    } catch (error) {
+      if (error.response?.status !== 429) {
+        console.error('Failed to fetch cities:', error);
+      }
+      // Consider implementing exponential backoff here
+    } finally {
+      setIsLoadingCities(false);
+    }
+  };
+
+  const timer = setTimeout(fetchCities, 300); // Small delay
+  return () => clearTimeout(timer);
+}, [isOpen]);
 
   
   if (!isOpen) return null;
@@ -306,33 +313,33 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
               />
 
               <div className="col-span-1">
-                <label className="flex items-center gap-1 text-b500 font-semibold text-xs mb-1">
-                  <FaMapMarkerAlt className="text-b500 text-xs" />
-                  <span>City</span>
-                </label>
-                <select
-                  value={formData.city}
-                  onChange={(e) => handleChange('city', e.target.value)}
-                  className={`w-full p-2 border rounded-md ${
-                    errors.city ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  disabled={isLoadingCities}
-                >
-                  <option value="">Select a city</option>
-                  {isLoadingCities ? (
-                    <option>Loading cities...</option>
-                  ) : (
-                    cities.map(city => (
-                      <option key={city} value={city}>
-                        {city}
-                      </option>
-                    ))
-                  )}
-                </select>
-                {errors.city && (
-                  <p className="text-red-500 text-xs mt-1">{errors.city}</p>
-                )}
-              </div>
+                    <label className="flex items-center gap-1 text-b500 font-semibold text-xs mb-1">
+                      <FaMapMarkerAlt className="text-b500 text-xs" />
+                      <span>City</span>
+                    </label>
+                    <select
+                      value={formData.city}
+                      onChange={(e) => handleChange('city', e.target.value)}
+                      className={`w-full p-2 border rounded-md ${
+                        errors.city ? 'border-red-500' : 'border-gray-300'
+                      }`}
+                      disabled={isLoadingCities}
+                    >
+                      <option value="">Select a city</option>
+                      {isLoadingCities ? (
+                        <option>Loading cities...</option>
+                      ) : (
+                        cities.map((city, index) => (
+                          <option key={`city-${index}-${city}`} value={city}>
+                            {city}
+                          </option>
+                        ))
+                      )}
+                    </select>
+                    {errors.city && (
+                      <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+                    )}
+                  </div>
 
               <div className="col-span-1">
                 <PrimaryInput
