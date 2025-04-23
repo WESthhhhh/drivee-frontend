@@ -41,7 +41,7 @@ export default function Learners() {
   return (
     <div className="px-5 mt-9 font-poppins">
       <div className="space-y-6">
-        <h1 className="text-b200 text-2xl font-bold">Manage Learners</h1>
+        <h1 className="text-b200 text-2xl font-bold">All Learners</h1>
 
         {/* Learners Table */}
         <div className="bg-light rounded-large-md  overflow-hidden">
@@ -60,10 +60,10 @@ export default function Learners() {
             learners.map((learner) => (
               <div
                 key={learner.id}
-                className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-gray-100 items-center hover:bg-gray-50 transition-colors"
+                className="grid grid-cols-12 gap-4 px-3 py-4 border-b border-gray-100 items-center hover:bg-gray-50 transition-colors"
               >
                 <div className="col-span-3">{`${learner.firstName} ${learner.lastName}`}</div>
-                <div className="col-span-4 basis-2/12 truncate">{learner.email}</div>
+                <div className="col-span-4 basis-2/12 truncate w-[200px]">{learner.email}</div>
                 <div className="col-span-2">{learner.phone}</div>
                 <div className="col-span-3">
                   {new Date(learner.createdAt).toLocaleDateString()}

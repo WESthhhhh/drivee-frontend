@@ -52,34 +52,7 @@ export default function Reservations() {
         }
     };
 
-    const getStatusStyle = (status) => {
-        switch(status.toLowerCase()) {
-            case 'pending':
-                return {
-                    bg: 'bg-[#F2FAF4]',
-                    text: 'text-[#4F7E59]',
-                    border: 'border-[#4F7E59]'
-                };
-            case 'confirmed':
-                return {
-                    bg: 'bg-[#EFF8FF]',
-                    text: 'text-[#3B82F6]',
-                    border: 'border-[#3B82F6]'
-                };
-            case 'cancelled':
-                return {
-                    bg: 'bg-[#FEF0F0]',
-                    text: 'text-[#EF4444]',
-                    border: 'border-[#EF4444]'
-                };
-            default:
-                return {
-                    bg: 'bg-b50',
-                    text: 'text-gray-800',
-                    border: 'border-gray-800'
-                };
-        }
-    };
+    
 
     const getPaymentStatusStyle = (status) => {
         switch(status.toLowerCase()) {
@@ -154,7 +127,7 @@ export default function Reservations() {
                         reservations.map((reservation) => (
                             <div 
                                 key={reservation.id} 
-                                className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-b50 hover:bg-gray-50 transition-colors"
+                                className="grid grid-cols-12 gap-4 px-6 py-4 items-center border-b border-b50 hover:bg-gray-50 transition-colors"
                             >
                                 <div className="col-span-2 truncate max-w-[180px]">
                                     {reservation.student?.firstName || 'N/A'}

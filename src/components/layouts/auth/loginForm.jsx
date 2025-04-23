@@ -5,11 +5,8 @@ import { EmailInput, PasswordInput } from '../../UI/formInputs';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../../../utils/axios';
-import { useSearchParams } from 'react-router-dom';
 
 const Login = () => {
-  const [searchParams] = useSearchParams();
-  const redirectPath = searchParams.get('redirect') || '/';
   const { 
     register, 
     handleSubmit, 
@@ -35,8 +32,8 @@ const Login = () => {
         withCredentials: true
       });
       
-      console.log('Full API Response:', response); // Log complete response
-      console.log('Response Data:', response.data); // Log response data
+      console.log('Full API Response:', response); 
+      console.log('Response Data:', response.data); 
       console.log('✅ Status:', response.data.status || 'NO_STATUS_RECEIVED');
       
       if (response.data.status === 'APPROVED') {
@@ -83,7 +80,7 @@ const Login = () => {
   
         if (!userRole) {
           console.error("Role not found in response");
-          setTimeout(() => navigate(redirectPath), 1500);
+          setTimeout(() => navigate("/"), 1500);
           return;
         }
   
@@ -95,10 +92,10 @@ const Login = () => {
               const { approved, pending } = await checkVerificationStatus();
               
               if (approved) {
-                navigate(redirectPath);
+                navigate("/school-info");
               } 
               else if (pending) {
-                navigate("/");
+                navigate("/school-info");
               }
               else {
                 navigate("/verification");
@@ -106,21 +103,21 @@ const Login = () => {
             } 
            
             else if (upperRole === "ADMIN") {
-              navigate(redirectPath); 
+              navigate("/admin-info"); 
             }
             else if (upperRole === "STUDENT") {
-              navigate(redirectPath);
+              navigate("/user-info");
             }
             else {
               navigate("/");
             }
           } catch (error) {
             console.error('Post-login check failed:', error);
-            // Fallback for schools if verification check fails
+
             if (upperRole === "SCHOOL") {
               navigate("/verification");
             } else {
-              navigate(redirectPath);
+              navigate("/");
             }
           }
         }, 1000);
