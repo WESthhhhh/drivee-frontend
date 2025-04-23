@@ -31,7 +31,7 @@ const OffersPage = () => {
 
   if (error) return <div className="text-red-500 text-center py-12">Error: {error}</div>;
 
-  // Filter offers with safe price handling
+  
   const filteredOffers = offers.filter(offer => {
     let priceValue;
     

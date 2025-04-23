@@ -33,7 +33,7 @@ const Navbar = () => {
   
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [scrolled]);  // Consider removing scrolled from dependencies if possible
+  }, []);
   
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -41,8 +41,6 @@ const Navbar = () => {
         const { data } = await api.get('/users/me', { 
           withCredentials: true 
         });
-  
-        console.log('API Response:', data);
   
         setUserData({
           id: data.id,
@@ -55,7 +53,6 @@ const Navbar = () => {
   
         setIsLoggedIn(true);
       } catch (error) {
-        console.error('Error fetching user:', error);
         setIsLoggedIn(false);
         setUserData(null);
       } finally {
@@ -65,11 +62,10 @@ const Navbar = () => {
   
     checkAuthStatus();
     
-    // Moved inside the useEffect
-    const intervalId = setInterval(checkAuthStatus, 300000); // 5 minutes
+    const intervalId = setInterval(checkAuthStatus, 300000);
     return () => clearInterval(intervalId);
   }, [navigate]); 
-  
+
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';

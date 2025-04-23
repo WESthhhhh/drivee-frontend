@@ -21,6 +21,9 @@ export default function InfoUpdate() {
     const [initialData, setInitialData] = useState(null);
     const [updateSuccess, setUpdateSuccess] = useState(false);
     const [apiError, setApiError] = useState(null);
+    const [userData, setUserData] = useState(null);
+    const [load, setLoad] = useState(true);
+  
     
     const newPassword = watch("newPassword");
     const confirmPassword = watch("confirmPassword");
@@ -61,9 +64,12 @@ export default function InfoUpdate() {
                 setApiError('Failed to load user data');
             }
         };
-    
+        
+    if (load) {  
         fetchUserData();
+      } 
     }, [reset]);
+   
 
     const onSubmit = async (data) => {
         console.log('Form submitted with data:', data);

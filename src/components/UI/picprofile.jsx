@@ -5,6 +5,7 @@ import LoadingSpinner from '../UI/loadingSpinner';
 export default function PicProfile() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [load, setLoad] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -14,14 +15,16 @@ export default function PicProfile() {
         });
         setUserData(data);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Fetch error:', error);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchUserData();
-  }, []);
+  
+    if (load) {  
+      fetchUserData();
+    } 
+  }, []); 
 
   if (loading) {
     return (

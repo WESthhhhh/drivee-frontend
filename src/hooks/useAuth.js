@@ -8,11 +8,11 @@ export function useAuth() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Add request timestamp tracking
+  
   const lastRequestTime = useRef(0);
 
   const checkAuth = useCallback(async () => {
-    // Throttle requests - minimum 5 seconds between checks
+    
     const now = Date.now();
     if (now - lastRequestTime.current < 5000) return;
     lastRequestTime.current = now;

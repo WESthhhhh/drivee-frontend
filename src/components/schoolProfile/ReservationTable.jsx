@@ -33,6 +33,7 @@ export default function Reservations() {
         
         fetchReservations();
     }, []);
+
     const getStatusStyle = (status) => {
         switch(status.toLowerCase()) {
             case 'pending':

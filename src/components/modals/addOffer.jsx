@@ -43,23 +43,26 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
     setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
   };
 
-  const handleCitySelect = (city) => {
-    handleChange('city', city.value); // Sets the value in your form data
-    setSelectedCityLabel(city.label); // Stores the label for display
-    setOpenDropdown(null); // Close the dropdown
-  };
-  
   useEffect(() => {
-    // Fetch cities when component mounts
+   
+    // Update your fetchCities function like this:
     const fetchCities = async () => {
       setIsLoadingCities(true);
       try {
         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/locations/cities`, {
-          credentials: 'include' // if using cookies
+          credentials: 'include'
         });
         if (!response.ok) throw new Error('Failed to fetch cities');
         const data = await response.json();
-        setCities(data.map(city => city.value)); // Assuming CITIES is an array of {value, label} objects
+        
+        // Ensure cities are properly formatted as {value, label} objects
+        const formattedCities = Array.isArray(data)
+          ? data.map(city => typeof city === 'string' 
+              ? { value: city, label: city }
+              : city)
+          : [];
+        
+        setCities(formattedCities);
       } catch (error) {
         console.error('Error fetching cities:', error);
         setErrors(prev => ({...prev, city: 'Failed to load cities'}));
@@ -70,6 +73,12 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
   
     fetchCities();
   }, []);
+
+  const handleCitySelect = (city) => {
+    handleChange('city', city.value);
+    setSelectedCityLabel(city.label);
+    setOpenDropdown(null);
+  };
 
 //   const timer = setTimeout(fetchCities, 300); // Small delay
 //   return () => clearTimeout(timer);
@@ -170,21 +179,27 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
     
     try {
       // First create or find the location
-      const locationResponse = await api.post('/locations/find-or-create', {
+      const locationResponse = await api.post('/locations', {
         city: formData.city,
         address: formData.address.trim()
+      }, {
+        withCredentials: true 
       });
-
-     
-      const response = await api.post('/offres', {
-        title: formData.title.trim(),
-        description: formData.description.trim(),
-        durationHours: parseInt(formData.durationHours),
-        price: parseFloat(formData.price),
-        startDate: new Date(formData.startDate).toISOString(),
-        endDate: new Date(formData.endDate).toISOString(),
-        locationId: locationResponse.data.id
-      });
+  
+     const response = await api.post('/offres', {
+      title: formData.title.trim(),
+      description: formData.description.trim(),
+      durationHours: parseInt(formData.durationHours),
+      price: parseFloat(formData.price),
+      startDate: new Date(formData.startDate).toISOString(),
+      endDate: new Date(formData.endDate).toISOString(),
+      locationId: locationResponse.data.id
+    },
+    {
+      withCredentials: true
+    }
+  
+  );
       
       // Reset form
       setFormData({
@@ -200,15 +215,24 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
       
       onOfferCreated(response.data);
       closeModal();
+
     } catch (error) {
+      console.error('Full error details:', {
+        message: error.message,
+        url: error.config?.url,
+        status: error.response?.status,
+        data: error.response?.data,
+        requestPayload: error.config?.data,
+        headers: error.config?.headers
+      });
+      
       if (error.response?.status === 401) {
         navigate('/login');
       } else {
-        console.error('Error creating offer:', error);
-        alert(
+        console.log(
           error.response?.data?.error || 
-          error.response?.data?.details || 
-          "Failed to create offer"
+          error.response?.data?.message || 
+          "Failed to create offer. Please check console for details."
         );
       }
     } finally {
@@ -222,6 +246,7 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
   };
+  
 
   return (
     <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-4">
@@ -317,22 +342,22 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
                 min={formData.startDate || new Date().toISOString().split('T')[0]}
               />
 
+             {/* City Dropdown */}
               <div className="col-span-1 relative">
-                <label className="flex items-center gap-1 text-b500 font-semibold text-xs mb-1">
-                  <FaMapMarkerAlt className="text-b500 text-xs" />
-                  <span>City</span>
+                <label className="flex items-center gap-1 text-primary font-semibold text-xs mb-3">
+                  <FaMapMarkerAlt className="text-bprimary text-xs" />
+                  <span>Area</span>
                 </label>
                 
-                {/* Dropdown trigger */}
                 <div
-                  className={`w-full p-2 border rounded-md flex items-center justify-between cursor-pointer ${
-                    errors.city ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full p-2 border text-[14px] flex items-center justify-between cursor-pointer rounded-small-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 ${
+                    errors.city ? 'border-red-500' : 'border-b50'
                   }`}
                   onClick={() => toggleDropdown('city')}
                 >
                   <span>{selectedCityLabel || 'Select a city'}</span>
                   <svg
-                    className={`w-4 h-4 transition-transform ${
+                    className={`w-4 h-4 transition-transform text-accent ${
                       openDropdown === 'city' ? 'transform rotate-180' : ''
                     }`}
                     fill="none"
@@ -343,7 +368,6 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
                   </svg>
                 </div>
 
-                {/* Dropdown content */}
                 {openDropdown === 'city' && (
                   <div className="dropdown absolute top-full left-0 mt-1 bg-light shadow-primary-4 rounded-small-md p-2 w-full z-50 border border-stroke max-h-60 overflow-y-auto">
                     {isLoadingCities ? (

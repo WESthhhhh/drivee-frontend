@@ -5,6 +5,7 @@ import LoadingSpinner from '../UI/loadingSpinner';
 export default function PicProfile() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [load, setLoad] = useState(true);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -14,20 +15,22 @@ export default function PicProfile() {
         });
         setUserData(data);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Fetch error:', error);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchUserData();
+  
+    if (load) {  
+      fetchUserData();
+    } 
   }, []);
 
   if (loading) {
     return (
       <div className="-space-y-4">
         <div className="relative w-full h-[140px] top-3">
-          <img src="/images/cover.svg" alt="" className="rounded-small-md" />
+          {/* <img src="/images/cover.svg" alt="" className="rounded-small-md" /> */}
         </div>
         <div className="flex justify-center items-center h-[100px]">
           {/* <LoadingSpinner />  */}
