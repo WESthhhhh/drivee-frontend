@@ -1,123 +1,151 @@
-import { Pencil, Trash } from "../UI/icons";
-import Button from "../UI/button";
-import AddOfferModal from "../modals/addOffer";
-import VerificationModal from "../modals/verification"; 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { Pencil } from "../UI/icons";
+import VerificationModal from "../modals/verification";
 
-export default function Offers() {
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+export default function Schools() {
   const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState(null);
+  const [schools, setSchools] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 10;
 
-  // Sample data - replace with your actual data
-  const schools = [
-    {
-      id: 1,
-      name: "Ecole Saada",
-      email: "saada@gmail.com",
-      phone: "065769899",
-      location: "Adrar",
-      registeredAt: "2023-05-15",
-      status: "Pending",
-      documentName: "license.pdf",
-      documentUrl: "/path/to/document.pdf"
-    },
-    {
-      id: 1,
-      name: "Ecole Ewa",
-      email: "saada@gmail.com",
-      phone: "065769899",
-      location: "Adrar",
-      registeredAt: "2023-05-15",
-      status: "Pending",
-      documentName: "license.pdf",
-      documentUrl: "/path/to/document.pdf"
-    },
-    // Add more schools as needed
-  ];
+  useEffect(() => {
+    fetchSchools();
+  }, [currentPage]);
 
-  const handleVerify = async () => {
+  const fetchSchools = async () => {
     try {
-      // Add your verification API call here
-      console.log("Verifying school:", selectedSchool.id);
-      setIsVerificationModalOpen(false);
-    } catch (error) {
-      console.error('Verification failed:', error);
-    }
-  };
+      setLoading(true);
+      const queryParams = new URLSearchParams({
+        page: currentPage,
+        limit: limit,
+        role: "SCHOOL",
+      }).toString();
 
-  const handleReject = async () => {
-    try {
-      // Add your rejection API call here
-      console.log("Rejecting school:", selectedSchool.id);
-      setIsVerificationModalOpen(false);
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/users/admin/users?${queryParams}`,
+        { credentials: "include" }
+      );
+      const data = await response.json();
+
+      if (data.success) {
+        setSchools(data.data);
+        setTotalPages(data.pagination.totalPages);
+      }
     } catch (error) {
-      console.error('Rejection failed:', error);
+      console.error("Error fetching schools:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="space-y-12 px-5 mt-9 font-poppins">
-      <div className="space-y-10">
-        <div className="text-[#0F34AE] text-[25px] font-bold">Manage Schools</div>
-        <div className="">
-          {/* Add Offer Modal */}
-          <AddOfferModal 
-            isOpen={isAddModalOpen} 
-            closeModal={() => setIsAddModalOpen(false)}
-          />
+    <div className="px-5 mt-9 font-poppins">
+      <div className="space-y-6">
+        <h1 className="text-[#0F34AE] text-2xl font-bold">Manage Schools</h1>
 
-          {/* Verification Modal */}
-          <VerificationModal
-            isOpen={isVerificationModalOpen}
-            closeModal={() => setIsVerificationModalOpen(false)}
-            schoolName={selectedSchool?.name}
-            documentName={selectedSchool?.documentName}
-            documentUrl={selectedSchool?.documentUrl}
-            onVerify={handleVerify}
-            onReject={handleReject}
-          />
+        <VerificationModal
+          isOpen={isVerificationModalOpen}
+          closeModal={() => setIsVerificationModalOpen(false)}
+          schoolName={
+            selectedSchool
+              ? `${selectedSchool.firstName} ${selectedSchool.lastName}`
+              : ""
+          }
+        />
 
-          {/* List */}
-          <div className="mt-4">
-            <div className="bg-cayan50 flex gap-4 px-2 py-4 font-semibold text-[#0B247A]">
-              <div className="basis-2/12">Name</div>
-              <div className="basis-2/12">Email</div>
-              <div className="basis-1/12">Phone</div>
-              <div className="basis-2/12">Location</div>
-              <div className="basis-2/12">Registered At</div>
-              <div className="basis-2/12">Status</div>
-              <div className="basis-1/12">Action</div>
-            </div>
-            
-            {/* Map over schools */}
-            {schools.map((school) => (
-              <div key={school.id} className="flex gap-4 px-2 py-4 border-b border-b50 items-center">
-                <div className="basis-2/12">{school.name}</div>
-                <div className="basis-2/12 truncate">{school.email}</div>
-                <div className="basis-1/12">{school.phone}</div>
-                <div className="basis-2/12">{school.location}</div>
-                <div className="basis-2/12">{school.registeredAt}</div>
-                <div className="basis-2/12">
-                  <div className="bg-[#F2FAF4] p-2 flex items-center gap-3 text-[#4F7E59] w-fit rounded-small-md">
-                    <div className="w-3 h-3 rounded-full border border-[#4F7E59]"></div>
-                    <div>{school.status}</div>
-                  </div>
+        {/* Schools Table */}
+        <div className="bg-light rounded-large-md overflow-hidden">
+          <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-cayan50 font-semibold text-[#0B247A]">
+            <div className="col-span-3">Name</div>
+            <div className="col-span-3">Email</div>
+            <div className="col-span-2">Phone</div>
+            <div className="col-span-2">Created At</div>
+            <div className="col-span-2">Action</div>
+          </div>
+
+          {loading ? (
+            <div className="flex justify-center py-8">Loading...</div>
+          ) : schools.length === 0 ? (
+            <div className="flex justify-center py-8">No schools found</div>
+          ) : (
+            schools.map((school) => (
+              <div
+                key={school.id}
+                className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-gray-100 items-center hover:bg-gray-50 transition-colors"
+              >
+                <div className="col-span-3">{`${school.firstName} ${school.lastName}`}</div>
+                <div className="col-span-3 truncate">{school.email}</div>
+                <div className="col-span-2">{school.phone}</div>
+                <div className="col-span-2">
+                  {new Date(school.createdAt).toLocaleDateString()}
                 </div>
-                <div className="basis-1/12 flex items-center ">
-                  <button 
+                <div className="col-span-2">
+                  <button
                     onClick={() => {
                       setSelectedSchool(school);
                       setIsVerificationModalOpen(true);
                     }}
+                    className="text-blue-500 hover:text-blue-700 p-1 rounded hover:bg-blue-50 transition-colors"
                   >
-                    <Pencil />
+                    <Pencil className="w-5 h-5" />
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
+            ))
+          )}
         </div>
+
+        {/* Improved Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center gap-2 mb-16 mt-6">
+            <button
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="p-2 rounded-full disabled:opacity-50 hover:bg-cayan50 transition-colors"
+            >
+              <FaChevronLeft className="text-b200" />
+            </button>
+            
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              let pageNum;
+              if (totalPages <= 5) {
+                pageNum = i + 1;
+              } else if (currentPage <= 3) {
+                pageNum = i + 1;
+              } else if (currentPage >= totalPages - 2) {
+                pageNum = totalPages - 4 + i;
+              } else {
+                pageNum = currentPage - 2 + i;
+              }
+
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => setCurrentPage(pageNum)}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    currentPage === pageNum 
+                      ? 'bg-primary text-light' 
+                      : 'hover:bg-cayan50 text-b200'
+                  } transition-colors`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+            
+            <button
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="p-2 rounded-full disabled:opacity-50 hover:bg-cayan50 transition-colors"
+            >
+              <FaChevronRight className="text-b200" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

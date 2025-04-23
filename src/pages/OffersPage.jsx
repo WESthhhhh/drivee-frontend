@@ -5,7 +5,7 @@ import { useOffers } from '../context/fetchOffers';
 import LoadingSpinner from '../components/UI/loadingSpinner';
 
 const OffersPage = () => {
-  // First call all hooks unconditionally at the top
+  
   const { offers, users, loading, error, refreshData } = useOffers();
   const [filters, setFilters] = useState({
     location: null,
@@ -31,7 +31,7 @@ const OffersPage = () => {
 
   if (error) return <div className="text-red-500 text-center py-12">Error: {error}</div>;
 
-  // Filter offers with safe price handling
+  
   const filteredOffers = offers.filter(offer => {
     let priceValue;
     

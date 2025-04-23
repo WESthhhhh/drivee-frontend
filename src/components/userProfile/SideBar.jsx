@@ -1,7 +1,8 @@
 import { Calendar, Logout, Offers, Star, User } from "../UI/icons";
 import { NavLink, Link } from "react-router-dom";
-
-export default function SideBar() {
+import api from "../../utils/axios";
+import LogoutButton from "../UI/logoutButton";
+export default function SideBar({ userData }) {
   return (
     <div className="font-poppins py-10 px-7.5">
       <div className="px-[19px] py-[15px] w-[273px]">
@@ -20,13 +21,16 @@ export default function SideBar() {
           <div className="flex items-center gap-2">
             <div className="relative w-[29px] h-[29px]">
               <img 
-                src="/images/of-2.png" 
+               src={userData?.profilePicture || "/images/of-2.png"} 
                 alt="Profile" 
                 className="w-full h-full object-cover rounded-full"
               /> 
             </div>
-            <div className="font-semibold text-base text-primary">User Profile</div>
-          </div>
+            <div className="font-semibold text-base text-primary">
+              {userData?.firstName && userData?.lastName 
+                ? `${userData.firstName} ${userData.lastName}`
+                : userData?.email?.split('@')[0] || 'User Profile'}
+            </div>          </div>
         </div>
         <div className="mt-[37px] space-y-5">
           {/* Account details */}
@@ -87,15 +91,11 @@ export default function SideBar() {
           </NavLink>
         </div>
         
-        {/* Logout - Keep as regular Link */}
-        <Link to="/" className="flex items-center gap-2 p-2 group mt-[66px]">
-          <div className="w-4 h-4 flex items-center justify-center">
-            <Logout />
-          </div>
-          <div className="text-base text-error group-hover:font-semibold">
-            Logout
-          </div>
-        </Link>
+        
+        <div className="mt-[66px] text-error">
+          <LogoutButton variant="danger" />
+        </div>
+        
       </div>
     </div>
   );

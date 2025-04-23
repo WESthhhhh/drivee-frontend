@@ -1,5 +1,5 @@
-import SchoolSidebar from "../../schoolProfile/SideBar"
-import ReservationsTable from "../../schoolProfile/ReservationTable"
+import AdminSidebar from "../../adminProfile/SideBar"
+import ReservationsTable from "../../adminProfile/reservations"
 import Picprofile from "../../UI/picprofile";
 import api from "../../../utils/axios";
 import LoadingSpinner from '../../UI/loadingSpinner';
@@ -32,6 +32,7 @@ export default function Home() {
   if (loading) {
       return (
         <div className="-space-y-4">
+          
           <div className="flex justify-center items-center h-[100px]">
             <LoadingSpinner /> 
           </div>
@@ -40,8 +41,8 @@ export default function Home() {
     }
   return (
     <div className="flex">
-      <SchoolSidebar userData={userData}/>
-      <div className="border border-stroke rounded-large-md flex-1 mt-7.5 p-8 space-y-5 mb-12">
+      <AdminSidebar userData={userData}/>
+      <div className="border border-stroke rounded-large-md flex-1 mt-7.5 py-8 px-4 space-y-5 mb-12">
         
         <Picprofile/>
         <ReservationsTable />

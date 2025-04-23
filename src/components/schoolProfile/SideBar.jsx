@@ -1,7 +1,20 @@
 import { Calendar, Logout, Offers, Star, User } from "../UI/icons";
-import { NavLink, Link } from "react-router-dom"; // Import NavLink
+import { NavLink, Link } from "react-router-dom"; 
+import LogoutButton from "../UI/logoutButton";
 
-export default function SideBar() {
+
+export default function SideBar({ userData }) {
+  
+  if (!userData) {
+    return (
+      <div className="font-poppins py-10 px-7.5">
+        <div className="px-[19px] py-[15px] w-[273px]">
+          {/* Loading skeleton or spinner */}
+          <div className="animate-pulse">Loading...</div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="font-poppins py-10 px-7.5">
       <div className="px-[19px] py-[15px] w-[273px]">
@@ -20,12 +33,16 @@ export default function SideBar() {
           <div className="flex items-center gap-2">
             <div className="relative w-[29px] h-[29px]">
               <img 
-                src="/images/of-2.png" 
+               src={userData?.profilePicture || "/images/of-2.png"} 
                 alt="Profile" 
                 className="w-full h-full object-cover rounded-full"
               />            
             </div>
-            <div className="font-semibold text-base text-primary">Auto Ecole Saada</div>
+            <div className="font-semibold text-base text-primary">
+              {userData?.firstName && userData?.lastName 
+                ? `${userData.firstName} ${userData.lastName}`
+                : userData?.email?.split('@')[0] || 'Auto Ecole Saada'}
+            </div>
           </div>
         </div>
         <div className="mt-[37px] space-y-5">
@@ -108,15 +125,9 @@ export default function SideBar() {
           
         </div>
         
-        {/* Logout - Keep as regular Link since it's not part of navigation */}
-        <Link to="/" className="flex items-center gap-2 p-2 group mt-[66px]">
-          <div className="w-4 h-4 flex items-center justify-center">
-            <Logout />
-          </div>
-          <div className="text-base text-error group-hover:font-semibold transition-all duration-300">
-            Logout
-          </div>
-        </Link>
+        <div className="mt-[66px] text-error">
+          <LogoutButton variant="danger" />
+        </div>
       </div>
     </div>
   );

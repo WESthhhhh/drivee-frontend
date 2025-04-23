@@ -77,6 +77,8 @@ import ManageUsers from './pages/profiles/manageUsers.jsx';
 import Admininfo from './pages/profiles/adminInfo.jsx';
 import AdminOffers from './pages/profiles/manageOffersAdmin.jsx';
 import ProfileSchool from './pages/profileSchool.jsx';
+import AdminReservations from './pages/profiles/adminReservations.jsx';
+
 
 export const router = createBrowserRouter([
   {
@@ -123,6 +125,7 @@ export const router = createBrowserRouter([
       { path: 'admin-users', element: <ManageUsers /> },
       { path: 'admin-info', element: <Admininfo /> },
       { path: 'admin-offers', element: <AdminOffers /> },
+      { path: 'admin-reservations', element: <AdminReservations /> },
     ]
 
   },

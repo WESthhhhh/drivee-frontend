@@ -5,9 +5,8 @@ import OfferDetailModal from '../modals/offerDetail';
 import Button from '../UI/button';
 import { useNavigate } from 'react-router-dom'; 
 import { useOffers } from '../../context/fetchOffers';
+
 const OfferCard = ({ offer }) => {
-  const { users } = useOffers();
-  const school = users[offer.schoolId] || {};
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
@@ -17,20 +16,22 @@ const OfferCard = ({ offer }) => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  
   const navigate = useNavigate();
+
   return (
     <>
       <div className="bg-light rounded-large-md border border-b50 shadow-primary-4 p-6 w-[350px] max-w-md md:w-[470px] flex flex-col justify-center h-[402px]">
-      <div className="flex items-center gap-4 mb-6">
+        <div className="flex items-center gap-4 mb-6">
           <img 
             src={offer.img} 
-            alt={school.firstName || 'School'} 
+            alt={offer.schoolName || 'School'} 
             className="w-16 h-16 rounded-full object-cover"
             loading='lazy'
           />
           <div className="text-left">
-            <h2 className="text-lg font-bold text-b200">{school.firstName || 'Unknown'} {school.lastName || ''}</h2>
-            <span className="inline-block px-2 py-1 bg-b50  text-primary text-xs font-medium rounded">
+            <h2 className="text-lg font-bold text-b200">{offer.schoolName || 'Unknown School'}</h2>
+            <span className="inline-block px-2 py-1 bg-b50 text-primary text-xs font-medium rounded">
               Pro
             </span>
           </div>
@@ -54,19 +55,20 @@ const OfferCard = ({ offer }) => {
           </div>
         </div>
 
-        <div className="flex  justify-center gap-4">
-          
-            <Button
+        <div className="flex justify-center gap-4">
+          <Button
             type='secondary'
             onClick={openModal}
-            
-            >View Details</Button>
+          >
+            View Details
+          </Button>
 
           <Button
             type='primary'
             onClick={() => navigate('/reservation')}
-            
-            >Book Offer</Button>
+          >
+            Book Offer
+          </Button>
         </div>
       </div>
 

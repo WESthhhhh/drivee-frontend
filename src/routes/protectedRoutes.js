@@ -1,4 +1,3 @@
-// components/RequireAuth.js
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
@@ -21,7 +20,7 @@ export default function RequireAuth({ children }) {
   }
 
   if (!isAuthenticated) {
-    return null; // Redirect will happen via useEffect
+    return null;
   }
 
   return children;
