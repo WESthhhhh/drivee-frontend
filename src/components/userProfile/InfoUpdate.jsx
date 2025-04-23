@@ -49,26 +49,19 @@ export default function InfoUpdate() {
         const fetchUserData = async () => {
             try {
                 const response = await api.get('/users/me', { 
-                    withCredentials: true,
-                    timeout: 30000 
+                    withCredentials: true
                 });
-                const userData = {
-                    id: response.data.id,
-                    firstName: response.data.firstName || '',
-                    lastName: response.data.lastName || '',
-                    email: response.data.email || '',
-                    phone: response.data.phone || '',
-                    address: response.data.address || '',
-                    role: response.data.role || '',
-                };
+                console.log('User data fetched successfully');
+                const userData = response.data;
+                
                 setInitialData(userData);
-                reset(userData); // This pre-fills all form fields with database values
+                reset(userData);
             } catch (error) {
                 console.error('Error fetching user data:', error);
                 setApiError('Failed to load user data');
             }
         };
-
+    
         fetchUserData();
     }, [reset]);
 

@@ -225,8 +225,8 @@ const Navbar = () => {
                     className="w-10 h-10 rounded-full object-cover" 
                   />
                   <div>
-                    <p className="text-sm font-semibold text-primary">{userData?.firstName || ''} {userData?.lastName || ''}</p>
-                    <p className="text-xs text-gray-500">{userData?.email || ''}</p>
+                    <p className="text-sm font-semibold text-primary">{userData?.firstName || ''} </p>
+                    <p className="text-xs text-gray-500 w-[70px]">{userData?.email || ''}</p>
                   </div>
                 </div>
                 <Link 
@@ -364,6 +364,8 @@ const Navbar = () => {
                   >
                     My Profile
                   </Link>
+
+                  
                 <LogoutButton 
                   onLogoutSuccess={handleSuccessfulLogout}
                   variant="danger"

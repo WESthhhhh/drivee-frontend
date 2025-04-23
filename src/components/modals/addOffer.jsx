@@ -36,39 +36,44 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
   const [cities, setCities] = useState([]);
   const [isLoadingCities, setIsLoadingCities] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const [selectedCityLabel, setSelectedCityLabel] = useState('');
 
-  
-// In AddOfferModal
-useEffect(() => {
-  const fetchCities = async () => {
-    if (!isOpen || cities.length > 0) return; // Skip if already fetched
-    
-    setIsLoadingCities(true);
-    try {
-      const response = await api.get('/locations/cities', {
-        headers: {
-          'Cache-Control': 'max-age=3600' // Cache for 1 hour
-        }
-      });
-      
-      const cityNames = response.data.map(item => 
-        typeof item === 'string' ? item : item.value || item.label || item.name
-      ).filter(Boolean);
-      
-      setCities([...new Set(cityNames)]);
-    } catch (error) {
-      if (error.response?.status !== 429) {
-        console.error('Failed to fetch cities:', error);
-      }
-      // Consider implementing exponential backoff here
-    } finally {
-      setIsLoadingCities(false);
-    }
+  const toggleDropdown = (dropdownName) => {
+    setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
   };
 
-  const timer = setTimeout(fetchCities, 300); // Small delay
-  return () => clearTimeout(timer);
-}, [isOpen]);
+  const handleCitySelect = (city) => {
+    handleChange('city', city.value); // Sets the value in your form data
+    setSelectedCityLabel(city.label); // Stores the label for display
+    setOpenDropdown(null); // Close the dropdown
+  };
+  
+  useEffect(() => {
+    // Fetch cities when component mounts
+    const fetchCities = async () => {
+      setIsLoadingCities(true);
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/locations/cities`, {
+          credentials: 'include' // if using cookies
+        });
+        if (!response.ok) throw new Error('Failed to fetch cities');
+        const data = await response.json();
+        setCities(data.map(city => city.value)); // Assuming CITIES is an array of {value, label} objects
+      } catch (error) {
+        console.error('Error fetching cities:', error);
+        setErrors(prev => ({...prev, city: 'Failed to load cities'}));
+      } finally {
+        setIsLoadingCities(false);
+      }
+    };
+  
+    fetchCities();
+  }, []);
+
+//   const timer = setTimeout(fetchCities, 300); // Small delay
+//   return () => clearTimeout(timer);
+// }, [isOpen]);
 
   
   if (!isOpen) return null;
@@ -312,34 +317,55 @@ useEffect(() => {
                 min={formData.startDate || new Date().toISOString().split('T')[0]}
               />
 
-              <div className="col-span-1">
-                    <label className="flex items-center gap-1 text-b500 font-semibold text-xs mb-1">
-                      <FaMapMarkerAlt className="text-b500 text-xs" />
-                      <span>City</span>
-                    </label>
-                    <select
-                      value={formData.city}
-                      onChange={(e) => handleChange('city', e.target.value)}
-                      className={`w-full p-2 border rounded-md ${
-                        errors.city ? 'border-red-500' : 'border-gray-300'
-                      }`}
-                      disabled={isLoadingCities}
-                    >
-                      <option value="">Select a city</option>
-                      {isLoadingCities ? (
-                        <option>Loading cities...</option>
-                      ) : (
-                        cities.map((city, index) => (
-                          <option key={`city-${index}-${city}`} value={city}>
-                            {city}
-                          </option>
-                        ))
-                      )}
-                    </select>
-                    {errors.city && (
-                      <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+              <div className="col-span-1 relative">
+                <label className="flex items-center gap-1 text-b500 font-semibold text-xs mb-1">
+                  <FaMapMarkerAlt className="text-b500 text-xs" />
+                  <span>City</span>
+                </label>
+                
+                {/* Dropdown trigger */}
+                <div
+                  className={`w-full p-2 border rounded-md flex items-center justify-between cursor-pointer ${
+                    errors.city ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  onClick={() => toggleDropdown('city')}
+                >
+                  <span>{selectedCityLabel || 'Select a city'}</span>
+                  <svg
+                    className={`w-4 h-4 transition-transform ${
+                      openDropdown === 'city' ? 'transform rotate-180' : ''
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+
+                {/* Dropdown content */}
+                {openDropdown === 'city' && (
+                  <div className="dropdown absolute top-full left-0 mt-1 bg-light shadow-primary-4 rounded-small-md p-2 w-full z-50 border border-stroke max-h-60 overflow-y-auto">
+                    {isLoadingCities ? (
+                      <div className="py-2 px-4 text-b200">Loading cities...</div>
+                    ) : (
+                      cities.map((city) => (
+                        <div
+                          key={city.value}
+                          className="py-2 px-4 hover:bg-cayan50 cursor-pointer text-b200 rounded-md"
+                          onClick={() => handleCitySelect(city)}
+                        >
+                          {city.label}
+                        </div>
+                      ))
                     )}
                   </div>
+                )}
+
+                {errors.city && (
+                  <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+                )}
+              </div>
 
               <div className="col-span-1">
                 <PrimaryInput
