@@ -36,36 +36,55 @@ const Navbar = () => {
   }, []);
   
   useEffect(() => {
+    const abortController = new AbortController();
+    let timeoutId;
+  
     const checkAuthStatus = async () => {
       try {
-        const { data } = await api.get('/users/me', { 
-          withCredentials: true 
+        const { data } = await api.get('/users/me', {
+          withCredentials: true,
+          signal: abortController.signal 
         });
   
         setUserData({
           id: data.id,
           email: data.email,
           role: data.role,
-          firstName: data.firstName, 
+          firstName: data.firstName,
           lastName: data.lastName,
           profilePicture: data.profilePicture || null
         });
-  
         setIsLoggedIn(true);
       } catch (error) {
-        setIsLoggedIn(false);
-        setUserData(null);
+        if (error.name !== 'CanceledError') { // Ignore cancelled requests
+          setIsLoggedIn(false);
+          setUserData(null);
+          
+          // Exponential backoff if rate-limited
+          if (error.response?.status === 429) {
+            const retryAfter = error.response.headers['retry-after'] || 5;
+            timeoutId = setTimeout(checkAuthStatus, retryAfter * 1000);
+            return;
+          }
+        }
       } finally {
         setIsLoading(false);
       }
+  
+      // Regular polling (only after successful request or non-429 error)
+      timeoutId = setTimeout(checkAuthStatus, 300000);
     };
   
     checkAuthStatus();
-    
-    const intervalId = setInterval(checkAuthStatus, 300000);
-    return () => clearInterval(intervalId);
+  
+    return () => {
+      abortController.abort();
+      clearTimeout(timeoutId);
+    };
   }, [navigate]); 
 
+
+  
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';

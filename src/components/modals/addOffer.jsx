@@ -9,7 +9,7 @@ import api from '../../utils/axios';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
-const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
+const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
   
   const { isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
