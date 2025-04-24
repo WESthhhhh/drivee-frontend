@@ -17,7 +17,7 @@ const SchoolCard = ({ school }) => {
       
       <div className="p-4 text-center flex-grow flex flex-col items-center">
       <div 
-        className="w-16 h-16 rounded-full border-4 border-light -mt-12 bg-light flex items-center justify-center text-white text-2xl "
+        className="w-16 h-16 rounded-full border-2 border-light -mt-12 bg-light flex items-center justify-center text-b200 text-2xl "
         style={{
           backgroundColor: "#DCEFFE" // Directly use the hex code
           // OR hsl(207, 95%, 93%) if you prefer HSL
