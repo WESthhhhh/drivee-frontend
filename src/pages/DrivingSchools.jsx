@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { FaChevronDown, FaChevronLeft, FaChevronRight, FaTimes } from 'react-icons/fa';
-import { schools } from '../schools';
+// import { schools } from '../schools';
 import SchoolCard from '../components/cards/schoolCards';
 
 const DrivingSchools = () => {
   const ITEMS_PER_PAGE = 6;
-
+  const [schools, setSchools] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [filters, setFilters] = useState({
     location: null,
     rating: null,
@@ -13,6 +15,49 @@ const DrivingSchools = () => {
   });
   const [openDropdown, setOpenDropdown] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+
+
+  useEffect(() => {
+    const fetchSchools = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/users/admin/users?role=SCHOOL`,
+          { credentials: "include" }
+        );
+        
+        if (!response.ok) throw new Error('Failed to fetch schools');
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          const formattedSchools = data.data.map(user => ({
+            id: user.id,
+            name: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
+            location: user.address?.city || 'Location not specified',
+            rating: user.rating || '4.5',
+            description: user.bio || 'Driving school description not available',
+            img: user.avatar || '/images/fallback-logo.png',
+            bgimg: user.coverImage || '/images/fallback-bg.jpg',
+            price: user.price || '0dh'
+          }));
+          setSchools(formattedSchools);
+        } else {
+          throw new Error(data.message || 'Failed to fetch schools');
+        }
+      } catch (err) {
+        console.error("Error fetching schools:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSchools();
+  }, []);
+
+
+
 
   // Filter
   const filteredSchools = schools.filter(school => {
