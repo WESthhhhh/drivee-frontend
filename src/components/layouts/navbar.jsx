@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, NavLink } from 'react-router-dom';
 import { IoMdClose } from 'react-icons/io';
 import { IoChevronDown } from 'react-icons/io5';
 import { HiMenuAlt1 } from "react-icons/hi";
@@ -23,7 +23,6 @@ const Navbar = () => {
   const navRef = useRef(null);
   const dropRef = useRef(null);
 
- 
   useEffect(() => {
     const handleScroll = () => {
       const isScrolled = window.scrollY > 10;
@@ -31,20 +30,28 @@ const Navbar = () => {
         setScrolled(isScrolled);
       }
     };
-
+  
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [scrolled]);
-
-  // Check authentication status
+  }, []);
+  
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
         const { data } = await api.get('/users/me', { 
-          withCredentials: true
+          withCredentials: true 
         });
+  
+        setUserData({
+          id: data.id,
+          email: data.email,
+          role: data.role,
+          firstName: data.firstName, 
+          lastName: data.lastName,
+          profilePicture: data.profilePicture || null
+        });
+  
         setIsLoggedIn(true);
-        setUserData(data.user); 
       } catch (error) {
         setIsLoggedIn(false);
         setUserData(null);
@@ -52,14 +59,13 @@ const Navbar = () => {
         setIsLoading(false);
       }
     };
-
+  
     checkAuthStatus();
-
+    
     const intervalId = setInterval(checkAuthStatus, 300000);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [navigate]); 
 
-  
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';
@@ -67,7 +73,6 @@ const Navbar = () => {
       document.body.style.overflow = 'auto';
     }
   }, [open]);
-
   
   useEffect(() => {
     const closeMenus = (e) => {
@@ -139,12 +144,58 @@ const Navbar = () => {
         </Link>
         
         
+        
         <nav className="hidden md:flex items-center gap-12">
-          <Link to={'/offers'} className="text-gray-800 text-[1.05rem] no-underline hover:text-primary transition-colors">Offers</Link>
-          <Link to={'/drivingschools'} className="text-gray-800 text-[1.05rem] no-underline hover:text-primary transition-colors">Driving School</Link>
-          <Link to={'/howitworks'} className="text-gray-800 text-[1.05rem] no-underline hover:text-primary transition-colors">How it works</Link>
-          <Link to={'/contact'} className="text-gray-800 text-[1.05rem] no-underline hover:text-primary transition-colors">Contact</Link>
+          <NavLink 
+            to={'/offers'} 
+            className={({ isActive }) => 
+              `text-[1.05rem] no-underline transition-colors duration-300 ${
+                isActive 
+                  ? 'text-primary font-semibold' 
+                  : 'text-text hover:text-primary'
+              }`
+            }
+          >
+            Offers
+          </NavLink>
+          <NavLink 
+            to={'/drivingschools'} 
+            className={({ isActive }) => 
+              `text-[1.05rem] no-underline transition-colors duration-300 ${
+                isActive 
+                  ? 'text-primary font-semibold' 
+                  : 'text-text hover:text-primary'
+              }`
+            }
+          >
+            Driving School
+          </NavLink>
+          <NavLink 
+            to={'/howitworks'} 
+            className={({ isActive }) => 
+              `text-[1.05rem] no-underline transition-colors duration-300 ${
+                isActive 
+                  ? 'text-primary font-semibold' 
+                  : 'text-text hover:text-primary'
+              }`
+            }
+          >
+            How it works
+          </NavLink>
+          <NavLink 
+            to={'/contact'} 
+            className={({ isActive }) => 
+              `text-[1.05rem] no-underline transition-colors duration-300 ${
+                isActive 
+                  ? 'text-primary font-semibold' 
+                  : 'text-text hover:text-primary'
+              }`
+            }
+          >
+            Contact
+          </NavLink>
         </nav>
+       
         
         
         {isLoggedIn ? (
@@ -170,12 +221,17 @@ const Navbar = () => {
                     className="w-10 h-10 rounded-full object-cover" 
                   />
                   <div>
-                    <p className="text-sm font-medium text-primary">{userData?.name || 'User'}</p>
-                    <p className="text-xs text-gray-500">{userData?.email || ''}</p>
+                    <p className="text-sm font-semibold text-primary">{userData?.firstName || ''} </p>
+                    <p className="text-xs text-gray-500 w-[70px]">{userData?.email || ''}</p>
                   </div>
                 </div>
                 <Link 
-                  to={'/profile'} 
+                  to={
+                    userData?.role === 'ADMIN' ? '/admin-info' : 
+                    userData?.role === 'SCHOOL' ? '/school-info' : 
+                    userData?.role === 'STUDENT' ? '/user-info' :
+                    '/profile'
+                  } 
                   className="block text-primary no-underline text-[1rem] py-2 hover:bg-gray-50 rounded-small-md px-2"
                 >
                   My Profile
@@ -223,34 +279,58 @@ const Navbar = () => {
           </div>
 
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            <Link
+            <NavLink
               to="/offers"
-              className="block py-3 px-4 rounded-small-md text-primary hover:bg-cayan50 transition-colors"
+              className={({ isActive }) => 
+                `block py-3 px-4 rounded-small-md transition-colors duration-300 ${
+                  isActive 
+                    ? 'text-primary font-semibold bg-cayan50' 
+                    : 'text-primary hover:bg-cayan50'
+                }`
+              }
               onClick={() => setOpen(false)}
             >
               Offers
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/drivingschools"
-              className="block py-3 px-4 rounded-small-md text-primary hover:bg-cayan50 transition-colors"
+              className={({ isActive }) => 
+                `block py-3 px-4 rounded-small-md transition-colors duration-300 ${
+                  isActive 
+                    ? 'text-primary font-semibold bg-cayan50' 
+                    : 'text-primary hover:bg-cayan50'
+                }`
+              }
               onClick={() => setOpen(false)}
             >
               Driving School
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/howitworks"
-              className="block py-3 px-4 rounded-small-md text-primary hover:bg-cayan50 transition-colors"
+              className={({ isActive }) => 
+                `block py-3 px-4 rounded-small-md transition-colors duration-300 ${
+                  isActive 
+                    ? 'text-primary font-semibold bg-cayan50' 
+                    : 'text-primary hover:bg-cayan50'
+                }`
+              }
               onClick={() => setOpen(false)}
             >
               How it works
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/contact"
-              className="block py-3 px-4 rounded-small-md text-primary hover:bg-cayan50 transition-colors"
+              className={({ isActive }) => 
+                `block py-3 px-4 rounded-small-md transition-colors duration-300 ${
+                  isActive 
+                    ? 'text-primary font-semibold bg-cayan50' 
+                    : 'text-primary hover:bg-cayan50'
+                }`
+              }
               onClick={() => setOpen(false)}
             >
               Contact
-            </Link>
+            </NavLink>
           </div>
 
           <div className="p-4">
@@ -263,17 +343,25 @@ const Navbar = () => {
                     className="w-10 h-10 rounded-full object-cover" 
                   />
                   <div>
-                    <p className="text-sm font-medium text-primary">{userData?.name || 'User'}</p>
+                    <p className="text-sm font-semibold text-primary">{userData?.name || 'User'}</p>
                     <p className="text-xs text-gray-500">{userData?.email || ''}</p>
                   </div>
                 </div>
-                <Link
-                  to="/profile"
-                  className="block w-full text-center py-3 px-4 rounded-lg bg-gray-100 text-primary hover:bg-gray-200 transition-colors mb-2"
-                  onClick={() => setOpen(false)}
-                >
-                  My Profile
-                </Link>
+                  <Link
+                    to={
+                      userData?.role === 'ADMIN' ? '/admin-info' : 
+                      userData?.role === 'SCHOOL' ? '/school-info' : 
+                      userData?.role === 'STUDENT' ? '/user-info' : 
+
+                      '/profile'
+                    }
+                    className="block w-full text-center py-3 px-4 rounded-lg bg-gray-100 text-primary hover:bg-gray-200 transition-colors mb-2"
+                    onClick={() => setOpen(false)}
+                  >
+                    My Profile
+                  </Link>
+
+                  
                 <LogoutButton 
                   onLogoutSuccess={handleSuccessfulLogout}
                   variant="danger"

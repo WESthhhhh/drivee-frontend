@@ -1,13 +1,48 @@
-import SchoolSidebar from "../../schoolProfile/SideBar"
+import { useState, useEffect } from 'react';
+import SchoolSidebar from "../../schoolProfile/SideBar";
 import Picprofile from "../../UI/picprofile";
-// import Cover from "../../schoolProfile/Card"
 import Cover from "../../cards/cover";
-import InfoUpdate from "../../schoolProfile/InfoUpdate";
+import InfoUpdate from "../../userProfile/InfoUpdate";
+import api from "../../../utils/axios";
+import LoadingSpinner from '../../UI/loadingSpinner';
 export default function Home() {
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [load, setLoad] = useState(true);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const { data } = await api.get('/users/me', {
+          withCredentials: true
+        });
+        setUserData(data);
+      } catch (error) {
+        console.error('Fetch error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    if (load) {  
+      fetchUserData();
+    } 
+  }, []);
+
+  if (loading) {
+      return (
+        <div className="-space-y-4">
+          <div className="flex justify-center items-center h-[100px]">
+            <LoadingSpinner /> 
+          </div>
+        </div>
+      );
+    }
+
   return (
     <div className="flex">
-      <SchoolSidebar />
-      <div className="border border-stroke rounded-large-md flex-1 mt-7.5 px-5 py-4 space-y-5 mb-12">
+      <SchoolSidebar userData={userData} />
+      <div className="border border-stroke rounded-large-md flex-1 mt-7.5 px-5 py-4 space-y-5 pb-32">
         <Cover />
         <InfoUpdate />
       </div>

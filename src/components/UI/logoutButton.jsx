@@ -8,13 +8,14 @@ const LogoutButton = ({
   className = '', 
   iconClassName = '', 
   text = 'Logout', 
-  variant = 'default',
+  variant = 'default', // 'default' or 'danger'
   onLogoutSuccess 
 }) => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogout = async () => {
+    if (isLoading) return;
     setIsLoading(true);
     try {
       await api.post('/users/logout', {}, {
@@ -29,16 +30,24 @@ const LogoutButton = ({
     }
   };
 
-  const buttonClasses = {
-    default: `flex items-center gap-2 text-primary cursor-pointer ${className}`,
-    danger: `flex items-center gap-2 text-error bg-red-50 hover:bg-red-100 p-2 rounded-md ${className}`
+  // Consolidated button classes with better variant handling
+  const getButtonClasses = () => {
+    const baseClasses = `flex items-center gap-2 cursor-pointer transition-colors ${className}`;
+    
+    switch(variant) {
+      case 'danger':
+        return `${baseClasses} text-error hover:text-error-dark bg-error-light hover:bg-error-lighter p-2 rounded-md`;
+      default:
+        return `${baseClasses} text-primary hover:text-primary-dark bg-primary-light hover:bg-primary-lighter p-2 rounded-md`;
+    }
   };
 
   return (
-    <div 
-      className={`${buttonClasses[variant] || buttonClasses.default} ${isLoading ? 'opacity-75' : ''}`}
+    <button 
+      className={getButtonClasses()}
       onClick={handleLogout}
       disabled={isLoading}
+      type="button"
     >
       {isLoading ? (
         <div className="flex items-center gap-2">
@@ -55,11 +64,11 @@ const LogoutButton = ({
         </div>
       ) : (
         <>
-          <TbLogout className={`text-xl ${iconClassName}`} />
+          <TbLogout className={`text-md ${iconClassName}`} />
           {text && <span>{text}</span>}
         </>
       )}
-    </div>
+    </button>
   );
 };
 

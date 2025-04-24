@@ -26,6 +26,7 @@ export default {
         inputtext:'#7D838B',
         grey:'#929599',
         stroke:'#E7EBF7',
+        cayan75:'#D6EDF0',
       },
       borderRadius: {
         'small-sm': '8px',

@@ -5,7 +5,7 @@ import { useOffers } from '../context/fetchOffers';
 import LoadingSpinner from '../components/UI/loadingSpinner';
 
 const OffersPage = () => {
-  // First call all hooks unconditionally at the top
+  
   const { offers, users, loading, error, refreshData } = useOffers();
   const [filters, setFilters] = useState({
     location: null,
@@ -31,7 +31,7 @@ const OffersPage = () => {
 
   if (error) return <div className="text-red-500 text-center py-12">Error: {error}</div>;
 
-  // Filter offers with safe price handling
+  
   const filteredOffers = offers.filter(offer => {
     let priceValue;
     
@@ -95,20 +95,21 @@ const OffersPage = () => {
   return (
     <div className="max-w-6xl w-full mx-auto overflow-x-hidden px-4 pt-12">
       {/* Header */}
-      <h1 className="text-[2.5rem] text-center font-normal mb-12 z-[999999999999999]">
+      {/* <h1 className="text-[2.5rem] text-center font-normal mb-12 z-[999999999999999]">
         Limited-Time <span className="font-semibold text-primary">Offers</span> on Driving Packages!
-      </h1>
-      <img 
-        src="/images/home-ellipse.png" 
-        className="absolute top-0 right-0 w-auto h-auto" 
-        alt="background circle" 
-      />
-      <img 
-        src="/images/home-elli-b.png" 
-        className="absolute right-[2%] top-1/2 w-auto h-auto" 
-        alt="small decorative element" 
-      />
-
+      </h1> */}
+      
+        <img 
+          src="/images/home-ellipse.png" 
+          className="absolute top-0 right-0 w-auto h-auto -z-10" 
+          alt="background circle" 
+        />
+        <img 
+          src="/images/home-elli-b.png" 
+          className="absolute right-[2%] top-1/2 w-auto h-auto -z-10" 
+          alt="small decorative element" 
+        />
+      
       {/* Filter Controls */}
       <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 mb-8 z-[999999999999999]">
         <h2 className="text-lg font-medium">Filter:</h2>
@@ -243,35 +244,34 @@ const OffersPage = () => {
       </button> */}
 
       {/* Offers Grid */}
-      <div className="grid md:grid-cols-2 justify-center gap-8 mb-12 z-[999999999999999]">
-        {paginatedOffers.length > 0 ? (
-          paginatedOffers.map(offer => (
-            <div key={offer.id} className="w-full md:w-1/2 lg:w-1/3 ">
-              <OfferCard 
-                offer={offer}
-                // school={offer.school}
-                className="z-[999999999999999]"
-              />
-            </div>
-          ))
-        ) : (
-          <div className="w-full text-center py-12">
-            <p className="text-inputtext mb-4">No offers match your filters</p>
-            <button
-              onClick={() => {
-                setFilters({
-                  location: null,
-                  rating: null,
-                  price: [0, 1000]
-                });
-              }}
-              className="px-4 py-2 text-b200 hover:underline"
-            >
-              Clear all filters
-            </button>
-          </div>
-        )}
+      <div className="grid grid-cols-1 lg:grid-cols-2  justify-items-center mb-12 gap-6  lg:px-14">
+  {paginatedOffers.length > 0 ? (
+    paginatedOffers.map(offer => (
+      <div key={offer.id} className="w-full max-w-md ">
+        <OfferCard 
+          offer={offer}
+          className="z-[999999999999999]"
+        />
       </div>
+    ))
+  ) : (
+    <div className="col-span-2 w-full text-center py-12">
+      <p className="text-inputtext mb-4">No offers match your filters</p>
+      <button
+        onClick={() => {
+          setFilters({
+            location: null,
+            rating: null,
+            price: [0, 1000]
+          });
+        }}
+        className="px-4 py-2 text-b200 hover:underline"
+      >
+        Clear all filters
+      </button>
+    </div>
+  )}
+</div>
 
       {/* Pagination */}
       {totalPages > 1 && (

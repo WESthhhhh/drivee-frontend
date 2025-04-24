@@ -65,7 +65,6 @@ import SchoolSignup from './pages/Auth/SchoolSignup.jsx';
 import StudentSignup from './pages/Auth/StudentSignup.jsx';
 import ForgotPassword from './pages/Auth/ForgotPassword.jsx';
 import ResetPassword from './pages/Auth/ResetPassword.jsx';
-
 import ManageOffers from './pages/profiles/manageOffers.jsx';
 import SchoolReservations from './pages/profiles/schoolReservations.jsx';
 import SchoolReviews from './pages/profiles/schoolReviews.jsx';
@@ -73,6 +72,13 @@ import SchoolInfo from './pages/profiles/schoolInfo.jsx';
 import Userinfo from './pages/profiles/userInfo.jsx';
 import MyReservations from './pages/profiles/PurchasedOffers.jsx';
 import MyReviews from './pages/profiles/reviewsUser.jsx';
+import ManageSchools from './pages/profiles/manageSchools.jsx';
+import ManageUsers from './pages/profiles/manageUsers.jsx';
+import Admininfo from './pages/profiles/adminInfo.jsx';
+import AdminOffers from './pages/profiles/manageOffersAdmin.jsx';
+import ProfileSchool from './pages/profileSchool.jsx';
+import AdminReservations from './pages/profiles/adminReservations.jsx';
+
 
 export const router = createBrowserRouter([
   {
@@ -80,12 +86,14 @@ export const router = createBrowserRouter([
     element: <MainLayout />,
     errorElement: <NotFoundPage />,
     children: [
-      { index: true, element:(<OffersDataProvider> <HomePage /></OffersDataProvider>)  },
+      { index: true , element:(<OffersDataProvider> <HomePage /></OffersDataProvider>)  },
+      { path: 'home' , element:(<OffersDataProvider> <HomePage /></OffersDataProvider>)  },
       { path: 'offers', element: (<OffersDataProvider> <OffersPage /></OffersDataProvider>) },
       { path: 'contact', element: <ContactPage /> },
       { path: 'drivingschools', element: <DrivingSchools /> },
       { path: 'howitworks', element: <HowItWorks/> },
       { path: 'reservation', element: <ReservationToPayement/> },
+      { path: 'profile', element: <ProfileSchool/> },
     ]
   },
   {
@@ -103,7 +111,7 @@ export const router = createBrowserRouter([
   {
     element: <ProfileLayout />,
     children: [
-      { path: 'offers-management', element: <ManageOffers /> },
+      // { path: 'offers-management', element: <ManageOffers /> },
       { path: 'school-reservation', element: <SchoolReservations /> },
       { path: 'school-review', element: <SchoolReviews /> },
       { path: 'school-info', element: <SchoolInfo /> },
@@ -113,6 +121,11 @@ export const router = createBrowserRouter([
       { path: 'user-info', element: <Userinfo /> },
       { path: 'user-offers', element: <MyReservations /> },
       { path: 'user-reviews', element: <MyReviews /> },
+      { path: 'admin-schools', element: <ManageSchools /> },
+      { path: 'admin-users', element: <ManageUsers /> },
+      { path: 'admin-info', element: <Admininfo /> },
+      { path: 'admin-offers', element: <AdminOffers /> },
+      { path: 'admin-reservations', element: <AdminReservations /> },
     ]
 
   },

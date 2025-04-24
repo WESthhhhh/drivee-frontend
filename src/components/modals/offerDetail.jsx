@@ -3,6 +3,7 @@ import { IoCalendarClearOutline } from "react-icons/io5";
 import { IoMdClose } from 'react-icons/io';
 import React from 'react';
 import Button from '../UI/button';
+import Img from '/images/of-1.png'
 import { useNavigate } from 'react-router-dom';
 
 const OfferDetail = ({ isOpen, closeModal, offer }) => {
@@ -60,19 +61,19 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
         {/* Scrollable Content Area */}
         <div className="p-5 flex-1 overflow-y-auto">
           {/* Profile Section */}
-          <div className="flex justify-between  gap-3 mt-3 mb-2 p-2 rounded-lg">
+          <div className="flex justify-between  gap-3 mt-4 mb-4 p-2 rounded-lg">
             <div className="flex  gap-3">
               <img 
-                src={school?.profileImage || img} 
+                src={school?.profileImage || Img} 
                 alt={schoolName} 
                 className="w-10 h-10 rounded-full object-cover"
                 onError={(e) => {
                   e.target.src = '/images/default-avatar.png';
                 }}
               />
-              <div>
+              <div className='justify-items-start '>
                 <h2 className="text-b500 text-sm font-medium">{schoolName}</h2>
-                <span className="inline-block px-2 py-0.5 bg-blue-100 text-b500 text-xs font-semibold rounded">
+                <span className="inline-block px-2 py-0.5 text-left bg-blue-100 text-b500 text-xs font-semibold rounded">
                   Pro
                 </span>
               </div>
@@ -81,23 +82,23 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
           </div>
           
           {/* Course Title and Description */}
-          <div className="text-center mb-10">
+          <div className="text-center my-10 ">
             <h2 className="text-b500 font-semibold text-base">{title}</h2>
-            <div className="flex justify-center items-center gap-2 mt-1">
+            <div className="flex justify-center items-center gap-2 mt-2">
               <div className="flex">
                 {stars.length > 0 ? (
                   stars.map((star) => (
                     <star.icon key={star.id} className="text-b500 text-sm" />
                   ))
                 ) : (
-                  <span className="text-inputtext text-xs my-1">No ratings</span>
+                  <span className="text-inputtext text-xs my-3">No ratings</span>
                 )}
               </div>
               {reviews > 0 && (
                 <span className="text-inputtext text-xs">({reviews})</span>
               )}
             </div>
-            <p className="text-xs text-gray-600 line-clamp-2 mx-auto max-w-xs">{description}</p>
+            <p className="text-xs text-gray-600 line-clamp-2 leading-4 mx-auto max-w-xs">{description}</p>
           </div>
 
           {/* Info Cards */}

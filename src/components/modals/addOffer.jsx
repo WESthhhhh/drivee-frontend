@@ -36,32 +36,51 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
   const [cities, setCities] = useState([]);
   const [isLoadingCities, setIsLoadingCities] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const [selectedCityLabel, setSelectedCityLabel] = useState('');
 
-  
-  useEffect(() => {
-    if (!isAuthenticated && !isLoading) {
-      navigate('/login');
-    }
-  }, [isAuthenticated, isLoading, navigate]);
+  const toggleDropdown = (dropdownName) => {
+    setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
+  };
 
-  /////         FETCH CITIESS        ////////////
   useEffect(() => {
+   
     const fetchCities = async () => {
-      if (!isOpen) return;
-      
       setIsLoadingCities(true);
       try {
-        const response = await api.get('/locations/cities');
-        setCities(response.data);
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/locations/cities`, {
+          credentials: 'include'
+        });
+        if (!response.ok) throw new Error('Failed to fetch cities');
+        const data = await response.json();
+        
+        const formattedCities = Array.isArray(data)
+          ? data.map(city => typeof city === 'string' 
+              ? { value: city, label: city }
+              : city)
+          : [];
+        
+        setCities(formattedCities);
       } catch (error) {
-        console.error('Failed to fetch cities:', error);
+        console.error('Error fetching cities:', error);
+        setErrors(prev => ({...prev, city: 'Failed to load cities'}));
       } finally {
         setIsLoadingCities(false);
       }
     };
-    
+  
     fetchCities();
-  }, [isOpen]);
+  }, []);
+
+  const handleCitySelect = (city) => {
+    handleChange('city', city.value);
+    setSelectedCityLabel(city.label);
+    setOpenDropdown(null);
+  };
+
+//   const timer = setTimeout(fetchCities, 300); // Small delay
+//   return () => clearTimeout(timer);
+// }, [isOpen]);
 
   
   if (!isOpen) return null;
@@ -157,24 +176,29 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
     setIsSubmitting(true);
     
     try {
-      // First create or find the location
-      const locationResponse = await api.post('/locations/find-or-create', {
+      const locationResponse = await api.post('/locations', {
         city: formData.city,
         address: formData.address.trim()
+      }, {
+        withCredentials: true 
       });
-
-     
-      const response = await api.post('/offres', {
-        title: formData.title.trim(),
-        description: formData.description.trim(),
-        durationHours: parseInt(formData.durationHours),
-        price: parseFloat(formData.price),
-        startDate: new Date(formData.startDate).toISOString(),
-        endDate: new Date(formData.endDate).toISOString(),
-        locationId: locationResponse.data.id
-      });
+  
+     const response = await api.post('/offres', {
+      title: formData.title.trim(),
+      description: formData.description.trim(),
+      durationHours: parseInt(formData.durationHours),
+      price: parseFloat(formData.price),
+      startDate: new Date(formData.startDate).toISOString(),
+      endDate: new Date(formData.endDate).toISOString(),
+      locationId: locationResponse.data.id
+    },
+    {
+      withCredentials: true
+    }
+  
+  );
       
-      // Reset form
+      
       setFormData({
         title: '',
         description: '',
@@ -188,15 +212,24 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
       
       onOfferCreated(response.data);
       closeModal();
+
     } catch (error) {
+      console.error('Full error details:', {
+        message: error.message,
+        url: error.config?.url,
+        status: error.response?.status,
+        data: error.response?.data,
+        requestPayload: error.config?.data,
+        headers: error.config?.headers
+      });
+      
       if (error.response?.status === 401) {
         navigate('/login');
       } else {
-        console.error('Error creating offer:', error);
-        alert(
+        console.log(
           error.response?.data?.error || 
-          error.response?.data?.details || 
-          "Failed to create offer"
+          error.response?.data?.message || 
+          "Failed to create offer. Please check console for details."
         );
       }
     } finally {
@@ -210,6 +243,7 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
   };
+  
 
   return (
     <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-4">
@@ -305,30 +339,50 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
                 min={formData.startDate || new Date().toISOString().split('T')[0]}
               />
 
-              <div className="col-span-1">
-                <label className="flex items-center gap-1 text-b500 font-semibold text-xs mb-1">
-                  <FaMapMarkerAlt className="text-b500 text-xs" />
-                  <span>City</span>
+             {/* City Dropdown */}
+              <div className="col-span-1 relative">
+                <label className="flex items-center gap-1 text-primary font-semibold text-xs mb-3">
+                  <FaMapMarkerAlt className="text-bprimary text-xs" />
+                  <span>Area</span>
                 </label>
-                <select
-                  value={formData.city}
-                  onChange={(e) => handleChange('city', e.target.value)}
-                  className={`w-full p-2 border rounded-md ${
-                    errors.city ? 'border-red-500' : 'border-gray-300'
+                
+                <div
+                  className={`w-full p-2 border text-[14px] flex items-center justify-between cursor-pointer rounded-small-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 ${
+                    errors.city ? 'border-red-500' : 'border-b50'
                   }`}
-                  disabled={isLoadingCities}
+                  onClick={() => toggleDropdown('city')}
                 >
-                  <option value="">Select a city</option>
-                  {isLoadingCities ? (
-                    <option>Loading cities...</option>
-                  ) : (
-                    cities.map(city => (
-                      <option key={city} value={city}>
-                        {city}
-                      </option>
-                    ))
-                  )}
-                </select>
+                  <span>{selectedCityLabel || 'Select a city'}</span>
+                  <svg
+                    className={`w-4 h-4 transition-transform text-accent ${
+                      openDropdown === 'city' ? 'transform rotate-180' : ''
+                    }`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+
+                {openDropdown === 'city' && (
+                  <div className="dropdown absolute top-full left-0 mt-1 bg-light shadow-primary-4 rounded-small-md p-2 w-full z-50 border border-stroke max-h-60 overflow-y-auto">
+                    {isLoadingCities ? (
+                      <div className="py-2 px-4 text-b200">Loading cities...</div>
+                    ) : (
+                      cities.map((city) => (
+                        <div
+                          key={city.value}
+                          className="py-2 px-4 hover:bg-cayan50 cursor-pointer text-b200 rounded-md"
+                          onClick={() => handleCitySelect(city)}
+                        >
+                          {city.label}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                )}
+
                 {errors.city && (
                   <p className="text-red-500 text-xs mt-1">{errors.city}</p>
                 )}

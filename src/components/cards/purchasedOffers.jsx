@@ -61,7 +61,7 @@ const PurchasedOffers = ({ offer = defaultOffer }) => {
             </div>
           )}
         </div>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6 justify-center">
           <Button 
             type='secondary'
             onClick={() => setIsDetailModalOpen(true)}

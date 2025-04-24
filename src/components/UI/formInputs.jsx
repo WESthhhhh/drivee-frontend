@@ -113,7 +113,21 @@ export const EmailInput = ({
       </div>
     );
   };
-
+  export const BasicEmailInput = ({ label, error, ...props }) => (
+    <div className="">
+      <label className="block text-sm font-medium mb-[12px] text-primary">
+        {label}
+      </label>
+      <input
+        type="email"
+        className={`w-full p-2 border ${
+          error ? 'border-error' : 'border-b50'
+        } rounded-small-md focus:outline-none focus:ring-thin focus:ring-border-b50 focus:border-b75 text-[14px]`}
+        {...props}
+      />
+      {error && <p className="text-[13px] text-error">{error}</p>}
+    </div>
+  );
 export const SecondaryInput = ({ label, placeholder, type = "text", icon = null }) => {
     const getIcon = () => {
         switch(icon) {

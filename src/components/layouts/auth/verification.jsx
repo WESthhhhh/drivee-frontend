@@ -36,7 +36,7 @@ const VerificationForm = () => {
 
   const handleCloseSuccess = () => {
     setShowSuccessPopup(false);
-    navigate('/profile'); // Navigate after closing
+    navigate('/'); 
   };
   
   const handleFileChange = (e) => {
@@ -201,7 +201,7 @@ const VerificationForm = () => {
           
           <Button
             type="ghost"
-            onClick={() => navigate('/profile')}
+            onClick={() => navigate('/')}
             className="w-full md:w-[40%]"
           >
             Skip for Now
@@ -212,7 +212,7 @@ const VerificationForm = () => {
         <SuccessPopup
           title="Your verification request has been submitted!"
           mainMessage="We will verify your details and notify you within 24-48 hours.
-          Check your email for updates. We'll contact you once your school is verified."
+          Check your email for updates. We'll contact you once your school is approved."
           onClose={handleCloseSuccess}
           buttonText="Ok, Got it"
         />
