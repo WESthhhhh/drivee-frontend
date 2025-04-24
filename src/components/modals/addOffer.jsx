@@ -45,7 +45,6 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
 
   useEffect(() => {
    
-    // Update your fetchCities function like this:
     const fetchCities = async () => {
       setIsLoadingCities(true);
       try {
@@ -55,7 +54,6 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
         if (!response.ok) throw new Error('Failed to fetch cities');
         const data = await response.json();
         
-        // Ensure cities are properly formatted as {value, label} objects
         const formattedCities = Array.isArray(data)
           ? data.map(city => typeof city === 'string' 
               ? { value: city, label: city }
@@ -178,7 +176,6 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
     setIsSubmitting(true);
     
     try {
-      // First create or find the location
       const locationResponse = await api.post('/locations', {
         city: formData.city,
         address: formData.address.trim()
@@ -201,7 +198,7 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
   
   );
       
-      // Reset form
+      
       setFormData({
         title: '',
         description: '',

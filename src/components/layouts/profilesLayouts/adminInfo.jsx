@@ -32,7 +32,7 @@ export default function Home() {
   if (loading) {
       return (
         <div className="-space-y-4">
-          <div className="flex justify-center items-center h-[100px]">
+          <div className="flex justify-center items-center ">
             <LoadingSpinner /> 
           </div>
         </div>

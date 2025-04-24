@@ -5,6 +5,7 @@ import api from "../../../utils/axios";
 import LoadingSpinner from '../../UI/loadingSpinner';
 import { useState, useEffect } from 'react';
 
+
 export default function Home() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
