@@ -7,7 +7,7 @@ import Button from '../UI/button';
 import LogoutButton from '../UI/logoutButton';
 import logo from '/logo/Logo.svg';
 import logo2 from '/logo/Logosm.svg';
-import logo3 from '/logo/Logolightsm.svg';
+import logo3 from '/logo/Logosm.svg';
 import profile from '../../assets/avatar.png';
 import api from '../../utils/axios';
 
@@ -362,7 +362,7 @@ const Navbar = () => {
                     className="w-10 h-10 rounded-full object-cover" 
                   />
                   <div>
-                    <p className="text-sm font-semibold text-primary">{userData?.name || 'User'}</p>
+                    <p className="text-sm font-semibold text-primary">{userData?.firstName || 'User'}</p>
                     <p className="text-xs text-gray-500">{userData?.email || ''}</p>
                   </div>
                 </div>

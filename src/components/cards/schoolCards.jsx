@@ -16,14 +16,15 @@ const SchoolCard = ({ school }) => {
       </div>
       
       <div className="p-4 text-center flex-grow flex flex-col items-center">
-        <div 
-          className="w-16 h-16 rounded-full border-4 border-light -mt-12 bg-light flex items-center justify-center text-white text-2xl font-bold"
-          style={{
-            backgroundColor: `hsl(${school.id.charCodeAt(0) % 360}, 70%, 50%)`
-          }}
-        >
-          {school.name.charAt(0).toUpperCase()}
-        </div>
+      <div 
+        className="w-16 h-16 rounded-full border-4 border-light -mt-12 bg-light flex items-center justify-center text-white text-2xl "
+        style={{
+          backgroundColor: "#DCEFFE" // Directly use the hex code
+          // OR hsl(207, 95%, 93%) if you prefer HSL
+        }}
+      >
+        {school.name.charAt(0).toUpperCase()}
+      </div>
         
         <h2 className="text-primary text-xl font-semibold mt-3">{school.name}</h2>
         
