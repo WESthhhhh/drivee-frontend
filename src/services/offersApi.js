@@ -53,3 +53,39 @@ export const deleteOffer = async (id) => {
     }
     return await response.json();
   };
+
+  // Location-related API functions
+export const fetchLocations = async () => {
+  const response = await fetch(`${API_BASE_URL}/locations`, {
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!response.ok) throw new Error(`Failed to load locations: ${response.status}`);
+  return await response.json();
+};
+
+export const fetchCities = async () => {
+  const response = await fetch(`${API_BASE_URL}/locations/cities`, {
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  if (!response.ok) throw new Error(`Failed to load cities: ${response.status}`);
+  return await response.json();
+};
+
+export const createLocation = async (locationData) => {
+  const response = await fetch(`${API_BASE_URL}/locations`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(locationData)
+  });
+  if (!response.ok) throw new Error('Failed to create location');
+  return await response.json();
+};

@@ -178,7 +178,8 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated }) => {
     try {
       const locationResponse = await api.post('/locations', {
         city: formData.city,
-        address: formData.address.trim()
+        address: formData.address.trim(),
+
       }, {
         withCredentials: true 
       });
