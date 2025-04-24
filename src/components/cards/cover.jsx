@@ -47,7 +47,7 @@ export default function Cover() {
       <div className="flex items-end gap-2 pl-6 relative">
         <div className="relative w-[60px] h-[60px] border-4 border-light rounded-full">
           <img 
-            src={userData?.profilePicture || "/images/of-2.png"} 
+            src="/images/avatar.jpg" 
             alt="Profile" 
             className="w-full h-full object-cover rounded-full"
             onError={(e) => {

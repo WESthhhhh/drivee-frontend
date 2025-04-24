@@ -10,7 +10,7 @@ const OfferCard = ({ offer }) => {
   const navigate = useNavigate();
 
   // Safely access nested properties
-  const schoolName = offer.school?.name || 'Unknown School';
+  const schoolName = offer.school?.firstName ? `${offer.school.firstName} ${offer.school.lastName || ''}` : 'Unknown School';
   const schoolImage = offer.school?.image || 'default-school-image.jpg';
   const location = offer.location?.city || 'Location not specified';
   const price = offer.price ? `${offer.price} dh` : 'Price not specified';
@@ -21,7 +21,7 @@ const OfferCard = ({ offer }) => {
       <div className="bg-light rounded-large-md border border-b50 shadow-primary-4 p-6 w-[350px] max-w-md md:w-[470px] flex flex-col justify-center h-[402px]">
         <div className="flex items-center gap-4 mb-6">
           <img 
-            src={schoolImage} 
+            src="/images/avatar.jpg" 
             alt={schoolName} 
             className="w-16 h-16 rounded-full object-cover"
             loading='lazy'

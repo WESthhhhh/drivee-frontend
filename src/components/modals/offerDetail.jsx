@@ -64,7 +64,7 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
           <div className="flex justify-between  gap-3 mt-4 mb-4 p-2 rounded-lg">
             <div className="flex  gap-3">
               <img 
-                src={school?.profileImage || Img} 
+                src="/images/avatar.jpg" 
                 alt={schoolName} 
                 className="w-10 h-10 rounded-full object-cover"
                 onError={(e) => {

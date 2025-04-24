@@ -21,7 +21,7 @@ export default function SideBar({ userData }) {
           <div className="flex items-center gap-2">
             <div className="relative w-[29px] h-[29px]">
               <img 
-               src={userData?.profilePicture || "/images/of-2.png"} 
+              src="/images/avatar.jpg" 
                 alt="Profile" 
                 className="w-full h-full object-cover rounded-full"
               /> 
