@@ -1,7 +1,7 @@
 import { IoIosStar } from 'react-icons/io';
 import { IoIosStarOutline } from 'react-icons/io';
-import r1 from '/images/simane-1.png'
-import r2 from '/images/khaoula-1.png'
+import r1 from '/images/simane.jpg'
+import r2 from '/images/khokha.jpg'
 
 export const review = [
   {
