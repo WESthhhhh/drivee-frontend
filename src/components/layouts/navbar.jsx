@@ -52,7 +52,6 @@ const Navbar = () => {
           role: data.role,
           firstName: data.firstName,
           lastName: data.lastName,
-          profilePicture: data.profilePicture || null
         });
         setIsLoggedIn(true);
       } catch (error) {
