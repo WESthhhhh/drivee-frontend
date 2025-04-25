@@ -42,6 +42,12 @@ export default function Schools() {
     }
   };
 
+  const handleVerificationSuccess = (action) => {
+    console.log(`School was ${action}`);
+    fetchSchools(); // Refresh the school list
+    // You might want to add a toast notification here
+  };
+
   return (
     <div className="px-5 mt-9 font-poppins">
       <div className="space-y-6">
@@ -50,11 +56,16 @@ export default function Schools() {
         <VerificationModal
           isOpen={isVerificationModalOpen}
           closeModal={() => setIsVerificationModalOpen(false)}
+          schoolId={selectedSchool?.id}
           schoolName={
             selectedSchool
               ? `${selectedSchool.firstName} ${selectedSchool.lastName}`
               : ""
           }
+          documentName={selectedSchool?.verificationDocument?.name || "Document"}
+          documentUrl={selectedSchool?.verificationDocument?.url || "#"}
+          onSuccess={handleVerificationSuccess}
+          refreshData={fetchSchools}
         />
 
         {/* Schools Table */}
