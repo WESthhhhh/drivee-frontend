@@ -39,10 +39,7 @@ export default function SchoolOffers() {
   // Handle create new offer for this school
   const handleCreateOffer = async (offerData) => {
     try {
-      const newOffer = await createOffer({ 
-        ...offerData,
-        schoolId // Include schoolId in the offer data
-      });
+      const newOffer = await createOffer(offerData); // Let the modal handle schoolId
       setOffers([...offers, newOffer]);
       setIsModalOpen(false);
     } catch (err) {
