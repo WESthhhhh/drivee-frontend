@@ -1,13 +1,14 @@
 import { IoIosStar } from 'react-icons/io';
 import { IoIosStarOutline } from 'react-icons/io';
-import r1 from '/images/review-1.png'
+import r1 from '/images/simane-1.png'
+import r2 from '/images/khaoula-1.png'
 
 export const review = [
   {
     id: 1,
     img: r1,
-    name: "Joella Aylan",
-    description: "I entrusted Drivee to sell my TAG Heuer, and the outcome was fantastic.",
+    name: "Simane Id belkacem",
+    description: " l’expérience a été excellente dans Drivee. L’équipe a été professionnelle, réactive, et le résultat a dépassé mes attentes.",
     stars: [
       { id: 1, icon: IoIosStar },
       { id: 2, icon: IoIosStar },
@@ -18,8 +19,8 @@ export const review = [
   },
   {
     id: 2,
-    img: r1,
-    name: "Joella Aylan",
+    img: r2,
+    name: "khaoula Hassoune", 
     description: "I entrusted Drivee to sell my TAG Heuer, and the outcome was fantastic.",
     stars: [
       { id: 1, icon: IoIosStar },
