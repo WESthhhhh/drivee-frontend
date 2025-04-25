@@ -1,17 +1,18 @@
 import { FaRegClock, FaDollarSign, FaMapMarkerAlt } from 'react-icons/fa';
 import { IoCalendarClearOutline } from "react-icons/io5";
 import { IoMdClose } from 'react-icons/io';
-import React from 'react';
 import { useState, useEffect } from 'react';
 import Button from '../UI/button';
 import { PrimaryInput, TextArea } from '../UI/formInputs';
-import api from '../../utils/axios'; 
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { fetchCities, createOffer } from '../../services/offersApi';
 
-const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
-  const { isAuthenticated, isLoading } = useAuth();
+const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {}, schoolId }) => {
+  const { isAuthenticated, isLoading, user } = useAuth();
   const navigate = useNavigate();
+  
+  // Form state
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -22,6 +23,19 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
     city: '',
     address: ''
   });
+
+  const initialFormState = {
+    title: '',
+    description: '',
+    durationHours: '',
+    price: '',
+    startDate: '',
+    endDate: '',
+    city: '',
+    address: ''
+  };
+
+  // UI state
   const [errors, setErrors] = useState({});
   const [cities, setCities] = useState([]);
   const [isLoadingCities, setIsLoadingCities] = useState(false);
@@ -29,37 +43,30 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [selectedCityLabel, setSelectedCityLabel] = useState('');
 
-  const toggleDropdown = (dropdownName) => {
-    setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
-  };
-
+  // Fetch cities when modal opens
   useEffect(() => {
-    const fetchCities = async () => {
+    const loadCities = async () => {
+      if (!isOpen) return;
+      
       setIsLoadingCities(true);
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/locations/cities`, {
-          credentials: 'include'
-        });
-        if (!response.ok) throw new Error('Failed to fetch cities');
-        const data = await response.json();
-        
-        const formattedCities = Array.isArray(data)
-          ? data.map(city => typeof city === 'string' 
-              ? { value: city, label: city }
-              : city)
-          : [];
-        
-        setCities(formattedCities);
+        const citiesData = await fetchCities();
+        setCities(citiesData);
       } catch (error) {
+        setErrors(prev => ({ ...prev, city: 'Failed to load cities' }));
         console.error('Error fetching cities:', error);
-        setErrors(prev => ({...prev, city: 'Failed to load cities'}));
       } finally {
         setIsLoadingCities(false);
       }
     };
-  
-    fetchCities();
-  }, []);
+
+    loadCities();
+  }, [isOpen]);
+
+  // Handlers
+  const toggleDropdown = (dropdownName) => {
+    setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
+  };
 
   const handleCitySelect = (city) => {
     handleChange('city', city.value);
@@ -67,27 +74,25 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
     setOpenDropdown(null);
   };
 
-  if (!isOpen) return null;
+  const handleChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
+  };
 
-  if (isLoading || isLoadingCities) {
-    return (
-      <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-4">
-        <div className="bg-light rounded-large-md p-8">
-          <div>Loading...</div>
-        </div>
-      </div>
-    );
-  }
-
+  // Form validation
   const validateForm = () => {
-    let isValid = true;
     const newErrors = {};
+    let isValid = true;
 
+    // Title validation
     if (!formData.title.trim()) {
       newErrors.title = "Title is required";
       isValid = false;
     }
 
+    // Description validation
     if (!formData.description.trim()) {
       newErrors.description = "Description is required";
       isValid = false;
@@ -96,6 +101,7 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
       isValid = false;
     }
 
+    // Duration validation
     if (!formData.durationHours) {
       newErrors.durationHours = "Duration is required";
       isValid = false;
@@ -104,6 +110,7 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
       isValid = false;
     }
 
+    // Price validation
     if (!formData.price) {
       newErrors.price = "Price is required";
       isValid = false;
@@ -112,6 +119,7 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
       isValid = false;
     }
 
+    // Date validation
     if (!formData.startDate) {
       newErrors.startDate = "Start date is required";
       isValid = false;
@@ -128,6 +136,7 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
       isValid = false;
     }
 
+    // Location validation
     if (!formData.city) {
       newErrors.city = "City is required";
       isValid = false;
@@ -142,61 +151,63 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
     return isValid;
   };
 
+  // Form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    if (isSubmitting) return;
+  
     if (!validateForm()) return;
-    
+  
     setIsSubmitting(true);
-    
+  
     try {
-      const startDate = formData.startDate ? `${formData.startDate}T00:00:00.000Z` : null;
-      const endDate = formData.endDate ? `${formData.endDate}T00:00:00.000Z` : null;
-
-      const response = await api.post('/offres', {
-        title: formData.title.trim(),
-        description: formData.description.trim(),
-        durationHours: formData.durationHours,
-        price: formData.price,
-        startDate,
-        endDate,
-        city: formData.city,
-        address: formData.address.trim()
-      }, {
-        withCredentials: true
-      });
+      const offerData = {
+        ...formData,
+        schoolId: schoolId || user?.schoolId,
+        durationHours: Number(formData.durationHours),
+        price: Number(formData.price),
+      };
+  
+      console.log('Prepared offer data:', offerData); // Debug log
+  
+      const newOffer = await createOffer(offerData);
       
-      setFormData({
-        title: '',
-        description: '',
-        durationHours: '',
-        price: '',
-        startDate: '',
-        endDate: '',
-        city: '',
-        address: ''
-      });
-      
-      onOfferCreated(response.data);
-      closeModal();
-    } catch (error) {
-      console.error('Full error details:', error);
-      
-      if (error.response?.status === 401) {
-        navigate('/login');
-      } else {
-        setErrors(error.response?.data?.error || "Failed to create offer");
+      if (!newOffer?.id) {
+        throw new Error('Unexpected response from server');
       }
+  
+      setFormData(initialFormState);
+      setSelectedCityLabel('');
+      onOfferCreated(newOffer);
+      closeModal();
+      
+    } catch (error) {
+      console.error('Detailed submission error:', {
+        error: error.message,
+        formData,
+        user
+      });
+      setErrors(prev => ({
+        ...prev,
+        submit: error.message || 'Failed to create offer'
+      }));
     } finally {
       setIsSubmitting(false);
     }
   };
-  const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
-    }
-  };
+
+  // Early returns
+  if (!isOpen) return null;
+
+  if (isLoading || isLoadingCities) {
+    return (
+      <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-4">
+        <div className="bg-light rounded-large-md p-8">
+          <div>Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-4">
@@ -359,15 +370,18 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
         </div>
         
         <div className="p-5 pt-2 border-t border-stroke">
-          <Button
-            htmlType="submit"
-            type="primary"
-            onClick={handleSubmit}
-            className="w-full py-2 text-sm"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Creating...' : 'Create Offer'}
-          </Button>
+        <Button
+          type="primary"
+          className="w-full py-2 text-sm"
+          disabled={isSubmitting}
+          htmlType="submit" // This connects it to the form
+          onClick={(e) => {
+            e.preventDefault(); // Prevent default behavior
+            handleSubmit(e);    // Manually trigger form submission
+          }}
+        >
+          {isSubmitting ? 'Creating...' : 'Create Offer'}
+        </Button>
         </div>
       </div>
     </div>
