@@ -22,7 +22,7 @@ const DrivingSchools = () => {
       try {
         setLoading(true);
         const response = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL}/users/admin/users?role=SCHOOL`,
+          `${import.meta.env.VITE_API_BASE_URL}/users/users?role=SCHOOL`,
           { credentials: "include" }
         );
         

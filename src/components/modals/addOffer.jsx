@@ -10,7 +10,6 @@ import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
 const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
-  
   const { isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -23,16 +22,7 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
     city: '',
     address: ''
   });
-  const [errors, setErrors] = useState({
-    title: '',
-    description: '',
-    durationHours: '',
-    price: '',
-    startDate: '',
-    endDate: '',
-    city: '',
-    address: ''
-  });
+  const [errors, setErrors] = useState({});
   const [cities, setCities] = useState([]);
   const [isLoadingCities, setIsLoadingCities] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,7 +34,6 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
   };
 
   useEffect(() => {
-   
     const fetchCities = async () => {
       setIsLoadingCities(true);
       try {
@@ -78,14 +67,8 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
     setOpenDropdown(null);
   };
 
-//   const timer = setTimeout(fetchCities, 300); // Small delay
-//   return () => clearTimeout(timer);
-// }, [isOpen]);
-
-  
   if (!isOpen) return null;
 
-  
   if (isLoading || isLoadingCities) {
     return (
       <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-4">
@@ -98,16 +81,7 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
 
   const validateForm = () => {
     let isValid = true;
-    const newErrors = {
-      title: '',
-      description: '',
-      durationHours: '',
-      price: '',
-      startDate: '',
-      endDate: '',
-      city: '',
-      address: ''
-    };
+    const newErrors = {};
 
     if (!formData.title.trim()) {
       newErrors.title = "Title is required";
@@ -176,29 +150,18 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
     setIsSubmitting(true);
     
     try {
-      const locationResponse = await api.post('/locations', {
+      const response = await api.post('/offres', {
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        durationHours: parseInt(formData.durationHours),
+        price: parseFloat(formData.price),
+        startDate: new Date(formData.startDate).toISOString(),
+        endDate: new Date(formData.endDate).toISOString(),
         city: formData.city,
-        address: formData.address.trim(),
-
+        address: formData.address.trim()
       }, {
-        withCredentials: true 
+        withCredentials: true
       });
-  
-     const response = await api.post('/offres', {
-      title: formData.title.trim(),
-      description: formData.description.trim(),
-      durationHours: parseInt(formData.durationHours),
-      price: parseFloat(formData.price),
-      startDate: new Date(formData.startDate).toISOString(),
-      endDate: new Date(formData.endDate).toISOString(),
-      locationId: locationResponse.data.id
-    },
-    {
-      withCredentials: true
-    }
-  
-  );
-      
       
       setFormData({
         title: '',
@@ -213,23 +176,14 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
       
       onOfferCreated(response.data);
       closeModal();
-
     } catch (error) {
-      console.error('Full error details:', {
-        message: error.message,
-        url: error.config?.url,
-        status: error.response?.status,
-        data: error.response?.data,
-        requestPayload: error.config?.data,
-        headers: error.config?.headers
-      });
+      console.error('Full error details:', error);
       
       if (error.response?.status === 401) {
         navigate('/login');
       } else {
-        console.log(
+        console.error(
           error.response?.data?.error || 
-          error.response?.data?.message || 
           "Failed to create offer. Please check console for details."
         );
       }
@@ -244,7 +198,6 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
   };
-  
 
   return (
     <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-4">
@@ -340,7 +293,6 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
                 min={formData.startDate || new Date().toISOString().split('T')[0]}
               />
 
-             {/* City Dropdown */}
               <div className="col-span-1 relative">
                 <label className="flex items-center gap-1 text-primary font-semibold text-xs mb-3">
                   <FaMapMarkerAlt className="text-bprimary text-xs" />
