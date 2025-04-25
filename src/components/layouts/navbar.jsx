@@ -7,7 +7,7 @@ import Button from '../UI/button';
 import LogoutButton from '../UI/logoutButton';
 import logo from '/logo/Logo.svg';
 import logo2 from '/logo/Logosm.svg';
-import logo3 from '/logo/Logolightsm.svg';
+import logo3 from '/logo/Logosm.svg';
 import profile from '../../assets/avatar.png';
 import api from '../../utils/axios';
 
@@ -84,7 +84,7 @@ const Navbar = () => {
   }, [navigate]); 
 
 
-  
+
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';
@@ -224,7 +224,7 @@ const Navbar = () => {
             ref={dropRef}
           >
             <img 
-              src={userData?.profilePicture || profile} 
+             src="/images/avatar.jpg" 
               alt="Profile" 
               className="w-[35px] h-[35px] object-cover rounded-full" 
             />
@@ -235,7 +235,7 @@ const Navbar = () => {
               <div className="absolute top-[110%] right-0 bg-light shadow-primary-4 w-[200px] border border-stroke rounded-small-md py-2 px-5">
                 <div className="flex items-center gap-3 mb-3 pb-3 border-b border-stroke">
                   <img 
-                    src={userData?.profilePicture || profile} 
+                    src="/images/avatar.jpg" 
                     alt="Profile" 
                     className="w-10 h-10 rounded-full object-cover" 
                   />
@@ -357,12 +357,12 @@ const Navbar = () => {
               <>
                 <div className="flex items-center gap-3 mb-4 p-3 bg-cayan50 rounded-small-md">
                   <img 
-                    src={userData?.profilePicture || profile} 
+                    src="/images/avatar.jpg" 
                     alt="Profile" 
                     className="w-10 h-10 rounded-full object-cover" 
                   />
                   <div>
-                    <p className="text-sm font-semibold text-primary">{userData?.name || 'User'}</p>
+                    <p className="text-sm font-semibold text-primary">{userData?.firstName || 'User'}</p>
                     <p className="text-xs text-gray-500">{userData?.email || ''}</p>
                   </div>
                 </div>
