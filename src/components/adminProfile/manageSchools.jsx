@@ -26,7 +26,7 @@ export default function Schools() {
       }).toString();
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/users/admin/users?${queryParams}`,
+        `${import.meta.env.VITE_API_BASE_URL}/users/users?${queryParams}`,
         { credentials: "include" }
       );
       const data = await response.json();

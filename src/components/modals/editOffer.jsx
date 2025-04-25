@@ -5,13 +5,13 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import Button from '../UI/button';
 import { PrimaryInput, TextArea } from '../UI/formInputs';
-import api from '../../utils/axios'; 
-import { useAuth } from '../../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
 
-const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
-  const { isAuthenticated, isLoading } = useAuth();
-  const navigate = useNavigate();
+const EditOfferModal = ({ 
+  isOpen, 
+  closeModal, 
+  offer, 
+  onOfferUpdated = () => {} 
+}) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -25,9 +25,25 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
   const [errors, setErrors] = useState({});
   const [cities, setCities] = useState([]);
   const [isLoadingCities, setIsLoadingCities] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [selectedCityLabel, setSelectedCityLabel] = useState('');
+
+  // Initialize form with offer data when modal opens or offer changes
+  useEffect(() => {
+    if (offer) {
+      setFormData({
+        title: offer.title || '',
+        description: offer.description || '',
+        durationHours: offer.durationHours || '',
+        price: offer.price || '',
+        startDate: offer.startDate ? offer.startDate.split('T')[0] : '',
+        endDate: offer.endDate ? offer.endDate.split('T')[0] : '',
+        city: offer.location?.city || '',
+        address: offer.location?.address || ''
+      });
+      setSelectedCityLabel(offer.location?.city || '');
+    }
+  }, [offer]);
 
   const toggleDropdown = (dropdownName) => {
     setOpenDropdown(openDropdown === dropdownName ? null : dropdownName);
@@ -68,16 +84,6 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
   };
 
   if (!isOpen) return null;
-
-  if (isLoading || isLoadingCities) {
-    return (
-      <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-[9999999999] p-4">
-        <div className="bg-light rounded-large-md p-8">
-          <div>Loading...</div>
-        </div>
-      </div>
-    );
-  }
 
   const validateForm = () => {
     let isValid = true;
@@ -142,54 +148,29 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
     return isValid;
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     
     if (!validateForm()) return;
     
-    setIsSubmitting(true);
+    const startDate = formData.startDate ? new Date(formData.startDate).toISOString() : null;
+    const endDate = formData.endDate ? new Date(formData.endDate).toISOString() : null;
     
-    try {
-      const startDate = formData.startDate ? `${formData.startDate}T00:00:00.000Z` : null;
-      const endDate = formData.endDate ? `${formData.endDate}T00:00:00.000Z` : null;
-
-      const response = await api.post('/offres', {
-        title: formData.title.trim(),
-        description: formData.description.trim(),
-        durationHours: formData.durationHours,
-        price: formData.price,
-        startDate,
-        endDate,
+    const updatedOffer = {
+      title: formData.title,
+      description: formData.description,
+      durationHours: formData.durationHours,
+      price: formData.price,
+      startDate, 
+      endDate,
+      location: {
         city: formData.city,
-        address: formData.address.trim()
-      }, {
-        withCredentials: true
-      });
-      
-      setFormData({
-        title: '',
-        description: '',
-        durationHours: '',
-        price: '',
-        startDate: '',
-        endDate: '',
-        city: '',
-        address: ''
-      });
-      
-      onOfferCreated(response.data);
-      closeModal();
-    } catch (error) {
-      console.error('Full error details:', error);
-      
-      if (error.response?.status === 401) {
-        navigate('/login');
-      } else {
-        setErrors(error.response?.data?.error || "Failed to create offer");
+        address: formData.address
       }
-    } finally {
-      setIsSubmitting(false);
-    }
+    };
+    
+    onOfferUpdated(updatedOffer);
+    closeModal();
   };
   const handleChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -203,7 +184,7 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
       <div className="bg-light rounded-large-md max-w-lg w-full max-h-[90vh] flex flex-col relative overflow-hidden">
         <div className="sticky top-0 bg-light z-10 pt-5 px-5 pb-4 border-b border-stroke">
           <div className="relative flex justify-center items-center">
-            <h1 className="text-b200 font-bold text-xl text-center mt-4">Add New Offer</h1>
+            <h1 className="text-b200 font-bold text-xl text-center mt-4">Edit Offer</h1>
             <button 
               onClick={closeModal}
               className="absolute right-0 w-8 h-8 flex justify-center items-center bg-b50 hover:bg-blue-100 rounded-small-sm text-b500 font-bold text-xl transition-colors"
@@ -364,9 +345,8 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
             type="primary"
             onClick={handleSubmit}
             className="w-full py-2 text-sm"
-            disabled={isSubmitting}
           >
-            {isSubmitting ? 'Creating...' : 'Create Offer'}
+            Update Offer
           </Button>
         </div>
       </div>
@@ -374,4 +354,4 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {} }) => {
   );
 };
 
-export default AddOfferModal;
+export default EditOfferModal;
