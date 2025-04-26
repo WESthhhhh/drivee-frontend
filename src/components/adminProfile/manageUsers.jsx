@@ -45,7 +45,7 @@ export default function Learners() {
 
         {/* Learners Table */}
         <div className="bg-light rounded-large-md  overflow-hidden">
-          <div className="grid grid-cols-12 gap-4 px-3 py-4 bg-cayan50 font-semibold text-primary">
+          <div className="grid grid-cols-12 gap-4 px-3 py-4 bg-cayan50 font-semibold text-primary text-sm ">
             <div className="col-span-3">Name</div>
             <div className="col-span-4">Email</div>
             <div className="col-span-2">Phone</div>
@@ -60,7 +60,7 @@ export default function Learners() {
             learners.map((learner) => (
               <div
                 key={learner.id}
-                className="grid grid-cols-12 gap-4 px-3 py-4 border-b border-gray-100 items-center hover:bg-gray-50 transition-colors"
+                className="grid grid-cols-12 gap-4 px-3 py-4 border-b border-gray-100 items-center hover:bg-gray-50 transition-colors text-sm"
               >
                 <div className="col-span-3">{`${learner.firstName} ${learner.lastName}`}</div>
                 <div className="col-span-4 basis-2/12 truncate w-[200px]">{learner.email}</div>

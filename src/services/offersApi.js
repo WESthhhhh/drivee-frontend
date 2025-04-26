@@ -126,14 +126,32 @@ export const createLocation = async (locationData) => {
   return await response.json();
 };
 
-// services/offersAPI.js
+const handleResponse = async (response) => {
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || `Request failed with status ${response.status}`);
+  }
+  return response.json();
+};
+
 export const fetchOffersForCurrentSchool = async () => {
-  const response = await fetch(`${API_BASE_URL}/offres/school/me`, {
-    credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json'
+  try {
+    const response = await fetch(`${API_BASE_URL}/offres/my/offers`, {
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    
+    const data = await handleResponse(response);
+    
+    // Basic response validation
+    if (!Array.isArray(data)) {
+      console.warn('Unexpected response format for school offers:', data);
+      return [];
     }
-  });
-  if (!response.ok) throw new Error(`Failed to load school offers: ${response.status}`);
-  return await response.json();
+    
+    return data;
+  } catch (error) {
+    console.error('Error fetching school offers:', error);
+    throw error;
+  }
 };

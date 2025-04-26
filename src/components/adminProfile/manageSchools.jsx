@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Pencil } from "../UI/icons";
 import VerificationModal from "../modals/verification";
+import { Tooltip } from "../UI/tooltip"; 
 import SuccessPopup from "../modals/SuccessPopup";
 import { fetchVerificationData, getDocumentUrl } from "../../services/schoolVerificationsApi";
 
@@ -14,6 +15,8 @@ export default function Schools() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [showTooltip, setShowTooltip] = useState(false);
   const [popupConfig, setPopupConfig] = useState({
     title: '',
     mainMessage: '',
@@ -91,12 +94,24 @@ export default function Schools() {
     }
   };
 
+  const handleMouseEnter = (e) => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setTooltipPosition({
+        x: rect.left + window.scrollX,
+        y: rect.top + window.scrollY - 40 // Position above the button
+      });
+      setShowTooltip(true);
+    }
+  };
+  
+  const handleMouseLeave = () => {
+    setShowTooltip(false);
+  };
+
   return (
     <div className="px-5 mt-9 font-poppins">
-      <div className="space-y-6">
-        <h1 className="text-[#0F34AE] text-2xl font-bold">Manage Schools</h1>
-
-        {showSuccessPopup && (
+       {showSuccessPopup && (
           <SuccessPopup
             title={popupConfig.title}
             mainMessage={popupConfig.mainMessage}
@@ -117,8 +132,12 @@ export default function Schools() {
           refreshData={fetchSchools}
         />
 
+      <div className="space-y-6">
+        <h1 className="text-[#0F34AE] text-2xl font-bold">Manage Schools</h1>
+
+       
         <div className="bg-light rounded-large-md overflow-hidden">
-          <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-cayan50 font-semibold text-[#0B247A]">
+          <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-cayan50 font-semibold text-[#0B247A] text-sm ">
             <div className="col-span-2">Name</div>
             <div className="col-span-2">Email</div>
             <div className="col-span-2">Phone</div>
@@ -157,50 +176,79 @@ export default function Schools() {
 
 const SchoolRow = ({ school, onClick, fetchVerificationData }) => {
   const [verification, setVerification] = useState(null);
+  const [loadingVerification, setLoadingVerification] = useState(true);
 
   useEffect(() => {
     const loadVerification = async () => {
       try {
+        setLoadingVerification(true);
         const data = await fetchVerificationData(school.id);
         setVerification(data);
       } catch (error) {
         console.error("Error loading verification:", error);
+      } finally {
+        setLoadingVerification(false);
       }
     };
     loadVerification();
   }, [school.id, fetchVerificationData]);
 
   const getStatusBadge = () => {
-    if (!verification) return (
-      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-        Not Submitted
-      </span>
-    );
-    
+    if (loadingVerification) {
+      return (
+        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+          Loading...
+        </span>
+      );
+    }
+
+    if (!verification) {
+      return (
+        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+          Not Submitted
+        </span>
+      );
+    }
+
     switch(verification.status) {
       case 'APPROVED':
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-success text-success">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
             Verified
           </span>
         );
       case 'REJECTED':
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-error text-error">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
             Rejected
+          </span>
+        );
+      case 'PENDING':
+        return (
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+            Pending
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-warning text-warning">
-            Pending
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+            Not Submitted
           </span>
         );
     }
   };
 
+  const getTooltipMessage = () => {
+    if (loadingVerification) return "Loading verification status...";
+    if (!verification) return "School hasn't submitted verification documents";
+    if (verification.status === 'APPROVED') return "School is already verified";
+    return "Click to verify/reject school";
+  };
+
+  const isDisabled = verification?.status === 'APPROVED' || !verification || loadingVerification;
+
   return (
-    <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-gray-100 items-center hover:bg-gray-50 transition-colors">
+    <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-gray-100 items-center text-sm hover:bg-gray-50 transition-colors">
       <div className="col-span-2">{`${school.firstName} ${school.lastName}`}</div>
       <div className="col-span-2 truncate">{school.email}</div>
       <div className="col-span-2">{school.phone}</div>
@@ -211,22 +259,23 @@ const SchoolRow = ({ school, onClick, fetchVerificationData }) => {
         {getStatusBadge()}
       </div>
       <div className="col-span-2">
-        <button
-          onClick={() => onClick(school)}
-          className={`p-1 rounded transition-colors ${
-            verification?.status === 'APPROVED'
-              ? 'text-gray-400 cursor-not-allowed'
-              : 'text-blue-500 hover:text-blue-700 hover:bg-blue-50'
-          }`}
-          disabled={verification?.status === 'APPROVED'}
-        >
-          <Pencil className="w-5 h-5" />
-        </button>
+        <Tooltip content={getTooltipMessage()}>
+          <button
+            onClick={() => !isDisabled && onClick(school)}
+            className={`p-1 rounded transition-colors ${
+              isDisabled
+                ? 'text-gray-400 cursor-not-allowed'
+                : 'text-blue-500 hover:text-blue-700 hover:bg-blue-50'
+            }`}
+            disabled={isDisabled}
+          >
+            <Pencil className="w-5 h-5" />
+          </button>
+        </Tooltip>
       </div>
     </div>
   );
 };
-
 const Pagination = ({ currentPage, totalPages, setCurrentPage }) => {
   return (
     <div className="flex justify-center gap-2 mb-16 mt-6">
