@@ -2,15 +2,24 @@ import { useState, useEffect } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { Pencil } from "../UI/icons";
 import VerificationModal from "../modals/verification";
+import SuccessPopup from "../modals/SuccessPopup";
+import { fetchVerificationData, getDocumentUrl } from "../../services/schoolVerificationsApi";
 
 export default function Schools() {
   const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState(null);
-  const [selectedVerification, setSelectedVerification] = useState(null); // Add this line
+  const [selectedVerification, setSelectedVerification] = useState(null);
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [popupConfig, setPopupConfig] = useState({
+    title: '',
+    mainMessage: '',
+    highlightedText: '',
+    secondaryMessage: ''
+  });
   const limit = 10;
 
   useEffect(() => {
@@ -42,58 +51,79 @@ export default function Schools() {
       setLoading(false);
     }
   };
-  const fetchVerificationData = async (userId) => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/verifications/user/${userId}`,
-        { credentials: "include" }
-      );
-      const data = await response.json();
-      
-      if (data.success && data.verification) {
-        return {
-          id: data.verification.id,
-          proof: data.verification.proof,
-          status: data.verification.status
-        };
-      }
-      return null;
-    } catch (error) {
-      console.error("Error fetching verification:", error);
-      return null;
-    }
-  };
   
   const handleVerificationSuccess = (action) => {
-    console.log(`School was ${action}`);
-    fetchSchools(); // Refresh the school list
-    // You might want to add a toast notification here
+    if (action === 'verified') {
+      setPopupConfig({
+        title: 'Verification Approved!',
+        mainMessage: 'You have successfully verified',
+        highlightedText: `${selectedSchool?.firstName} ${selectedSchool?.lastName}`,
+        secondaryMessage: 'The school has been officially verified and recognized!'
+      });
+    } else {
+      setPopupConfig({
+        title: 'Verification Rejected',
+        mainMessage: 'You have rejected the verification for',
+        highlightedText: `${selectedSchool?.firstName} ${selectedSchool?.lastName}`,
+        secondaryMessage: 'The school must submit new documents for verification.'
+      });
+    }
+    
+    setShowSuccessPopup(true);
+    setIsVerificationModalOpen(false);
+    fetchSchools();
   };
 
+  const handlePopupClose = () => {
+    setShowSuccessPopup(false);
+  };
+
+  const handleSchoolClick = async (school) => {
+    setSelectedSchool(school);
+    try {
+      const verification = await fetchVerificationData(school.id);
+      setSelectedVerification(verification);
+      if (verification?.status !== 'APPROVED') {
+        setIsVerificationModalOpen(true);
+      }
+    } catch (error) {
+      console.error("Error handling school click:", error);
+    }
+  };
 
   return (
     <div className="px-5 mt-9 font-poppins">
       <div className="space-y-6">
         <h1 className="text-[#0F34AE] text-2xl font-bold">Manage Schools</h1>
 
+        {showSuccessPopup && (
+          <SuccessPopup
+            title={popupConfig.title}
+            mainMessage={popupConfig.mainMessage}
+            highlightedText={popupConfig.highlightedText}
+            secondaryMessage={popupConfig.secondaryMessage}
+            onClose={handlePopupClose}
+          />
+        )}
+
         <VerificationModal
           isOpen={isVerificationModalOpen}
           closeModal={() => setIsVerificationModalOpen(false)}
           verificationId={selectedVerification?.id}
           schoolName={`${selectedSchool?.firstName} ${selectedSchool?.lastName}`}
-          documentName={selectedVerification?.proof?.split('/').pop() || 'Verification Document'} // Extract filename from path
-          documentUrl={`${import.meta.env.VITE_API_BASE_URL}/${selectedVerification?.proof}`}
+          documentName={selectedVerification?.proof?.split('/').pop() || 'Verification Document'}
+          documentUrl={selectedVerification?.proof ? getDocumentUrl(selectedVerification.proof) : null}
           onSuccess={handleVerificationSuccess}
           refreshData={fetchSchools}
         />
 
-        {/* Schools Table */}
         <div className="bg-light rounded-large-md overflow-hidden">
           <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-cayan50 font-semibold text-[#0B247A]">
-            <div className="col-span-3">Name</div>
-            <div className="col-span-3">Email</div>
+            <div className="col-span-2">Name</div>
+            <div className="col-span-2">Email</div>
             <div className="col-span-2">Phone</div>
             <div className="col-span-2">Created At</div>
+            <div className="col-span-2">Status</div>
             <div className="col-span-2">Action</div>
           </div>
 
@@ -103,82 +133,145 @@ export default function Schools() {
             <div className="flex justify-center py-8">No schools found</div>
           ) : (
             schools.map((school) => (
-              <div
+              <SchoolRow 
                 key={school.id}
-                className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-gray-100 items-center hover:bg-gray-50 transition-colors"
-              >
-                <div className="col-span-3">{`${school.firstName} ${school.lastName}`}</div>
-                <div className="col-span-3 truncate">{school.email}</div>
-                <div className="col-span-2">{school.phone}</div>
-                <div className="col-span-2">
-                  {new Date(school.createdAt).toLocaleDateString()}
-                </div>
-                <div className="col-span-2">
-                 <button
-                  onClick={async () => {
-                    setSelectedSchool(school);
-                    const verification = await fetchVerificationData(school.id);
-                    setSelectedVerification(verification);
-                    setIsVerificationModalOpen(true);
-                  }}
-                  className="text-blue-500 hover:text-blue-700 p-1 rounded hover:bg-blue-50 transition-colors"
-                >
-                  <Pencil className="w-5 h-5" />
-                </button>
-                </div>
-              </div>
+                school={school}
+                onClick={handleSchoolClick}
+                fetchVerificationData={fetchVerificationData}
+              />
             ))
           )}
         </div>
 
-        {/* Improved Pagination */}
         {totalPages > 1 && (
-          <div className="flex justify-center gap-2 mb-16 mt-6">
-            <button
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="p-2 rounded-full disabled:opacity-50 hover:bg-cayan50 transition-colors"
-            >
-              <FaChevronLeft className="text-b200" />
-            </button>
-            
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              let pageNum;
-              if (totalPages <= 5) {
-                pageNum = i + 1;
-              } else if (currentPage <= 3) {
-                pageNum = i + 1;
-              } else if (currentPage >= totalPages - 2) {
-                pageNum = totalPages - 4 + i;
-              } else {
-                pageNum = currentPage - 2 + i;
-              }
-
-              return (
-                <button
-                  key={pageNum}
-                  onClick={() => setCurrentPage(pageNum)}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    currentPage === pageNum 
-                      ? 'bg-primary text-light' 
-                      : 'hover:bg-cayan50 text-b200'
-                  } transition-colors`}
-                >
-                  {pageNum}
-                </button>
-              );
-            })}
-            
-            <button
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-              className="p-2 rounded-full disabled:opacity-50 hover:bg-cayan50 transition-colors"
-            >
-              <FaChevronRight className="text-b200" />
-            </button>
-          </div>
+          <Pagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+          />
         )}
       </div>
     </div>
   );
 }
+
+const SchoolRow = ({ school, onClick, fetchVerificationData }) => {
+  const [verification, setVerification] = useState(null);
+
+  useEffect(() => {
+    const loadVerification = async () => {
+      try {
+        const data = await fetchVerificationData(school.id);
+        setVerification(data);
+      } catch (error) {
+        console.error("Error loading verification:", error);
+      }
+    };
+    loadVerification();
+  }, [school.id, fetchVerificationData]);
+
+  const getStatusBadge = () => {
+    if (!verification) return (
+      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+        Not Submitted
+      </span>
+    );
+    
+    switch(verification.status) {
+      case 'APPROVED':
+        return (
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-success text-success">
+            Verified
+          </span>
+        );
+      case 'REJECTED':
+        return (
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-error text-error">
+            Rejected
+          </span>
+        );
+      default:
+        return (
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-warning text-warning">
+            Pending
+          </span>
+        );
+    }
+  };
+
+  return (
+    <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-gray-100 items-center hover:bg-gray-50 transition-colors">
+      <div className="col-span-2">{`${school.firstName} ${school.lastName}`}</div>
+      <div className="col-span-2 truncate">{school.email}</div>
+      <div className="col-span-2">{school.phone}</div>
+      <div className="col-span-2">
+        {new Date(school.createdAt).toLocaleDateString()}
+      </div>
+      <div className="col-span-2">
+        {getStatusBadge()}
+      </div>
+      <div className="col-span-2">
+        <button
+          onClick={() => onClick(school)}
+          className={`p-1 rounded transition-colors ${
+            verification?.status === 'APPROVED'
+              ? 'text-gray-400 cursor-not-allowed'
+              : 'text-blue-500 hover:text-blue-700 hover:bg-blue-50'
+          }`}
+          disabled={verification?.status === 'APPROVED'}
+        >
+          <Pencil className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const Pagination = ({ currentPage, totalPages, setCurrentPage }) => {
+  return (
+    <div className="flex justify-center gap-2 mb-16 mt-6">
+      <button
+        onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+        disabled={currentPage === 1}
+        className="p-2 rounded-full disabled:opacity-50 hover:bg-cayan50 transition-colors"
+      >
+        <FaChevronLeft className="text-b200" />
+      </button>
+      
+      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+        let pageNum;
+        if (totalPages <= 5) {
+          pageNum = i + 1;
+        } else if (currentPage <= 3) {
+          pageNum = i + 1;
+        } else if (currentPage >= totalPages - 2) {
+          pageNum = totalPages - 4 + i;
+        } else {
+          pageNum = currentPage - 2 + i;
+        }
+
+        return (
+          <button
+            key={pageNum}
+            onClick={() => setCurrentPage(pageNum)}
+            className={`w-10 h-10 rounded-full flex items-center justify-center ${
+              currentPage === pageNum 
+                ? 'bg-primary text-light' 
+                : 'hover:bg-cayan50 text-b200'
+            } transition-colors`}
+          >
+            {pageNum}
+          </button>
+        );
+      })}
+      
+      <button
+        onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+        disabled={currentPage === totalPages}
+        className="p-2 rounded-full disabled:opacity-50 hover:bg-cayan50 transition-colors"
+      >
+        <FaChevronRight className="text-b200" />
+      </button>
+    </div>
+  );
+};

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import Button from '../UI/button';
-import { verifySchool, rejectSchool } from '../../services/schoolVerificationsApi';
+import { approveVerification, rejectVerification } from '../../services/schoolVerificationsApi';
 
 const VerificationModal = ({ 
   isOpen, 
@@ -27,7 +27,7 @@ const VerificationModal = ({
     setIsLoading(true);
     setError(null);
     try {
-      await verifySchool(verificationId);
+      await approveVerification(verificationId);
       onSuccess?.('verified');
       refreshData?.();
       closeModal();
@@ -48,7 +48,7 @@ const VerificationModal = ({
     setIsLoading(true);
     setError(null);
     try {
-      await rejectSchool(verificationId);
+      await rejectVerification(verificationId);
       onSuccess?.('rejected');
       refreshData?.();
       closeModal();
@@ -61,7 +61,7 @@ const VerificationModal = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center mt-25 p-4">
+    <div className="fixed inset-0 bg-b500 bg-opacity-30 backdrop-blur-sm flex justify-center items-center mt-25 p-4 z-40">
       <div className="bg-light rounded-large-md max-w-lg w-full flex flex-col relative overflow-hidden">
         <div className="sticky top-0 bg-light z-10 pt-5 px-5 pb-4 border-b border-stroke">
           <div className="relative flex justify-center items-center">
