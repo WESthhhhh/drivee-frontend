@@ -18,36 +18,18 @@ export const fetchAllOffers = async () => {
 
 // Create new offer
 export const createOffer = async (offerData) => {
-  try {
-    console.log('Sending offer data:', offerData); // Debug log
-    
-    const response = await fetch(`${API_BASE_URL}/offres`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(offerData),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Server error response:', errorData); // Detailed error log
-      throw new Error(errorData.message || `Failed to create offer: ${response.status}`);
-    }
-
-    const responseData = await response.json();
-    console.log('Offer created successfully:', responseData); // Success log
-    return responseData;
-    
-  } catch (error) {
-    console.error('Full API Error:', {
-      message: error.message,
-      stack: error.stack,
-      offerData // Include the data that caused the error
-    });
-    throw error;
-  }
+  console.log('Sending to API:', offerData); // Add this
+  const response = await fetch(`${API_BASE_URL}/offres`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(offerData) // Make sure this isn't being wrapped
+  });
+  if (!response.ok) throw new Error('Failed to create offer');
+  return await response.json();
 };
-
 // Update existing offer
 export const updateOffer = async (id, updates) => {
   const response = await fetch(`${API_BASE_URL}/offres/${id}`, {
@@ -97,21 +79,13 @@ export const fetchLocations = async () => {
 export const fetchCities = async () => {
   const response = await fetch(`${API_BASE_URL}/locations/cities`, {
     credentials: 'include',
-    headers: { 'Content-Type': 'application/json' }
+    headers: {
+      'Content-Type': 'application/json'
+    }
   });
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch cities: ${response.status}`);
-  }
-
-  const data = await response.json();
-  
-  // Format cities consistently (handle both strings and objects)
-  return Array.isArray(data) 
-    ? data.map(city => typeof city === 'string' ? { value: city, label: city } : city)
-    : [];
+  if (!response.ok) throw new Error(`Failed to load cities: ${response.status}`);
+  return await response.json();
 };
-
 
 export const createLocation = async (locationData) => {
   const response = await fetch(`${API_BASE_URL}/locations`, {

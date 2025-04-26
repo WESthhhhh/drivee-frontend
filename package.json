@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@stripe/stripe-js": "^6.0.0",
     "axios": "^1.8.4",
     "framer-motion": "^12.7.3",
     "lucide-react": "^0.487.0",
+    "nodemailer": "^6.10.1",
     "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-clock": "^5.1.0",
