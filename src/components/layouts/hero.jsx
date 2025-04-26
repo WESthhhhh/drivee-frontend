@@ -10,22 +10,22 @@ const HeroSection = () => {
       {/* hel */}
       <img 
         src="/images/home-ellipse.png" 
-        className="absolute top-0 right-0 w-auto h-auto -z-10" 
+        className="absolute top-0 right-0 w-auto h-auto " 
         alt="background circle" 
       />
       <img 
         src="/images/home-ellipse.png" 
-        className="absolute top-1/5 left-0 transform rotate-180 w-auto h-auto -z-10" 
+        className="absolute top-1/5 left-0 transform rotate-180 w-auto h-auto " 
         alt="background circle" 
       />
       <img 
         src="/images/home-elli-t.png" 
-        className="absolute left-[13%] top-1/5 w-auto h-auto -z-10" 
+        className="absolute left-[13%] top-1/5 w-auto h-auto " 
         alt="small decorative element" 
       />
       <img 
         src="/images/home-elli-b.png" 
-        className="absolute right-[2%] top-1/2 w-auto h-auto -z-10" 
+        className="absolute right-[2%] top-1/2 w-auto h-auto " 
         alt="small decorative element" 
       /> 
       

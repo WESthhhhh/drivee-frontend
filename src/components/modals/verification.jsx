@@ -7,7 +7,7 @@ import { verifySchool, rejectSchool } from '../../services/schoolVerificationsAp
 const VerificationModal = ({ 
   isOpen, 
   closeModal, 
-  schoolId,
+  verificationId, // Changed from schoolId
   schoolName,
   documentName,
   documentUrl,
@@ -22,15 +22,15 @@ const VerificationModal = ({
   if (!isOpen) return null;
 
   const handleVerify = async () => {
-    if (!schoolId) {
-      setError('No school selected');
+    if (!verificationId) {
+      setError('No verification selected');
       return;
     }
-
+  
     setIsLoading(true);
     setError(null);
     try {
-      await verifySchool(schoolId);
+      await verifySchool(verificationId); // Now passing verificationId
       onSuccess?.('verified');
       refreshData?.();
       closeModal();
@@ -47,16 +47,16 @@ const VerificationModal = ({
       setShowRejectInput(true);
       return;
     }
-
-    if (!schoolId) {
-      setError('No school selected');
+  
+    if (!verificationId) {
+      setError('No verification selected');
       return;
     }
-
+  
     setIsLoading(true);
     setError(null);
     try {
-      await rejectSchool(schoolId, rejectionReason);
+      await rejectSchool(verificationId, rejectionReason); // Now passing verificationId
       onSuccess?.('rejected');
       refreshData?.();
       closeModal();
@@ -101,13 +101,14 @@ const VerificationModal = ({
               </div>
             </div>
             
+            // In your VerificationModal component
             <div className="mb-4">
               <label className="text-b500 font-semibold text-xs mb-2 block">
                 Verification Document
               </label>
               <div className="flex items-center justify-between p-3 rounded-large-sm border border-stroke">
-                <span>{documentName || 'N/A'}</span>
-                {documentUrl && documentUrl !== '#' ? (
+                <span>{documentName || 'No document uploaded'}</span>
+                {documentUrl ? (
                   <a 
                     href={documentUrl} 
                     target="_blank" 
@@ -117,7 +118,7 @@ const VerificationModal = ({
                     View Document
                   </a>
                 ) : (
-                  <span className="text-gray-400 text-sm">No document</span>
+                  <span className="text-gray-400 text-sm">No document available</span>
                 )}
               </div>
             </div>

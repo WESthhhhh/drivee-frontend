@@ -6,6 +6,7 @@ import VerificationModal from "../modals/verification";
 export default function Schools() {
   const [isVerificationModalOpen, setIsVerificationModalOpen] = useState(false);
   const [selectedSchool, setSelectedSchool] = useState(null);
+  const [selectedVerification, setSelectedVerification] = useState(null); // Add this line
   const [schools, setSchools] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,12 +42,26 @@ export default function Schools() {
       setLoading(false);
     }
   };
+  const fetchVerificationData = async (userId) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/verifications/user/${userId}`,
+        { credentials: "include" }
+      );
+      const data = await response.json();
+      return data.data; // Assuming your API returns { success: true, data: verification }
+    } catch (error) {
+      console.error("Error fetching verification:", error);
+      return null;
+    }
+  };
 
   const handleVerificationSuccess = (action) => {
     console.log(`School was ${action}`);
     fetchSchools(); // Refresh the school list
     // You might want to add a toast notification here
   };
+
 
   return (
     <div className="px-5 mt-9 font-poppins">
@@ -56,14 +71,10 @@ export default function Schools() {
         <VerificationModal
           isOpen={isVerificationModalOpen}
           closeModal={() => setIsVerificationModalOpen(false)}
-          schoolId={selectedSchool?.id}
-          schoolName={
-            selectedSchool
-              ? `${selectedSchool.firstName} ${selectedSchool.lastName}`
-              : ""
-          }
-          documentName={selectedSchool?.verificationDocument?.name || "Document"}
-          documentUrl={selectedSchool?.verificationDocument?.url || "#"}
+          verificationId={selectedVerification?.id}
+          schoolName={`${selectedSchool?.firstName} ${selectedSchool?.lastName}`}
+          documentName={selectedVerification?.proof?.split('/').pop() || 'Verification Document'} // Extract filename from path
+          documentUrl={`${import.meta.env.VITE_API_BASE_URL}/${selectedVerification?.proof}`}
           onSuccess={handleVerificationSuccess}
           refreshData={fetchSchools}
         />
@@ -95,15 +106,17 @@ export default function Schools() {
                   {new Date(school.createdAt).toLocaleDateString()}
                 </div>
                 <div className="col-span-2">
-                  <button
-                    onClick={() => {
-                      setSelectedSchool(school);
-                      setIsVerificationModalOpen(true);
-                    }}
-                    className="text-blue-500 hover:text-blue-700 p-1 rounded hover:bg-blue-50 transition-colors"
-                  >
-                    <Pencil className="w-5 h-5" />
-                  </button>
+                 <button
+                  onClick={async () => {
+                    setSelectedSchool(school);
+                    const verification = await fetchVerificationData(school.id);
+                    setSelectedVerification(verification);
+                    setIsVerificationModalOpen(true);
+                  }}
+                  className="text-blue-500 hover:text-blue-700 p-1 rounded hover:bg-blue-50 transition-colors"
+                >
+                  <Pencil className="w-5 h-5" />
+                </button>
                 </div>
               </div>
             ))
