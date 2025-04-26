@@ -1,21 +1,18 @@
 import { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import Button from '../UI/button';
-import { PrimaryInput } from '../UI/formInputs';
 import { verifySchool, rejectSchool } from '../../services/schoolVerificationsApi';
 
 const VerificationModal = ({ 
   isOpen, 
   closeModal, 
-  verificationId, // Changed from schoolId
+  verificationId,
   schoolName,
   documentName,
   documentUrl,
   onSuccess,
   refreshData
 }) => {
-  const [rejectionReason, setRejectionReason] = useState('');
-  const [showRejectInput, setShowRejectInput] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -30,7 +27,7 @@ const VerificationModal = ({
     setIsLoading(true);
     setError(null);
     try {
-      await verifySchool(verificationId); // Now passing verificationId
+      await verifySchool(verificationId);
       onSuccess?.('verified');
       refreshData?.();
       closeModal();
@@ -43,11 +40,6 @@ const VerificationModal = ({
   };
 
   const handleReject = async () => {
-    if (!showRejectInput) {
-      setShowRejectInput(true);
-      return;
-    }
-  
     if (!verificationId) {
       setError('No verification selected');
       return;
@@ -56,7 +48,7 @@ const VerificationModal = ({
     setIsLoading(true);
     setError(null);
     try {
-      await rejectSchool(verificationId, rejectionReason); // Now passing verificationId
+      await rejectSchool(verificationId);
       onSuccess?.('rejected');
       refreshData?.();
       closeModal();
@@ -101,7 +93,6 @@ const VerificationModal = ({
               </div>
             </div>
             
-            // In your VerificationModal component
             <div className="mb-4">
               <label className="text-b500 font-semibold text-xs mb-2 block">
                 Verification Document
@@ -122,20 +113,6 @@ const VerificationModal = ({
                 )}
               </div>
             </div>
-
-            {showRejectInput && (
-              <div className="mt-4">
-                <PrimaryInput
-                  label="Rejection Reason"
-                  value={rejectionReason}
-                  onChange={(e) => setRejectionReason(e.target.value)}
-                  placeholder="Enter reason for rejection"
-                  multiline
-                  rows={3}
-                  required
-                />
-              </div>
-            )}
           </div>
         </div>
         
@@ -146,15 +123,16 @@ const VerificationModal = ({
             className="flex-1 py-2 text-sm"
             disabled={isLoading}
           >
-            {isLoading ? 'Processing...' : 'Verify School'}
+            {isLoading ? 'Processing...' : 'Approve Verification'}
           </Button>
+          
           <Button
             type="secondary"
             onClick={handleReject}
             className="flex-1 py-2 text-sm"
             disabled={isLoading}
           >
-            {showRejectInput ? 'Submit Rejection' : 'Reject'}
+            {isLoading ? 'Processing...' : 'Reject Verification'}
           </Button>
         </div>
       </div>

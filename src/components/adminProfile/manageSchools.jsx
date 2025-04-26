@@ -49,13 +49,21 @@ export default function Schools() {
         { credentials: "include" }
       );
       const data = await response.json();
-      return data.data; // Assuming your API returns { success: true, data: verification }
+      
+      if (data.success && data.verification) {
+        return {
+          id: data.verification.id,
+          proof: data.verification.proof,
+          status: data.verification.status
+        };
+      }
+      return null;
     } catch (error) {
       console.error("Error fetching verification:", error);
       return null;
     }
   };
-
+  
   const handleVerificationSuccess = (action) => {
     console.log(`School was ${action}`);
     fetchSchools(); // Refresh the school list
