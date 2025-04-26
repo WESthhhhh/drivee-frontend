@@ -64,7 +64,7 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
           <div className="flex justify-between  gap-3 mt-4 mb-4 p-2 rounded-lg">
             <div className="flex  gap-3">
               <img 
-                src={school?.profileImage || Img} 
+                src="/images/avatar.jpg" 
                 alt={schoolName} 
                 className="w-10 h-10 rounded-full object-cover"
                 onError={(e) => {
@@ -138,15 +138,14 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
                   <FaMapMarkerAlt className="text-b500 text-xs" />
                   <span className="text-b500 font-semibold text-xs">Location</span>
                 </div>
-                <p className="text-xs text-inputtext">{location || 'Agadir, Morocco'}</p>
-              </div>
+                <p className="text-xs text-inputtext">{location?.address || 'Agadir, Morocco'}</p>                
+                </div>
             </div>
 
           {/* Map container */}
           <div className="mb-10">
             <a 
-              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location || 'Agadir Morocco')}`}
-              target="_blank"
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location?.address || 'Agadir Morocco')}`}              target="_blank"
               rel="noopener noreferrer"
               className="block"
             >

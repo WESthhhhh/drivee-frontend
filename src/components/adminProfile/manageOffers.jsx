@@ -3,25 +3,37 @@ import { Trash } from "../UI/icons";
 import { useState, useEffect, useMemo } from "react";
 import LoadingSpinner from '../UI/loadingSpinner';
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import Button from '../UI/button';
-import { fetchAllOffers, deleteOffer } from '../../services/offersApi';
-import DeleteConfirmationModal from '../modals/deleteConfirmation'; // Import the modal
+import DeleteConfirmationModal from '../modals/deleteConfirmation'; 
+import { fetchAllOffers, deleteOffer } from "../../services/offersApi";
+
+/**
+ * @typedef {Object} Offer
+ * @property {string} id
+ * @property {string} title
+ * @property {string} schoolName
+ * @property {number} price
+ * @property {number} durationHours
+ * @property {string} startDate
+ * @property {string} endDate
+ * @property {Object} location
+ * @property {string} location.address
+ * @property {string} location.city
+ */
 
 export default function AdminOffers() {
+  /** @type {[Offer[], React.Dispatch<React.SetStateAction<Offer[]>>]} */
   const [allOffers, setAllOffers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  /** @type {[Offer|null, React.Dispatch<React.SetStateAction<Offer|null>>]} */
   const [selectedOffer, setSelectedOffer] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const limit = 10;
 
-  
   const { offers, totalPages } = useMemo(() => {
-    if (!allOffers) return { offers: [], totalPages: 0 }; 
-    
     const startIndex = (currentPage - 1) * limit;
     const endIndex = startIndex + limit;
     return {
@@ -30,48 +42,36 @@ export default function AdminOffers() {
     };
   }, [allOffers, currentPage]);
 
-  
+  const fetchOffersData = async () => {  
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await fetchAllOffers(); 
+      setAllOffers(data || []);
+    } catch (error) {
+      console.error("Fetch error:", error);
+      setError(error instanceof Error ? error.message : 'Failed to load offers');
+    } finally {
+      setLoading(false);
+    }
+  };
 
- 
-      const fetchOffersData = async () => {  
-        try {
-          setLoading(true);
-          setError(null);
-          const data = await fetchAllOffers(); 
-          setAllOffers(data || []);
-        } catch (error) {
-          console.error("Fetch error:", error);
-          setError(error.message);
-        } finally {
-          setLoading(false);
-        }
-      };
+  useEffect(() => {
+    fetchOffersData();
+  }, []);
 
-      
-      useEffect(() => {
-        const loadData = async () => {
-          try {
-            await fetchOffersData(); 
-          } catch (error) {
-            setError(error.message);
-          }
-        };
-        loadData();
-      }, []);
-
-  
-      const handleDeleteOffer = async () => {
+  const handleDeleteOffer = async () => {
     if (!selectedOffer) return;
     
     try {
       setIsDeleting(true);
       await deleteOffer(selectedOffer.id);
-      await fetchAllOffers();
-      setIsDeleteModalOpen(false);
+      await fetchOffersData();
       setSuccessMessage(`"${selectedOffer.title}" was deleted successfully`);
+      setIsDeleteModalOpen(false);
     } catch (err) {
       console.error("Delete error:", err);
-      setError(err.message || "Failed to delete offer");
+      setError(err instanceof Error ? err.message : "Failed to delete offer");
     } finally {
       setIsDeleting(false);
     }
@@ -97,12 +97,7 @@ export default function AdminOffers() {
   return (
     <div className="px-5 mt-9 font-poppins">
       <div className="space-y-6">
-        <h1 className="text-b200 text-2xl font-bold">
-          Manage Offers
-        </h1>
-        {/* <h1 className="text-b200 text-2xl font-bold">
-          All Offers ({allOffers?.length || 0})
-        </h1> */}
+        <h1 className="text-b200 text-2xl font-bold">Manage Offers</h1>
 
         {successMessage && (
           <div className="p-4 bg-green-100 text-green-700 rounded-md">
@@ -122,25 +117,24 @@ export default function AdminOffers() {
           </div>
         )}
 
-{/* <DeleteConfirmationModal
+        <DeleteConfirmationModal
           isOpen={isDeleteModalOpen}
           closeModal={() => !isDeleting && setIsDeleteModalOpen(false)}
           onConfirm={handleDeleteOffer}
           title="Delete Offer"
           message={`Are you sure you want to delete "${selectedOffer?.title}"?`}
           isLoading={isDeleting}
-        /> */}
+        />
 
-
-<div className="light rounded-large-md overflow-hidden">
-          <div className="grid grid-cols-11 gap-4 px-3 py-4 bg-[#F5FBFB] font-semibold text-primary">
+        <div className="light rounded-large-md overflow-hidden">
+          <div className="grid grid-cols-12 gap-4 px-3 py-4 bg-[#F5FBFB] font-semibold text-primary">
             <div className="col-span-2">School Name</div>
             <div className="col-span-3">Offer Title</div>
             <div className="col-span-1">Price</div>
+            <div className="col-span-2">Location</div>
             <div className="col-span-1">Duration</div>
-            <div className="col-span-2 px-6">Start Date</div>
-            <div className="col-span-2 ">End Date</div>
-           
+            <div className="col-span-2">Start Date</div>
+            <div className="col-span-1">End Date</div>
           </div>
           
           {offers.length === 0 ? (
@@ -151,27 +145,30 @@ export default function AdminOffers() {
             offers.map((offer) => (
               <div 
                 key={offer.id} 
-                className="grid grid-cols-11 gap-4 px-3 py-4 border-b border-b50 hover:bg-gray-50 transition-colors"
+                className="grid grid-cols-12 gap-4 px-3 py-4 border-b border-b50 hover:bg-gray-50 transition-colors"
               >
-                <div className="col-span-2 truncate max-w-[180px]">
+                <div className="col-span-2 truncate">
                   {offer.schoolName || 'N/A'}
                 </div>
-                <div className="col-span-3 truncate max-w-[180px]">
+                <div className="col-span-3 truncate">
                   {offer.title || 'N/A'}
                 </div>
-                <div className="col-span-1 ">
+                <div className="col-span-1">
                   ${offer.price || '0'}
+                </div>
+                <div className="col-span-2 truncate">
+                  {offer.location?.city || 'N/A'}, {offer.location?.address || 'N/A'}
                 </div>
                 <div className="col-span-1">
                   {offer.durationHours || 'N/A'} hrs
                 </div>
-                <div className="col-span-2 max-w-[180px] px-6">
+                <div className="col-span-2">
                   {formatDate(offer.startDate)}
                 </div>
-                <div className="col-span-2 max-w-[180px] ">
+                <div className="col-span-1">
                   {formatDate(offer.endDate)}
                 </div>
-                {/* <div className="col-span-1 flex justify-center">
+                <div className="col-span-1 flex justify-center">
                   <button 
                     onClick={() => {
                       setSelectedOffer(offer);
@@ -179,7 +176,6 @@ export default function AdminOffers() {
                     }}
                     className="text-error hover:text-red-700 p-1 rounded hover:bg-red-50 transition-colors group relative"
                     aria-label="Delete offer"
-                    disabled={loading}
                   >
                     <Trash className="w-5 h-5" />
                     <span className="sr-only">Delete offer</span>
@@ -187,12 +183,11 @@ export default function AdminOffers() {
                       Delete Offer
                     </span>
                   </button>
-                </div> */}
+                </div>
               </div>
             ))
           )}
         </div>
-
 
         {totalPages > 1 && (
           <div className="flex flex-col items-center gap-4 mb-16 mt-6">

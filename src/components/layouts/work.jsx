@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 const Work = () => {
   const navigate = useNavigate();
   return (
-    <div className=" max-w-7xl w-[90%] mx-auto flex  flex-col md:flex-row md:justify-between items-center overflow-x-hidden mb-[50px]">
+    <div className=" max-w-7xl ml-[5%] mx-auto flex  flex-col md:flex-row md:justify-between items-center overflow-x-hidden mb-[50px]">
       {/* Content Section */}
       <div className="md:max-w-[50%] w-full">
         <h1 className="text-3xl font-bold">How Drivee Works ?</h1>

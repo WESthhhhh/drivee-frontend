@@ -13,7 +13,7 @@ export const fetchSchoolOffers = async (schoolId) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: 'include' // if using cookies
+    credentials: 'include' 
   });
   
   console.log("Response status:", response.status);

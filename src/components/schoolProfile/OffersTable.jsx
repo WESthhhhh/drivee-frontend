@@ -1,172 +1,194 @@
-'use client'
-import { useState, useEffect } from 'react';
-import { fetchSchoolOffers, createOffer, updateOffer, deleteOffer } from '../../services/schoolOffersApi';
-import OfferForm from '../modals/addOffer';
-
 import { Pencil, Trash } from "../UI/icons";
 import Button from "../UI/button";
-import LoadingSpinner from '../UI/loadingSpinner';
+import AddOfferModal from "../modals/addOffer";
+import EditOfferModal from "../modals/editOffer";
+import  ConfirmPopup  from "../modals/confirmation";
 
-export default function SchoolOffers({ schoolId }) {
-  console.log("Component rendering with schoolId:", schoolId);
-  
+import { useState, useEffect } from "react";
+import { 
+  deleteOffer,
+  createOffer,
+  fetchAllOffers,
+  updateOffer,
+  fetchOffersForCurrentSchool
+} from "../../services/offersApi";
+import { useParams } from "react-router-dom";
+
+export default function SchoolOffers() {
+  const { schoolId } = useParams();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [offers, setOffers] = useState([]);
+  const [currentOffer, setCurrentOffer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editingOffer, setEditingOffer] = useState(null);
-  const [showForm, setShowForm] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
+
+  // Fetch offers by school ID on component mount
   useEffect(() => {
-    console.log("useEffect triggered with schoolId:", schoolId);
-    if (schoolId) {
-      console.log("schoolId is valid, loading offers");
-      loadOffers();
-    } else {
-      console.warn("No schoolId provided");
-      setLoading(false);
-    }
-  }, [schoolId]);
-
-  const loadOffers = async () => {
-    console.log("Starting loadOffers");
-    try {
-      setLoading(true);
-      setError(null);
-      console.log("Calling fetchSchoolOffers with schoolId:", schoolId);
-      
-      const data = await fetchSchoolOffers(schoolId);
-      console.log("Received data:", data);
-      
-      setOffers(data);
-    } catch (err) {
-      console.error("Error in loadOffers:", err);
-      setError(err.message);
-    } finally {
-      console.log("Finished loading");
-      setLoading(false);
-    }
-  };
-
-  const handleCreate = async (offerData) => {
-    try {
-      const newOffer = await createOffer({ ...offerData, schoolId });
-      setOffers(prev => [...prev, newOffer]);
-      setShowForm(false);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const handleUpdate = async (id, updates) => {
-    try {
-      const updatedOffer = await updateOffer(id, updates);
-      setOffers(prev => prev.map(o => o.id === id ? updatedOffer : o));
-      setEditingOffer(null);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    if (confirm('Are you sure you want to delete this offer?')) {
+    const loadOffers = async () => {
       try {
-        await deleteOffer(id);
-        setOffers(prev => prev.filter(o => o.id !== id));
+        const data = await fetchAllOffers();
+        setOffers(data);
+        setLoading(false);
       } catch (err) {
         setError(err.message);
+        setLoading(false);
       }
+    };
+    loadOffers();
+  }, []);
+
+  // Handle create new offer for this school
+  const handleCreateOffer = async (offerData) => {
+    try {
+      const newOffer = await createOffer(offerData); // Let the modal handle schoolId
+      setOffers([...offers, newOffer]);
+      setIsModalOpen(false);
+    } catch (err) {
+      setError(err.message);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <LoadingSpinner />
-      </div>
-    );
-  }
+  const handleDeleteClick = (id) => {
+    setItemToDelete(id);
+    setShowConfirm(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteOffer(itemToDelete);
+      setOffers(offers.filter(offer => offer.id !== itemToDelete));
+      setShowConfirm(false);
+    } catch (err) {
+      setError(err.message);
+      setShowConfirm(false);
+    }
+  };
+
+  const handleEdit = async (id) => {
+    try {
+      const offer = offers.find(offer => offer.id === id);
+      if (offer) {
+        setCurrentOffer(offer);
+        setIsEditModalOpen(true);
+      }
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  
+  
+
+  const handleUpdateOffer = async (updatedData) => {
+    try {
+      // Call the API to update the offer
+      const updatedOffer = await updateOffer(currentOffer.id, updatedData);
+      
+      // Update the local state
+      setOffers(offers.map(offer => 
+        offer.id === updatedOffer.id ? updatedOffer : offer
+      ));
+      
+      // Close the modal
+      setIsEditModalOpen(false);
+      setCurrentOffer(null);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-[#0F34AE]">School Offers</h1>
-        <Button 
-          type="primary" 
-          onClick={() => {
-            setEditingOffer(null);
-            setShowForm(true);
-          }}
-        >
-          Add New Offer
-        </Button>
-      </div>
+    <div className="space-y-12 px-5 mt-9 font-poppins">
 
-      {error && (
-        <div className="p-4 bg-red-100 text-red-700 rounded-md">
-          {error}
-          <button 
-            onClick={() => setError(null)} 
-            className="float-right font-bold"
-          >
-            ×
-          </button>
-        </div>
-      )}
-
-      {(showForm || editingOffer) && (
-        <OfferForm 
-          onSubmit={editingOffer ? 
-            (data) => handleUpdate(editingOffer.id, data) : 
-            handleCreate
-          }
-          initialData={editingOffer}
-          onCancel={() => {
-            setEditingOffer(null);
-            setShowForm(false);
-          }}
+      {showConfirm && (
+        <ConfirmPopup
+          title="Are you Sure You Want To Delete the Offer !"
+          confirmText="Delete"
+          mainMessage="Are you sure you want to delete this offer? This action cannot be undone."
+          cancelText="Cancel"
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setShowConfirm(false)}
         />
       )}
-
-      {offers.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
-          No offers found for this school
+      <div className="space-y-10">
+        <div className="text-[#0F34AE] text-[25px] font-bold">
+          Offers for School ID: {schoolId}
         </div>
-      ) : (
-        <div className="space-y-4">
-          {offers.map(offer => (
-            <div key={offer.id} className="p-6 border rounded-lg hover:shadow-md transition-shadow">
-              <div className="flex justify-between items-start">
-                <div className="space-y-2">
-                  <h3 className="font-bold text-lg">{offer.title}</h3>
-                  <p className="text-gray-600">{offer.description}</p>
-                  <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
-                    <div><span className="font-semibold">Price:</span> ${offer.price}</div>
-                    <div><span className="font-semibold">Duration:</span> {offer.durationHours} hours</div>
-                    <div><span className="font-semibold">Start:</span> {new Date(offer.startDate).toLocaleDateString()}</div>
-                    <div><span className="font-semibold">End:</span> {new Date(offer.endDate).toLocaleDateString()}</div>
+        
+        <div className="">
+          <div className="flex justify-end">
+            <Button 
+              type="primary" 
+              onClick={() => setIsModalOpen(true)}
+            >
+              Add New Offer
+            </Button>
+          </div>
+          
+          {/* Add Offer Modal */}
+          <AddOfferModal 
+            isOpen={isModalOpen} 
+            closeModal={() => setIsModalOpen(false)}
+            onOfferCreated={handleCreateOffer}
+          />
+
+          {/* Edit Offer Modal */}
+          <EditOfferModal
+            isOpen={isEditModalOpen}
+            closeModal={() => {
+              setIsEditModalOpen(false);
+              setCurrentOffer(null);
+            }}
+            offer={currentOffer}
+            onOfferUpdated={handleUpdateOffer}
+          />
+
+          {/* Offers table */}
+          <div className="mt-4">
+            <div className="bg-cayan50 flex gap-4 px-2 py-4 font-semibold text-[#0B247A]">
+              <div className="basis-2/12">Name</div>
+              <div className="basis-2/12">Description</div>
+              <div className="basis-1/12">Price</div>
+              <div className="basis-2/12">Duration</div>
+              <div className="basis-2/12">Start Date</div>
+              <div className="basis-2/12">End Date</div>
+              <div className="basis-1/12">Actions</div>
+            </div>
+            
+            {offers.length === 0 ? (
+              <div className="py-8 text-center text-gray-500">
+                No offers found for this school
+              </div>
+            ) : (
+              offers.map(offer => (
+                <div key={offer.id} className="flex gap-4 px-2 py-4 border-b border-b50 hover:bg-gray-50">
+                  <div className="basis-2/12">{offer.title || 'N/A'}</div>
+                  <div className="basis-2/12 truncate">{offer.description || 'N/A'}</div>
+                  <div className="basis-1/12">{offer.price || 'N/A'}</div>
+                  <div className="basis-2/12">{offer.durationHours || 'N/A'}</div>
+                  <div className="basis-2/12">{offer.startDate || 'N/A'}</div>
+                  <div className="basis-2/12">{offer.endDate || 'N/A'}</div>
+                  <div className="basis-1/12 flex items-center gap-2">
+                  <button onClick={() => handleDeleteClick(offer.id)} className="hover:text-red-600">                      <Trash />
+                    </button>
+                    <div className="h-[22px] w-0.25 bg-[#6E6E6A]" />
+                    <button onClick={() => handleEdit(offer.id)} className="hover:text-blue-600">
+                      <Pencil />
+                    </button>
                   </div>
                 </div>
-                <div className="flex space-x-2">
-                  <button 
-                    onClick={() => setEditingOffer(offer)}
-                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-full"
-                    title="Edit"
-                  >
-                    <Pencil />
-                  </button>
-                  <button 
-                    onClick={() => handleDelete(offer.id)}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded-full"
-                    title="Delete"
-                  >
-                    <Trash />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+              ))
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
