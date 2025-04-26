@@ -44,8 +44,7 @@ export default function Home() {
         setLoad(false); // Mark as loaded
       }
     };
-  
-    // Only fetch if load is true (initial load)
+
     if (load) {  
       fetchData();
     }
