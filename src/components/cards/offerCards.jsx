@@ -11,7 +11,6 @@ const OfferCard = ({ offer }) => {
 
   // Safely access nested properties
   const schoolName = offer.school?.firstName ? `${offer.school.firstName} ${offer.school.lastName || ''}` : 'Unknown School';
-  const schoolImage = offer.school?.image || 'default-school-image.jpg';
   const location = offer.location?.city || 'Location not specified';
   const price = offer.price ? `${offer.price} dh` : 'Price not specified';
   const duration = offer.durationHours ? `${offer.durationHours} hours` : 'Duration not specified';
