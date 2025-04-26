@@ -2,6 +2,8 @@ import { Pencil, Trash } from "../UI/icons";
 import Button from "../UI/button";
 import AddOfferModal from "../modals/addOffer";
 import EditOfferModal from "../modals/editOffer";
+import  ConfirmPopup  from "../modals/confirmation";
+
 import { useState, useEffect } from "react";
 import { 
   deleteOffer,
@@ -20,6 +22,9 @@ export default function SchoolOffers() {
   const [currentOffer, setCurrentOffer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+
 
   // Fetch offers by school ID on component mount
   useEffect(() => {
@@ -46,21 +51,25 @@ export default function SchoolOffers() {
       setError(err.message);
     }
   };
-  // Handle delete offer
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this offer?')) {
-      try {
-        await deleteOffer(id);
-        setOffers(offers.filter(offer => offer.id !== id));
-      } catch (err) {
-        setError(err.message);
-      }
+
+  const handleDeleteClick = (id) => {
+    setItemToDelete(id);
+    setShowConfirm(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteOffer(itemToDelete);
+      setOffers(offers.filter(offer => offer.id !== itemToDelete));
+      setShowConfirm(false);
+    } catch (err) {
+      setError(err.message);
+      setShowConfirm(false);
     }
   };
 
   const handleEdit = async (id) => {
     try {
-      // Find the offer in the existing offers array
       const offer = offers.find(offer => offer.id === id);
       if (offer) {
         setCurrentOffer(offer);
@@ -70,6 +79,9 @@ export default function SchoolOffers() {
       setError(err.message);
     }
   };
+
+  
+  
 
   const handleUpdateOffer = async (updatedData) => {
     try {
@@ -94,6 +106,17 @@ export default function SchoolOffers() {
 
   return (
     <div className="space-y-12 px-5 mt-9 font-poppins">
+
+      {showConfirm && (
+        <ConfirmPopup
+          title="Are you Sure You Want To Delete the Offer !"
+          confirmText="Delete"
+          mainMessage="Are you sure you want to delete this offer? This action cannot be undone."
+          cancelText="Cancel"
+          onConfirm={handleConfirmDelete}
+          onCancel={() => setShowConfirm(false)}
+        />
+      )}
       <div className="space-y-10">
         <div className="text-[#0F34AE] text-[25px] font-bold">
           Offers for School ID: {schoolId}
@@ -153,8 +176,7 @@ export default function SchoolOffers() {
                   <div className="basis-2/12">{offer.startDate || 'N/A'}</div>
                   <div className="basis-2/12">{offer.endDate || 'N/A'}</div>
                   <div className="basis-1/12 flex items-center gap-2">
-                    <button onClick={() => handleDelete(offer.id)} className="hover:text-red-600">
-                      <Trash />
+                  <button onClick={() => handleDeleteClick(offer.id)} className="hover:text-red-600">                      <Trash />
                     </button>
                     <div className="h-[22px] w-0.25 bg-[#6E6E6A]" />
                     <button onClick={() => handleEdit(offer.id)} className="hover:text-blue-600">
