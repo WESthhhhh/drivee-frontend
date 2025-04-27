@@ -1,11 +1,12 @@
 import { PrimaryInput, TextArea } from '../UI/formInputs'; 
 import Button from '../UI/button';
 import React, { useState } from 'react';
+import  DriveeChatbot  from '../layouts/driveeChatbot';
 
-const Contactform = () => {
+const ContactForm = () => {
   const [formData, setFormData] = useState({
     name: '',
-    phone: '',  // Changé de 'email' à 'phone'
+    phone: '',
     subject: '',
     message: ''
   });
@@ -13,10 +14,11 @@ const Contactform = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [showChatbot, setShowChatbot] = useState(false);
 
   const validate = () => {
     const newErrors = {};
-    const phoneRegex = /^[0-9]{10,15}$/; // Validation basique numéro téléphone
+    const phoneRegex = /^[0-9]{10,15}$/;
 
     if (!formData.name.trim()) newErrors.name = 'Name is required';
     if (!formData.phone.trim()) {
@@ -47,19 +49,12 @@ const Contactform = () => {
 
     setIsLoading(true);
     
-    // Formatage du message pour WhatsApp
-    const whatsappMessage = `Nouveau message de contact:%0A%0A*Nom:* ${formData.name}%0A*Téléphone:* ${formData.phone}%0A*Sujet:* ${formData.subject}%0A*Message:* ${formData.message}`;
-    
-    // Votre numéro WhatsApp (remplacez par votre vrai numéro avec l'indicatif)
-    const yourWhatsAppNumber = "+212604070252"; // Exemple pour Maroc
-    
-    // URL pour envoyer directement le message (sans avoir à cliquer)
+    const whatsappMessage = `New contact message:%0A%0A*Name:* ${formData.name}%0A*Phone:* ${formData.phone}%0A*Subject:* ${formData.subject}%0A*Message:* ${formData.message}`;
+    const yourWhatsAppNumber = "+212604070252";
     const whatsappUrl = `https://api.whatsapp.com/send?phone=${yourWhatsAppNumber}&text=${whatsappMessage}`;
     
-    // Ouvrir dans un nouvel onglet
     window.open(whatsappUrl, '_blank');
     
-    // Réinitialiser le formulaire
     setFormData({
       name: '',
       phone: '',
@@ -75,24 +70,24 @@ const Contactform = () => {
     <div className="md:w-[45%] p-8 border shadow-primary-4 border-b50 rounded-large-md relative z-10 mt-10 md:mt-0">
       {submitStatus === 'success' && (
         <div className="mb-6 p-4 bg-success/10 text-success rounded-large-sm">
-          Message envoyé avec succès sur WhatsApp!
+          Message sent successfully via WhatsApp!
         </div>
       )}
 
       <form onSubmit={handleSubmit} noValidate className='space-y-4'>
         <PrimaryInput 
-          label="Nom complet" 
+          label="Full Name" 
           name="name" 
-          placeholder="Votre nom complet"
+          placeholder="Your full name"
           value={formData.name}
           onChange={handleChange}
           error={errors.name}
         />
         
         <PrimaryInput 
-          label="Numéro de téléphone" 
+          label="Phone Number" 
           name="phone" 
-          placeholder="Votre numéro WhatsApp"
+          placeholder="Your WhatsApp number"
           type="tel"
           value={formData.phone}
           onChange={handleChange}
@@ -100,9 +95,9 @@ const Contactform = () => {
         />
         
         <PrimaryInput 
-          label="Sujet" 
+          label="Subject" 
           name="subject" 
-          placeholder="Objet du message"
+          placeholder="Message subject"
           value={formData.subject}
           onChange={handleChange}
           error={errors.subject}
@@ -111,33 +106,46 @@ const Contactform = () => {
         <TextArea 
           label="Message" 
           name="message" 
-          placeholder="Votre message..."
+          placeholder="Your message..."
           value={formData.message}
           onChange={handleChange}
           error={errors.message}
         />
         
-        <Button 
-          type="submit" 
-          htmlType='submit'
-          className="mt-6 p-2.5 text-light bg-primary rounded-small-md hover:bg-primary-dark transition-colors"
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <span className="flex items-center justify-center gap-2">
-              <svg className="animate-spin h-5 w-5 text-light" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Envoi en cours...
-            </span>
-          ) : (
-            'Envoyer via WhatsApp'
-          )}
-        </Button>
+        <div className="flex flex-col space-y-3">
+          <Button 
+            type="submit" 
+            htmlType='submit'
+            className="mt-6 p-2.5 text-light bg-primary rounded-small-md hover:bg-primary-dark transition-colors"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin h-5 w-5 text-light" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Sending...
+              </span>
+            ) : (
+              'Send via WhatsApp'
+            )}
+          </Button>
+
+          <Button 
+            type="secondary"
+            htmlType='button'
+            onClick={() => setShowChatbot(true)}
+            className="p-2.5 text-primary bg-light border border-primary rounded-small-md hover:bg-primary/10 transition-colors"
+          >
+            Chat with Drivee 
+          </Button>
+        </div>
       </form>
+
+      {showChatbot && <DriveeChatbot onClose={() => setShowChatbot(false)} />}
     </div>
   );
 };
 
-export default Contactform;
+export default ContactForm;

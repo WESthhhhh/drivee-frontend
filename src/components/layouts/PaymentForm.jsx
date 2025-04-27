@@ -4,6 +4,9 @@ import { Calendar } from "lucide-react"
 import SuccessPopup from "../modals/SuccessPopup"
 import api from "../../utils/axios"
 import Button from "../UI/button"
+import paypalLogo from '../../assets/paypal-svgrepo-com.svg'
+import mastercardLogo from '../../assets/mastercard-svgrepo-com.svg'
+import visaLogo from '../../assets/visa-svgrepo-com.svg'
 
 const PaymentForm = ({
   offer, // Receive the full offer object
@@ -32,9 +35,9 @@ const PaymentForm = ({
 
   // Payment method images
   const paymentMethods = [
-    { id: "paypal", name: "PayPal", src: "/src/assets/paypal-svgrepo-com.svg", alt: "PayPal" },
-    { id: "mastercard", name: "Mastercard", src: "/src/assets/mastercard-svgrepo-com.svg", alt: "Mastercard" },
-    { id: "visa", name: "Visa", src: "/src/assets/visa-svgrepo-com.svg", alt: "Visa" },
+    { id: "paypal", name: "PayPal", src: paypalLogo, alt: "PayPal" },
+    { id: "mastercard", name: "Mastercard", src: mastercardLogo, alt: "Mastercard" },
+    { id: "visa", name: "Visa", src: visaLogo, alt: "Visa" },
   ]
 
   // Format date for display
@@ -110,41 +113,45 @@ const PaymentForm = ({
     if (!validateForm()) return
     
     setLoading(true)
-
+  
     try {
-      // 1. Create Payment Intent with your backend
-      const response = await api.post(
-        '/payments/create-payment-intent',
-        { reservationId: reservation.id }
-      )
-
-      const { clientSecret } = response.data
-
-      // 2. Confirm payment with Stripe.js
-      const stripe = window.Stripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY)
-      const { error } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: {
-            number: cardNumber.replace(/\s/g, ''),
-            exp_month: expiryMonth,
-            exp_year: expiryYear,
-            cvc: securityCode,
-          },
-          billing_details: {
-            name: fullName,
-          },
+      // 1. Create Payment Intent
+      const response = await api.post('/payments/create-payment-intent', {
+        reservationId: reservation.id
+      }, {
+        headers: {
+          'Idempotency-Key': uuidv4() // Add idempotency key
         }
       })
-
-      if (error) {
-        throw new Error(error.message)
+  
+      // 2. Handle different payment methods
+      if (selectedPaymentMethod === 'paypal') {
+        // Redirect to PayPal flow
+      } else {
+        // Process card payment
+        const { clientSecret } = response.data
+        const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY)
+        
+        const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: elements.getElement(CardElement),
+            billing_details: { name: fullName }
+          }
+        })
+  
+        if (error) throw error
+        
+        if (paymentIntent.status === 'succeeded') {
+          setShowSuccess(true)
+        }
       }
-
-      // 3. Show success if payment succeeds
-      setShowSuccess(true)
     } catch (error) {
       console.error("Payment error:", error)
-      setPaymentError(error.message || "Payment failed. Please try again.")
+      setPaymentError(
+        error.response?.data?.error || 
+        error.message || 
+        "Payment failed. Please try again."
+      )
     } finally {
       setLoading(false)
     }
