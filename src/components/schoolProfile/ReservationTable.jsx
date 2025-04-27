@@ -116,7 +116,7 @@ export default function Reservations() {
                 <div className="text-[#0F34AE] text-[25px] font-bold">School Reservations</div>
                 <div className="">
                     <div className="mt-4">
-                        <div className="bg-[#F5FBFB] flex gap-4 px-2 py-4 font-semibold text-[#0B247A]">
+                        <div className="bg-[#F5FBFB] flex gap-4 px-2 py-4 font-semibold text-[#0B247A] text-sm">
                             <div className="basis-2/12">Student</div>
                             <div className="basis-2/12">Offer</div>
                             <div className="basis-2/12">Reservation date</div>
@@ -131,7 +131,7 @@ export default function Reservations() {
                             </div>
                         ) : (
                             reservations.map((reservation) => (
-                                <div key={reservation.id} className="flex gap-4 px-2 py-4 border-b border-b50">
+                                <div key={reservation.id} className="flex gap-4 px-2 py-4 border-b border-b50 text-sm">
                                     <div className="basis-2/12">
                                         <div>{reservation.student?.name || 'N/A'}</div>
                                         <div className="text-sm text-gray-500">{reservation.student?.email || ''}</div>

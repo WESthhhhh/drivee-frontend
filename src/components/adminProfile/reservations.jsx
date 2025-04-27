@@ -110,7 +110,7 @@ export default function Reservations() {
 
                 <div className="light rounded-large-md overflow-hidden">
                     {/* Table Header */}
-                    <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-[#F5FBFB] font-semibold text-primary">
+                    <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-[#F5FBFB] font-semibold text-primary text-sm">
                         <div className="col-span-2">Student</div>
                         <div className="col-span-2">School</div>
                         <div className="col-span-2">Offer</div>
@@ -127,7 +127,7 @@ export default function Reservations() {
                         reservations.map((reservation) => (
                             <div 
                                 key={reservation.id} 
-                                className="grid grid-cols-12 gap-4 px-6 py-4 items-center border-b border-b50 hover:bg-gray-50 transition-colors"
+                                className="grid grid-cols-12 gap-4 px-6 py-4 items-center border-b border-b50 hover:bg-gray-50 transition-colors text-sm"
                             >
                                 <div className="col-span-2 truncate max-w-[180px]">
                                     {reservation.student?.firstName || 'N/A'}

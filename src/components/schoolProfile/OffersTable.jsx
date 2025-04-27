@@ -3,6 +3,8 @@ import Button from "../UI/button";
 import AddOfferModal from "../modals/addOffer";
 import EditOfferModal from "../modals/editOffer";
 import  ConfirmPopup  from "../modals/confirmation";
+import SuccessPopup from "../modals/SuccessPopup";
+import { format } from 'date-fns';
 
 import { useState, useEffect } from "react";
 import { 
@@ -24,17 +26,28 @@ export default function SchoolOffers() {
   const [error, setError] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [successTitle, setSuccessTitle] = useState('');
+  const [popupType, setPopupType] = useState('create'); 
+
 
 
   // Fetch offers by school ID on component mount
   useEffect(() => {
     const loadOffers = async () => {
       try {
-        const data = await fetchAllOffers();
+        setLoading(true);
+        setError(null);
+        const data = await fetchOffersForCurrentSchool();
         setOffers(data);
-        setLoading(false);
       } catch (err) {
         setError(err.message);
+        // Handle 403 specifically
+        if (err.message.includes('403')) {
+          setError("You don't have permission to view these offers");
+        }
+      } finally {
         setLoading(false);
       }
     };
@@ -44,9 +57,13 @@ export default function SchoolOffers() {
   // Handle create new offer for this school
   const handleCreateOffer = async (offerData) => {
     try {
-      const newOffer = await createOffer(offerData); // Let the modal handle schoolId
+      const newOffer = await createOffer(offerData);
       setOffers([...offers, newOffer]);
       setIsModalOpen(false);
+      setSuccessTitle("Offer Created Successfully!");
+      setSuccessMessage(`"${newOffer.title}" has been successfully created.`);
+      setPopupType('create');
+      setShowSuccessPopup(true);
     } catch (err) {
       setError(err.message);
     }
@@ -85,22 +102,27 @@ export default function SchoolOffers() {
 
   const handleUpdateOffer = async (updatedData) => {
     try {
-      // Call the API to update the offer
       const updatedOffer = await updateOffer(currentOffer.id, updatedData);
-      
-      // Update the local state
       setOffers(offers.map(offer => 
         offer.id === updatedOffer.id ? updatedOffer : offer
       ));
-      
-      // Close the modal
       setIsEditModalOpen(false);
       setCurrentOffer(null);
+      setSuccessTitle("Offer Updated Successfully!");
+      setSuccessMessage(`"${updatedOffer.title}" has been successfully updated.`);
+      setPopupType('update');
+      setShowSuccessPopup(true);
     } catch (err) {
       setError(err.message);
     }
   };
 
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -117,9 +139,17 @@ export default function SchoolOffers() {
           onCancel={() => setShowConfirm(false)}
         />
       )}
+      {showSuccessPopup && (
+        <SuccessPopup
+          title={successTitle}
+          mainMessage={successMessage}
+          buttonText="Close"
+          onClose={() => setShowSuccessPopup(false)}
+        />
+      )}
       <div className="space-y-10">
         <div className="text-[#0F34AE] text-[25px] font-bold">
-          Offers for School ID: {schoolId}
+          Manage Offers
         </div>
         
         <div className="">
@@ -152,7 +182,7 @@ export default function SchoolOffers() {
 
           {/* Offers table */}
           <div className="mt-4">
-            <div className="bg-cayan50 flex gap-4 px-2 py-4 font-semibold text-[#0B247A]">
+            <div className="bg-cayan50 flex gap-4 px-2 py-4 font-semibold text-[#0B247A] text-sm">
               <div className="basis-2/12">Name</div>
               <div className="basis-2/12">Description</div>
               <div className="basis-1/12">Price</div>
@@ -168,15 +198,16 @@ export default function SchoolOffers() {
               </div>
             ) : (
               offers.map(offer => (
-                <div key={offer.id} className="flex gap-4 px-2 py-4 border-b border-b50 hover:bg-gray-50">
+                <div key={offer.id} className="flex gap-4 px-2 py-4 border-b border-b50 hover:bg-gray-50 text-sm">
                   <div className="basis-2/12">{offer.title || 'N/A'}</div>
                   <div className="basis-2/12 truncate">{offer.description || 'N/A'}</div>
                   <div className="basis-1/12">{offer.price || 'N/A'}</div>
                   <div className="basis-2/12">{offer.durationHours || 'N/A'}</div>
-                  <div className="basis-2/12">{offer.startDate || 'N/A'}</div>
-                  <div className="basis-2/12">{offer.endDate || 'N/A'}</div>
+                  <div className="col-span-2">{offer.startDate ? format(new Date(offer.startDate), 'MM-dd-yy') : 'N/A'}</div>
+                  <div className="col-span-2">{offer.endDate ? format(new Date(offer.endDate), 'MM-dd-yy') : 'N/A'}</div>
                   <div className="basis-1/12 flex items-center gap-2">
-                  <button onClick={() => handleDeleteClick(offer.id)} className="hover:text-red-600">                      <Trash />
+                  <button onClick={() => handleDeleteClick(offer.id)} className="hover:text-red-600">                      
+                      <Trash />
                     </button>
                     <div className="h-[22px] w-0.25 bg-[#6E6E6A]" />
                     <button onClick={() => handleEdit(offer.id)} className="hover:text-blue-600">
@@ -189,6 +220,7 @@ export default function SchoolOffers() {
           </div>
         </div>
       </div>
+      
     </div>
   );
 }

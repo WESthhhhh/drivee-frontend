@@ -5,7 +5,7 @@ import LoadingSpinner from '../UI/loadingSpinner';
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import DeleteConfirmationModal from '../modals/deleteConfirmation'; 
 import { fetchAllOffers, deleteOffer } from "../../services/offersApi";
-
+import { format } from 'date-fns';
 /**
  * @typedef {Object} Offer
  * @property {string} id
@@ -77,11 +77,11 @@ export default function AdminOffers() {
     }
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
-  };
+ 
+  // const formatDate = (dateString) => {
+  //   const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  //   return new Date(dateString).toLocaleDateString(undefined, options);
+  // };
 
   if (loading) {
     return (
@@ -126,68 +126,82 @@ export default function AdminOffers() {
           isLoading={isDeleting}
         />
 
-        <div className="light rounded-large-md overflow-hidden">
-          <div className="grid grid-cols-12 gap-4 px-3 py-4 bg-[#F5FBFB] font-semibold text-primary">
-            <div className="col-span-2">School Name</div>
-            <div className="col-span-3">Offer Title</div>
-            <div className="col-span-1">Price</div>
-            <div className="col-span-2">Location</div>
-            <div className="col-span-1">Duration</div>
-            <div className="col-span-2">Start Date</div>
-            <div className="col-span-1">End Date</div>
+<div className="rounded-large-md overflow-hidden ">
+  {/* Table Header */}
+  <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-[#F5FBFB] font-semibold text-primary text-sm">
+    <div className="col-span-2">School</div>
+    <div className="col-span-3">Offer Title</div>
+    <div className="col-span-1 text-right">Price</div>
+    <div className="col-span-2">Location</div>
+    <div className="col-span-1 text-center">Duration</div>
+    <div className="col-span-2">Start Date</div>
+    <div className="col-span-1 text-center">Actions</div>
+  </div>
+  
+  {/* Table Body */}
+  {offers.length === 0 ? (
+    <div className="py-12 text-center text-gray-500 text-sm">
+      No offers found
+    </div>
+  ) : (
+    <div className="divide-y divide-gray-100">
+      {offers.map((offer) => (
+        <div 
+          key={offer.id} 
+          className="grid grid-cols-12 gap-4 px-4 py-3 hover:bg-gray-50 transition-colors text-sm items-center"
+        >
+          {/* School Name */}
+          <div className="col-span-2 truncate font-medium text-gray-800">
+            {offer.schoolName || 'N/A'}
           </div>
           
-          {offers.length === 0 ? (
-            <div className="py-12 text-center text-inputtext">
-              No offers found
-            </div>
-          ) : (
-            offers.map((offer) => (
-              <div 
-                key={offer.id} 
-                className="grid grid-cols-12 gap-4 px-3 py-4 border-b border-b50 hover:bg-gray-50 transition-colors"
-              >
-                <div className="col-span-2 truncate">
-                  {offer.schoolName || 'N/A'}
-                </div>
-                <div className="col-span-3 truncate">
-                  {offer.title || 'N/A'}
-                </div>
-                <div className="col-span-1">
-                  ${offer.price || '0'}
-                </div>
-                <div className="col-span-2 truncate">
-                  {offer.location?.city || 'N/A'}, {offer.location?.address || 'N/A'}
-                </div>
-                <div className="col-span-1">
-                  {offer.durationHours || 'N/A'} hrs
-                </div>
-                <div className="col-span-2">
-                  {formatDate(offer.startDate)}
-                </div>
-                <div className="col-span-1">
-                  {formatDate(offer.endDate)}
-                </div>
-                <div className="col-span-1 flex justify-center">
-                  <button 
-                    onClick={() => {
-                      setSelectedOffer(offer);
-                      setIsDeleteModalOpen(true);
-                    }}
-                    className="text-error hover:text-red-700 p-1 rounded hover:bg-red-50 transition-colors group relative"
-                    aria-label="Delete offer"
-                  >
-                    <Trash className="w-5 h-5" />
-                    <span className="sr-only">Delete offer</span>
-                    <span className="absolute invisible group-hover:visible text-xs bg-gray-800 text-white px-2 py-1 rounded -mt-8 -ml-2 whitespace-nowrap">
-                      Delete Offer
-                    </span>
-                  </button>
-                </div>
-              </div>
-            ))
-          )}
+          {/* Offer Title */}
+          <div className="col-span-3 truncate text-gray-700">
+            {offer.title || 'N/A'}
+          </div>
+          
+          {/* Price */}
+          <div className="col-span-1 text-right font-medium text-gray-800">
+            ${offer.price ? offer.price.toLocaleString() : '0'}
+          </div>
+          
+          {/* Location */}
+          <div className="col-span-2 truncate text-gray-600">
+            {offer.location?.city || 'N/A'}
+          </div>
+          
+          {/* Duration */}
+          <div className="col-span-1 text-center text-gray-600">
+            {offer.durationHours || 'N/A'}h
+          </div>
+          
+          {/* Start Date */}
+          <div className="col-span-2 text-gray-600">
+            {offer.startDate ? format(new Date(offer.startDate), 'MMM dd, yyyy') : 'N/A'}
+          </div>
+          
+          {/* Actions */}
+          <div className="col-span-1 flex justify-center">
+            <button 
+              onClick={() => {
+                setSelectedOffer(offer);
+                setIsDeleteModalOpen(true);
+              }}
+              className="text-gray-400 hover:text-red-500 p-1 rounded-full hover:bg-red-50 transition-colors group relative"
+              aria-label="Delete offer"
+            >
+              <Trash className="w-4 h-4" />
+              <span className="sr-only">Delete offer</span>
+              <span className="absolute invisible group-hover:visible text-xs bg-gray-800 text-white px-2 py-1 rounded -mt-8 -ml-2 whitespace-nowrap">
+                Delete Offer
+              </span>
+            </button>
+          </div>
         </div>
+      ))}
+    </div>
+  )}
+</div>
 
         {totalPages > 1 && (
           <div className="flex flex-col items-center gap-4 mb-16 mt-6">

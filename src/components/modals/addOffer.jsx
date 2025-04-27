@@ -170,8 +170,6 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {}, schoolId
         price: Number(formData.price),
       };
   
-      console.log('Prepared offer data:', offerData);
-  
       const newOffer = await createOffer(offerData);
       
       if (!newOffer?.id) {
@@ -184,11 +182,7 @@ const AddOfferModal = ({ isOpen, closeModal, onOfferCreated = () => {}, schoolId
       setShowSuccessPopup(true);
       
     } catch (error) {
-      console.error('Detailed submission error:', {
-        error: error.message,
-        formData,
-        user
-      });
+      console.error('Error creating offer:', error);
       setErrors(prev => ({
         ...prev,
         submit: error.message || 'Failed to create offer'
