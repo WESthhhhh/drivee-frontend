@@ -176,7 +176,7 @@ const PaymentForm = ({
             {/* Left panel - Offer Summary */}
             <div className="w-full md:w-[35%] bg-cayan50 md:rounded-r-none p-7">
               <div className="flex flex-col justify-center h-full py-8">
-                <h2 className="text-2xl font-bold text-b200 mb-6">Offer Summary</h2>
+                <h2 className="text-xl font-bold text-b200 mb-6">Offer Summary</h2>
                 <div className="space-y-5">
                   <div>
                     <span className="text-[#0A1172] text-[16px] font-bold">Driving School: </span>
@@ -217,8 +217,8 @@ const PaymentForm = ({
             </div>
 
             {/* Right panel - Payment Form */}
-            <div className="w-full md:w-[65%] bg-light md:rounded-l-none p-5">
-              <h2 className="text-xl font-semibold text-[#1E1B48] mb-5">Offer Payment</h2>
+            <div className="w-full md:w-[65%] bg-light md:rounded-l-none p-8">
+              <h2 className="text-2xl font-semibold text-b200 mb-5">Offer Payment</h2>
               
               {paymentError && (
                 <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
