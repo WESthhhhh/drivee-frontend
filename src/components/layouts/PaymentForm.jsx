@@ -2,15 +2,25 @@
 import { useState } from "react"
 import { Calendar } from "lucide-react"
 import SuccessPopup from "../modals/SuccessPopup"
-import api from "../../utils/axios"
+import { createPaymentIntent } from "../../services/paymentApi"
+import { getStripe } from "../../utils/stripe"
 import Button from "../UI/button"
 import paypalLogo from '../../assets/paypal-svgrepo-com.svg'
 import mastercardLogo from '../../assets/mastercard-svgrepo-com.svg'
 import visaLogo from '../../assets/visa-svgrepo-com.svg'
 
+// Card brand detection function
+const detectCardBrand = (cardNumber) => {
+  const cleaned = cardNumber.replace(/\s/g, '');
+  if (/^3[47]/.test(cleaned)) return 'amex';
+  if (/^4/.test(cleaned)) return 'visa';
+  if (/^5[1-5]/.test(cleaned)) return 'mastercard';
+  return 'unknown';
+};
+
 const PaymentForm = ({
-  offer, // Receive the full offer object
-  reservation, // Receive the reservation object
+  offer,
+  reservation,
   onPaymentComplete,
 }) => {
   const [showSuccess, setShowSuccess] = useState(false)
@@ -101,61 +111,75 @@ const PaymentForm = ({
         isValid = false
       }
     }
+    
+    // Card brand specific validation
+    const cardBrand = detectCardBrand(cardNumber.replace(/\s/g, ''));
+    if (cardBrand === 'amex' && securityCode.length !== 4) {
+      newErrors.securityCode = "American Express requires a 4-digit CVV";
+      isValid = false;
+    } else if (cardBrand !== 'amex' && securityCode.length !== 3) {
+      newErrors.securityCode = "Security code must be 3 digits";
+      isValid = false;
+    }
 
-    setErrors(newErrors)
+    setErrors(newErrors);
     return isValid
   }
 
   const handlePayment = async (e) => {
-    e.preventDefault()
-    setPaymentError("")
+    e.preventDefault();
+    setPaymentError("");
     
-    if (!validateForm()) return
+    if (!validateForm()) return;
     
-    setLoading(true)
+    setLoading(true);
   
     try {
-      // 1. Create Payment Intent
-      const response = await api.post('/payments/create-payment-intent', {
-        reservationId: reservation.id
-      }, {
-        headers: {
-          'Idempotency-Key': uuidv4() // Add idempotency key
-        }
-      })
+      // 1. Create Payment Intent with payment method
+      const intentResponse = await createPaymentIntent(
+        reservation.id,
+        'mad',
+        selectedPaymentMethod
+      );
+      const { clientSecret } = intentResponse.data;
   
-      // 2. Handle different payment methods
-      if (selectedPaymentMethod === 'paypal') {
-        // Redirect to PayPal flow
-      } else {
-        // Process card payment
-        const { clientSecret } = response.data
-        const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY)
-        
-        const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-          payment_method: {
-            card: elements.getElement(CardElement),
-            billing_details: { name: fullName }
-          }
-        })
-  
-        if (error) throw error
-        
-        if (paymentIntent.status === 'succeeded') {
-          setShowSuccess(true)
+      // 2. Confirm payment with Stripe
+      const stripe = await getStripe();
+      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: {
+            number: cardNumber.replace(/\s/g, ''),
+            exp_month: expiryMonth,
+            exp_year: expiryYear,
+            cvc: securityCode,
+          },
+          billing_details: {
+            name: fullName,
+          },
+        },
+        metadata: {
+          payment_method: selectedPaymentMethod
         }
-      }
+      });
+  
+      if (error) throw error;
+  
+      setShowSuccess(true);
+      
     } catch (error) {
-      console.error("Payment error:", error)
-      setPaymentError(
-        error.response?.data?.error || 
-        error.message || 
-        "Payment failed. Please try again."
-      )
+      console.error("Payment error:", {
+        error: error.message,
+        reservationId: reservation.id,
+        timestamp: new Date().toISOString(),
+        cardLast4: cardNumber.slice(-4),
+        paymentMethod: selectedPaymentMethod
+      });
+      
+      setPaymentError(error.message || "Payment failed. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleCloseSuccess = () => {
     setShowSuccess(false)
@@ -179,7 +203,7 @@ const PaymentForm = ({
     <>
       <div className="w-full max-w-[950px] mx-auto px-4 py-4 scale-95 origin-center">
         <form onSubmit={handlePayment}>
-          <div className="flex flex-col md:flex-row gap-3 md:gap-0 border border-stroke rounded-large-md shadow-primary-4 overflow-hidden ">
+          <div className="flex flex-col md:flex-row gap-3 md:gap-0 border border-stroke rounded-large-md shadow-primary-4 overflow-hidden">
             {/* Left panel - Offer Summary */}
             <div className="w-full md:w-[35%] bg-cayan50 md:rounded-r-none p-7">
               <div className="flex flex-col justify-center h-full py-8">
@@ -290,10 +314,10 @@ const PaymentForm = ({
                   <label className="block text-sm font-medium text-[#1E1B48] mb-1">Security Code</label>
                   <input
                     type="text"
-                    placeholder="Eg: 123"
+                    placeholder={detectCardBrand(cardNumber) === 'amex' ? "4-digit CVV" : "3-digit CVV"}
                     value={securityCode}
                     onChange={(e) => setSecurityCode(e.target.value.replace(/\D/g, ""))}
-                    maxLength={4}
+                    maxLength={detectCardBrand(cardNumber) === 'amex' ? 4 : 3}
                     className={`w-full p-2 border ${
                       errors.securityCode ? "border-red-500" : "border-gray-200"
                     } rounded-small-md focus:ring-1 focus:ring-b75 focus:border-transparent outline-none`}
@@ -342,6 +366,7 @@ const PaymentForm = ({
 
                 <Button
                   htmlType="submit"
+                  loading={loading}
                   disabled={loading}
                   className="w-full bg-[#0A1172] text-light py-3 px-4 rounded-lg hover:bg-blue-900 transition-colors text-base font-medium mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
                 >

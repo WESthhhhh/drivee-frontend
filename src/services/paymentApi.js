@@ -1,12 +1,12 @@
-import api from '../utils/axios'
+import api from '../utils/axios';
 
-export const createPaymentIntent = async (reservationId, amount) => {
-  return api.post('/payments/create-payment-intent', {
+export const createPaymentIntent = async (reservationId, currency = 'mad') => {
+  return api.post('/payments/create-intent', {
     reservationId,
-    amount: amount * 100 // Convert to cents
+    currency
   });
 };
 
-export const createPaymentRecord = async (paymentData) => {
-  return api.post('/payments', paymentData);
+export const confirmCardPayment = async (paymentData) => {
+  return api.post('/payments/confirm-card', paymentData);
 };

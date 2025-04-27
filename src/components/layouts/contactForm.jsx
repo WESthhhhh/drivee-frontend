@@ -1,7 +1,7 @@
 import { PrimaryInput, TextArea } from '../UI/formInputs'; 
 import Button from '../UI/button';
 import React, { useState } from 'react';
-import  DriveeChatbot  from '../layouts/driveeChatbot';
+import  {DriveeChatbot}  from '../layouts/driveeChatbot';
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
