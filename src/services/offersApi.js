@@ -1,6 +1,16 @@
 // services/offersAPI.js
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+
+
+const handleResponse = async (response) => {
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || `Request failed with status ${response.status}`);
+  }
+  return response.json();
+};
+
 // Fetch all offers
 export const fetchAllOffers = async () => {
   const response = await fetch(`${API_BASE_URL}/offres`, {
@@ -13,7 +23,16 @@ export const fetchAllOffers = async () => {
   return await response.json();
 };
 
-
+// Fetch offer by ID
+export const fetchOfferById = async (id) => {
+  const response = await fetch(`${API_BASE_URL}/offres/${id}`, {
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  return handleResponse(response);
+};
 
 
 // Create new offer
@@ -126,13 +145,6 @@ export const createLocation = async (locationData) => {
   return await response.json();
 };
 
-const handleResponse = async (response) => {
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || `Request failed with status ${response.status}`);
-  }
-  return response.json();
-};
 
 export const fetchOffersForCurrentSchool = async () => {
   try {

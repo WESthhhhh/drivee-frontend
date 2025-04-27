@@ -8,6 +8,15 @@ import { useNavigate } from 'react-router-dom';
 
 const OfferDetail = ({ isOpen, closeModal, offer }) => {
   const navigate = useNavigate();
+  const handleBookNow = () => {
+    navigate(`/reservation/${offer.id}`, { 
+      state: { 
+        offer,
+        from: window.location.pathname // To navigate back after reservation
+      } 
+    });
+    closeModal();
+  };
 
   if (!isOpen) return null;
 
@@ -170,8 +179,9 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
         <div className="p-5 pt-2 border-t border-stroke">
           <Button
             type='primary'
-            onClick={() => navigate('/reservation', { state: { offer } })}
-            className='w-full py-2 text-sm'>
+            onClick={handleBookNow}
+            className='w-full py-2 text-sm'
+          >
             Book Now
           </Button>
         </div>

@@ -92,8 +92,17 @@ export const router = createBrowserRouter([
       { path: 'contact', element: <ContactPage /> },
       { path: 'drivingschools', element: <DrivingSchools /> },
       { path: 'howitworks', element: <HowItWorks/> },
+      { path: 'reservation/:id', element: <ReservationToPayement/> },
       { path: 'reservation', element: <ReservationToPayement/> },
       { path: 'profile', element: <ProfileSchool/> },
+      // { 
+      //   path: 'my-reservations', 
+      //   element: <UserReservationsPage/>,
+      //   loader: async () => {
+      //     const reservations = await fetchUserReservations();
+      //     return { reservations };
+      //   }
+      // }
     ]
   },
   {

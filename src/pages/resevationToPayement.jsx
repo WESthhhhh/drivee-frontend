@@ -1,77 +1,122 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import ProgressBar from '../components/UI/ProgressBar';
 import ReservationStep from '../components/layouts/ReservationStep';
+import { fetchOfferById } from "../services/offersApi";
+import {createReservation} from "../services/reservationApi"
 import ReservationConfirmation from '../components/layouts/ReservationConfirmation';
 import PaymentForm from '../components/layouts/PaymentForm';
 
 function ReservationToPayement() {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedDate, setSelectedDate] = useState('');
+  const [offer, setOffer] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [reservation, setReservation] = useState(null);
+  const [temporaryReservation, setTemporaryReservation] = useState(null);
 
-  const reservationDetails = {
-    schoolName: "Excellence Driving School",
-    offer: "20 Hour Offer",
-    startDate: selectedDate,
-    price: "5000",
-    location: "123 Avenue Hassan II, Casablanca, Morocco"
-  };
-
-  const handleStepChange = (step) => {
-    // Only allow going back to previous steps or proceeding if date is selected
-    if (step < currentStep || (step === 2 && selectedDate)) {
-      setCurrentStep(step);
+  useEffect(() => {
+    if (id) {
+      const loadOffer = async () => {
+        try {
+          const offerData = await fetchOfferById(id);
+          setOffer(offerData);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+      loadOffer();
     }
+  }, [id]);
+
+  const handleDateSelected = (date) => {
+    setSelectedDate(date);
+    setTemporaryReservation({
+      offreId: offer.id,
+      schoolId: offer.schoolId,
+      startDate: date,
+      price: offer.price,
+      status: 'pending'
+    });
+    // Removed the automatic step change here
   };
 
-  const handleConfirmReservation = () => {
+  const handleConfirmClick = () => {
     if (selectedDate) {
-      setCurrentStep(2);
+      setCurrentStep(2); // Only move to confirmation step when confirm is clicked
     }
   };
 
-  const handleProceedToPayment = () => {
-    setCurrentStep(3);
+  const handleConfirmReservation = async () => {
+    if (!temporaryReservation) {
+      setError("Reservation data is missing");
+      return;
+    }
+    
+    try {
+      const createdReservation = await createReservation(temporaryReservation);
+      setReservation(createdReservation);
+      setCurrentStep(3); // Move to payment step
+    } catch (err) {
+      setError(err.message);
+      setCurrentStep(1); // Go back to date selection if error
+    }
   };
 
   const handlePaymentComplete = () => {
-    setCurrentStep(1);
-    setSelectedDate('');
+    navigate("/my-reservations", { 
+      state: { 
+        success: true,
+        reservation: reservation 
+      } 
+    });
   };
 
+  if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  if (error) return <div className="flex justify-center items-center h-screen text-red-500">Error: {error}</div>;
+
   return (
-    <div className="pt-12  flex flex-col z-[9999999999999] ">
-      
-      <main className="flex-grow">
+    <div className="pt-12 flex flex-col min-h-screen">
+      <main className="flex-grow container mx-auto px-4">
         <ProgressBar 
           currentStep={currentStep} 
-          onStepClick={handleStepChange}
-          canProceed={!!selectedDate}
+          steps={['Select Date', 'Confirmation', 'Payment']}
+          onStepClick={(step) => {
+            if (step < currentStep) setCurrentStep(step);
+          }}
         />
         
         {currentStep === 1 && (
           <ReservationStep 
-            onConfirm={handleConfirmReservation}
+            offer={offer}
+            onDateChange={handleDateSelected}
             selectedDate={selectedDate}
-            onDateChange={setSelectedDate}
+            onConfirm={handleConfirmClick} // Changed to use the new handler
           />
         )}
         
         {currentStep === 2 && (
           <ReservationConfirmation 
-            {...reservationDetails} 
-            onProceed={handleProceedToPayment}
+            temporaryReservation={temporaryReservation}
+            offer={offer}
+            onConfirm={handleConfirmReservation}
+            onBack={() => setCurrentStep(1)}
           />
         )}
         
-        {currentStep === 3 && (
+        {currentStep === 3 && reservation && (
           <PaymentForm 
-            schoolName={reservationDetails.schoolName}
+            reservation={reservation}
+            offer={offer}
             onPaymentComplete={handlePaymentComplete}
           />
         )}
       </main>
-     
     </div>
   );
 }

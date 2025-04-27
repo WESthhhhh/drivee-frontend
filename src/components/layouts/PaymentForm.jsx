@@ -2,18 +2,19 @@
 import { useState } from "react"
 import { Calendar } from "lucide-react"
 import SuccessPopup from "../modals/SuccessPopup"
+import api from "../../utils/axios"
+import Button from "../UI/button"
 
 const PaymentForm = ({
-  schoolName = "School Name",
-  offerName = "20 Hour Offer",
-  startDate = "20/05/2025",
-  price = "500Dh",
-  location = "123 Avenue Hassan II, Casablanca, Morocco",
+  offer, // Receive the full offer object
+  reservation, // Receive the reservation object
   onPaymentComplete,
 }) => {
   const [showSuccess, setShowSuccess] = useState(false)
   const [expiryMonth, setExpiryMonth] = useState("")
   const [expiryYear, setExpiryYear] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [paymentError, setPaymentError] = useState("")
   
   // Form state
   const [fullName, setFullName] = useState("")
@@ -35,6 +36,17 @@ const PaymentForm = ({
     { id: "mastercard", name: "Mastercard", src: "/src/assets/mastercard-svgrepo-com.svg", alt: "Mastercard" },
     { id: "visa", name: "Visa", src: "/src/assets/visa-svgrepo-com.svg", alt: "Visa" },
   ]
+
+  // Format date for display
+  const formatDate = (dateString) => {
+    if (!dateString) return "Date not specified"
+    const date = new Date(dateString)
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric"
+    })
+  }
 
   const validateForm = () => {
     const newErrors = {}
@@ -91,10 +103,50 @@ const PaymentForm = ({
     return isValid
   }
 
-  const handlePayment = (e) => {
+  const handlePayment = async (e) => {
     e.preventDefault()
-    if (validateForm()) {
+    setPaymentError("")
+    
+    if (!validateForm()) return
+    
+    setLoading(true)
+
+    try {
+      // 1. Create Payment Intent with your backend
+      const response = await api.post(
+        '/payments/create-payment-intent',
+        { reservationId: reservation.id }
+      )
+
+      const { clientSecret } = response.data
+
+      // 2. Confirm payment with Stripe.js
+      const stripe = window.Stripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY)
+      const { error } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: {
+            number: cardNumber.replace(/\s/g, ''),
+            exp_month: expiryMonth,
+            exp_year: expiryYear,
+            cvc: securityCode,
+          },
+          billing_details: {
+            name: fullName,
+          },
+        }
+      })
+
+      if (error) {
+        throw new Error(error.message)
+      }
+
+      // 3. Show success if payment succeeds
       setShowSuccess(true)
+    } catch (error) {
+      console.error("Payment error:", error)
+      setPaymentError(error.message || "Payment failed. Please try again.")
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -120,39 +172,60 @@ const PaymentForm = ({
     <>
       <div className="w-full max-w-[950px] mx-auto px-4 py-4 scale-95 origin-center">
         <form onSubmit={handlePayment}>
-          <div className="flex flex-col md:flex-row gap-3 md:gap-0 border border-b75 rounded-2xl shadow-sm overflow-hidden">
-            {/* Left panel - 30% width */}
-            <div className="w-full md:w-[35%] bg-[#F6F5FB] md:rounded-r-none p-5">
+          <div className="flex flex-col md:flex-row gap-3 md:gap-0 border border-stroke rounded-large-md shadow-primary-4 overflow-hidden ">
+            {/* Left panel - Offer Summary */}
+            <div className="w-full md:w-[35%] bg-cayan50 md:rounded-r-none p-7">
               <div className="flex flex-col justify-center h-full py-8">
-                <h2 className="text-xl font-semibold text-[#1E1B48] mb-6">Offer Summary</h2>
+                <h2 className="text-2xl font-bold text-b200 mb-6">Offer Summary</h2>
                 <div className="space-y-5">
                   <div>
                     <span className="text-[#0A1172] text-[16px] font-bold">Driving School: </span>
-                    <span className="text-gray-600 text-[16px]">{schoolName}</span>
+                    <span className="text-gray-600 text-[16px]">
+                      {offer?.school?.firstName} {offer?.school?.lastName}
+                    </span>
                   </div>
                   <div>
-                    <span className="text-[#0A1172] text-[16px] font-bold">Offer: </span>
-                    <span className="text-gray-600 text-[16px]">{offerName}</span>
+                    <span className="text-[#0A1172] text-[16px] font-bold">Offer Title: </span>
+                    <span className="text-gray-600 text-[16px]">{offer?.title}</span>
                   </div>
                   <div>
                     <span className="text-[#0A1172] text-[16px] font-bold">Start Date: </span>
-                    <span className="text-gray-600 text-[16px]">{startDate}</span>
+                    <span className="text-gray-600 text-[16px]">
+                      {formatDate(reservation?.startDate)}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-[#0A1172] text-[16px] font-bold">Duration: </span>
+                    <span className="text-gray-600 text-[16px]">
+                      {offer?.durationHours} Hours a week
+                    </span>
                   </div>
                   <div>
                     <span className="text-[#0A1172] text-[16px] font-bold">Price: </span>
-                    <span className="text-gray-600 text-[16px]">{price}</span>
+                    <span className="text-gray-600 text-[16px]">
+                      {offer?.price} Dh
+                    </span>
                   </div>
                   <div>
                     <span className="text-[#0A1172] text-[16px] font-bold">Location: </span>
-                    <span className="text-gray-600 text-[16px]">{location}</span>
+                    <span className="text-gray-600 text-[16px]">
+                      {offer?.location?.address || "Address not specified"}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Right panel - 70% width */}
+            {/* Right panel - Payment Form */}
             <div className="w-full md:w-[65%] bg-light md:rounded-l-none p-5">
               <h2 className="text-xl font-semibold text-[#1E1B48] mb-5">Offer Payment</h2>
+              
+              {paymentError && (
+                <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+                  {paymentError}
+                </div>
+              )}
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-[#1E1B48] mb-2">Payment Method</label>
@@ -184,9 +257,9 @@ const PaymentForm = ({
                     placeholder="Eg: Khaoula Hassoune"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value.replace(/[0-9]/g, ""))}
-                    className={`w-full p-3 border ${
+                    className={`w-full p-2 border ${
                       errors.fullName ? "border-red-500" : "border-gray-200"
-                    } rounded-lg focus:ring-1 focus:ring-[#0A1172] focus:border-transparent`}
+                    } rounded-small-md focus:ring-1 focus:ring-b75 focus:border-transparent outline-none`}
                   />
                   {errors.fullName && <p className="mt-1 text-red-500 text-xs">{errors.fullName}</p>}
                 </div>
@@ -199,9 +272,9 @@ const PaymentForm = ({
                     value={cardNumber}
                     onChange={(e) => setCardNumber(formatCardNumber(e.target.value.replace(/[^0-9\s]/g, "")))}
                     maxLength={19}
-                    className={`w-full p-3 border ${
+                    className={`w-full p-2 border ${
                       errors.cardNumber ? "border-red-500" : "border-gray-200"
-                    } rounded-lg focus:ring-1 focus:ring-[#0A1172] focus:border-transparent`}
+                    } rounded-small-md focus:ring-1 focus:ring-b75 focus:border-transparent outline-none`}
                   />
                   {errors.cardNumber && <p className="mt-1 text-red-500 text-xs">{errors.cardNumber}</p>}
                 </div>
@@ -214,9 +287,9 @@ const PaymentForm = ({
                     value={securityCode}
                     onChange={(e) => setSecurityCode(e.target.value.replace(/\D/g, ""))}
                     maxLength={4}
-                    className={`w-full p-3 border ${
+                    className={`w-full p-2 border ${
                       errors.securityCode ? "border-red-500" : "border-gray-200"
-                    } rounded-lg focus:ring-1 focus:ring-[#0A1172] focus:border-transparent`}
+                    } rounded-small-md focus:ring-1 focus:ring-b75 focus:border-transparent outline-none`}
                   />
                   {errors.securityCode && <p className="mt-1 text-red-500 text-xs">{errors.securityCode}</p>}
                 </div>
@@ -225,9 +298,9 @@ const PaymentForm = ({
                   <label className="block text-sm font-medium text-[#1E1B48] mb-1">Expiry Date</label>
                   <div className="relative">
                     <div
-                      className={`w-full p-3 border ${
+                      className={`w-full p-2 border ${
                         errors.expiryDate ? "border-red-500" : "border-gray-200"
-                      } rounded-lg bg-light flex items-center`}
+                      } rounded-small-md bg-light flex items-center focus:ring-1 focus:ring-b75`}
                     >
                       <Calendar className="w-4 h-4 text-[#0A1172] mr-2" />
                       <div className="flex space-x-2 w-full">
@@ -260,12 +333,13 @@ const PaymentForm = ({
                   </div>
                 </div>
 
-                <button
-                  type="submit"
-                  className="w-full bg-[#0A1172] text-light py-3 px-4 rounded-lg hover:bg-blue-900 transition-colors text-base font-medium mt-4"
+                <Button
+                  htmlType="submit"
+                  disabled={loading}
+                  className="w-full bg-[#0A1172] text-light py-3 px-4 rounded-lg hover:bg-blue-900 transition-colors text-base font-medium mt-4 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
-                  Pay Now
-                </button>
+                  {loading ? 'Processing...' : 'Pay Now'}
+                </Button>
               </div>
             </div>
           </div>
@@ -276,7 +350,7 @@ const PaymentForm = ({
         <SuccessPopup
           title="Payment Successful!"
           mainMessage="Thank you for reserving your driving lesson with"
-          highlightedText={schoolName}
+          highlightedText={offer?.school?.firstName + " " + offer?.school?.lastName}
           secondaryMessage="We've sent a confirmation email with all the details about your driving lessons."
           onClose={handleCloseSuccess}
           buttonText="Ok, Got it"

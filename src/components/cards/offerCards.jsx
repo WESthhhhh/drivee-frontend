@@ -15,6 +15,12 @@ const OfferCard = ({ offer }) => {
   const price = offer.price ? `${offer.price} dh` : 'Price not specified';
   const duration = offer.durationHours ? `${offer.durationHours} hours` : 'Duration not specified';
 
+  const handleBookOffer = () => {
+    navigate(`/reservation/${offer.id}`, { 
+      state: { offer } 
+    });
+  };
+
   return (
     <>
       <div className="bg-light rounded-large-md border border-b50 shadow-primary-4 p-6 w-[350px] max-w-md md:w-[470px] flex flex-col justify-center h-[402px]">
@@ -57,9 +63,9 @@ const OfferCard = ({ offer }) => {
           <Button type='secondary' onClick={() => setIsModalOpen(true)}>
             View Details
           </Button>
-          <Button type='primary' onClick={() => navigate('/reservation')}>
-            Book Offer
-          </Button>
+         <Button type='primary' onClick={handleBookOffer}>
+          Book Offer
+        </Button>
         </div>
       </div>
 
