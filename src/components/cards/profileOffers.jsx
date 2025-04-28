@@ -1,66 +1,59 @@
-import React, { useState } from 'react';
-import { IoLocationOutline } from 'react-icons/io5';
-import { FaDollarSign, FaRegClock } from 'react-icons/fa6';
-import Button from '../UI/button';
-import OfferDetail from '../modals/offerDetail';
-import { useNavigate } from 'react-router-dom'; 
+// PurchasedOffers.jsx
+import React, { useState, useEffect } from 'react';
+import { fetchOfferById } from '../../services/offersApi';
 
-const defaultOffer = {
-  id: 'default-id',
-  title: 'Default Offer Title',
-  description: 'No description available',
-  img: '/images/default-course.jpg',
-  location: 'Location not specified',
-  price: '0',
-  durationHours: '0',
-  startDate: new Date().toISOString(),
-  endDate: new Date().toISOString(),
-  school: {
-    firstName: 'Unknown',
-    lastName: 'School',
-    profileImage: '/images/of-2.png'
-  },
-  rating: 0,
-  reviews: 0,
-  graph: '/images/default-map.jpg'
-};
-
-const PurchasedOffers = ({ offer = defaultOffer }) => {
+const PurchasedOffers = ({ offerId }) => {
+  const [offer, setOffer] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [selectedOfferId, setSelectedOfferId] = useState(offer.id);
 
-  const fullOfferDetails = {
-    ...defaultOffer,
-    ...offer,
-    school: {
-      ...defaultOffer.school,
-      ...(offer.school || {})
+  useEffect(() => {
+    const loadOffer = async () => {
+      try {
+        setLoading(true);
+        const offerData = await fetchOfferById(offerId);
+        setOffer(offerData);
+      } catch (err) {
+        console.error('Failed to load offer:', err);
+        setError(err.message || 'Failed to load offer details');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (offerId) {
+      loadOffer();
     }
-  };
+  }, [offerId]);
 
-  const navigate = useNavigate();
+  if (loading) return <div>Loading offer details...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!offer) return <div>No offer data available</div>;
+
   return (
     <>
       <div className="border border-stroke rounded-large-md p-6 space-y-6">
         <div className="space-y-3">
-          <div className="text-text text-xl font-semibold">{fullOfferDetails.title}</div>
-          <div className="text-inputtext">{fullOfferDetails.description}</div>
-
+          <div className="text-text text-xl font-semibold">{offer.title}</div>
+          <div className="text-inputtext">{offer.description}</div>
         </div>
+        
         <div className="flex justify-center gap-[40px] mb-6 text-primary">
-                  <div className="flex flex-col justify-center rounded-small-md items-center gap-2 py-2 text-b200 bg-cayan50 w-[90px]">
-                     <IoLocationOutline className="" />
-                    <span className="text-sm ">Agadir</span>
-                  </div>
-                  <div className="flex flex-col justify-center items-center rounded-small-md gap-2 py-2 text-b200 bg-cayan50 w-[90px]">
-                    <FaDollarSign className="" />
-                    <span className="text-sm ">100 dh</span>
-                  </div>
-                  <div className="flex flex-col justify-center items-center rounded-small-md gap-2 py-2 text-b200 bg-cayan50 w-[90px]">
-                    <FaRegClock className="" />
-                    <span className="text-sm ">20 hours</span>
-                  </div>
-                </div>
+          <div className="flex flex-col justify-center rounded-small-md items-center gap-2 py-2 text-b200 bg-cayan50 w-[90px]">
+            <IoLocationOutline />
+            <span className="text-sm">{offer.city}</span>
+          </div>
+          <div className="flex flex-col justify-center items-center rounded-small-md gap-2 py-2 text-b200 bg-cayan50 w-[90px]">
+            <FaDollarSign />
+            <span className="text-sm">{offer.price} dh</span>
+          </div>
+          <div className="flex flex-col justify-center items-center rounded-small-md gap-2 py-2 text-b200 bg-cayan50 w-[90px]">
+            <FaRegClock />
+            <span className="text-sm">{offer.durationHours} hours</span>
+          </div>
+        </div>
+        
         <div className="flex items-center gap-6 justify-center">
           <Button 
             type='secondary'
@@ -71,20 +64,17 @@ const PurchasedOffers = ({ offer = defaultOffer }) => {
           <Button
             type='primary'
             onClick={() => navigate('/reservation')}
-            
-            >Book Offer
+          >
+            Book Offer
           </Button>
         </div>
       </div>
 
-      {/* Offer Details Modal */}
       <OfferDetail 
         isOpen={isDetailModalOpen}
         closeModal={() => setIsDetailModalOpen(false)}
-        offer={fullOfferDetails}
+        offer={offer}
       />
-
-     
     </>
   );
 };

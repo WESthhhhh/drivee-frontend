@@ -2,19 +2,18 @@ import { Pencil, Trash } from "../UI/icons";
 import Button from "../UI/button";
 import AddOfferModal from "../modals/addOffer";
 import EditOfferModal from "../modals/editOffer";
-import  ConfirmPopup  from "../modals/confirmation";
+import ConfirmPopup from "../modals/confirmation";
 import SuccessPopup from "../modals/SuccessPopup";
 import { format } from 'date-fns';
-
 import { useState, useEffect } from "react";
 import { 
   deleteOffer,
   createOffer,
-  fetchAllOffers,
   updateOffer,
   fetchOffersForCurrentSchool
 } from "../../services/offersApi";
 import { useParams } from "react-router-dom";
+import api from "../../utils/axios";
 
 export default function SchoolOffers() {
   const { schoolId } = useParams();
@@ -29,21 +28,33 @@ export default function SchoolOffers() {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [successTitle, setSuccessTitle] = useState('');
-  const [popupType, setPopupType] = useState('create'); 
+  const [popupType, setPopupType] = useState('create');
+  const [verificationStatus, setVerificationStatus] = useState(null);
 
+  // Check verification status
+  const isVerified = verificationStatus?.verified;
+  const verificationPending = verificationStatus?.status === 'PENDING';
 
-
-  // Fetch offers by school ID on component mount
+  // Fetch offers and verification status
   useEffect(() => {
-    const loadOffers = async () => {
+    const loadData = async () => {
       try {
         setLoading(true);
-        setError(null);
-        const data = await fetchOffersForCurrentSchool();
-        setOffers(data);
+        
+        // Fetch offers
+        const offersData = await fetchOffersForCurrentSchool();
+        setOffers(offersData);
+        
+        // Fetch verification status
+        try {
+          const { data: verification } = await api.get('/verifications/status');
+          setVerificationStatus(verification);
+        } catch {
+          setVerificationStatus({ verified: false });
+        }
+        
       } catch (err) {
         setError(err.message);
-        // Handle 403 specifically
         if (err.message.includes('403')) {
           setError("You don't have permission to view these offers");
         }
@@ -51,10 +62,9 @@ export default function SchoolOffers() {
         setLoading(false);
       }
     };
-    loadOffers();
+    loadData();
   }, []);
 
-  // Handle create new offer for this school
   const handleCreateOffer = async (offerData) => {
     try {
       const newOffer = await createOffer(offerData);
@@ -79,6 +89,10 @@ export default function SchoolOffers() {
       await deleteOffer(itemToDelete);
       setOffers(offers.filter(offer => offer.id !== itemToDelete));
       setShowConfirm(false);
+      setSuccessTitle("Offer Deleted Successfully!");
+      setSuccessMessage("The offer has been successfully deleted.");
+      setPopupType('delete');
+      setShowSuccessPopup(true);
     } catch (err) {
       setError(err.message);
       setShowConfirm(false);
@@ -97,9 +111,6 @@ export default function SchoolOffers() {
     }
   };
 
-  
-  
-
   const handleUpdateOffer = async (updatedData) => {
     try {
       const updatedOffer = await updateOffer(currentOffer.id, updatedData);
@@ -117,18 +128,11 @@ export default function SchoolOffers() {
     }
   };
 
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-
-  
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="space-y-12 px-5 mt-9 font-poppins">
-
       {showConfirm && (
         <ConfirmPopup
           title="Are you Sure You Want To Delete the Offer !"
@@ -153,10 +157,21 @@ export default function SchoolOffers() {
         </div>
         
         <div className="">
-          <div className="flex justify-end">
+          <div className="flex justify-end items-center gap-4">
+            {/* Verification status message */}
+            {!isVerified && (
+              <div className="text-[9px] text-primary font-semibold bg-stroke p-2 rounded-small-md">
+                {verificationPending 
+                  ? "Your verification is pending approval" 
+                  : "Please complete verification to add offers"}
+              </div>
+            )}
+            
             <Button 
               type="primary" 
               onClick={() => setIsModalOpen(true)}
+              disabled={!isVerified}
+              className={!isVerified ? "opacity-50 cursor-not-allowed" : ""}
             >
               Add New Offer
             </Button>
@@ -194,7 +209,7 @@ export default function SchoolOffers() {
             
             {offers.length === 0 ? (
               <div className="py-8 text-center text-gray-500">
-                No offers found for this school
+                {isVerified ? "No offers found for this school" : "Complete verification to add offers"}
               </div>
             ) : (
               offers.map(offer => (
@@ -203,14 +218,22 @@ export default function SchoolOffers() {
                   <div className="basis-2/12 truncate">{offer.description || 'N/A'}</div>
                   <div className="basis-1/12">{offer.price || 'N/A'}</div>
                   <div className="basis-2/12">{offer.durationHours || 'N/A'}</div>
-                  <div className="col-span-2">{offer.startDate ? format(new Date(offer.startDate), 'MM-dd-yy') : 'N/A'}</div>
-                  <div className="col-span-2">{offer.endDate ? format(new Date(offer.endDate), 'MM-dd-yy') : 'N/A'}</div>
+                  <div className="basis-2/12">{offer.startDate ? format(new Date(offer.startDate), 'MM-dd-yy') : 'N/A'}</div>
+                  <div className="basis-2/12">{offer.endDate ? format(new Date(offer.endDate), 'MM-dd-yy') : 'N/A'}</div>
                   <div className="basis-1/12 flex items-center gap-2">
-                  <button onClick={() => handleDeleteClick(offer.id)} className="hover:text-red-600">                      
+                    <button 
+                      onClick={() => handleDeleteClick(offer.id)} 
+                      className={`hover:text-red-600 ${!isVerified ? "opacity-50 cursor-not-allowed" : ""}`}
+                      disabled={!isVerified}
+                    >                      
                       <Trash />
                     </button>
                     <div className="h-[22px] w-0.25 bg-[#6E6E6A]" />
-                    <button onClick={() => handleEdit(offer.id)} className="hover:text-blue-600">
+                    <button 
+                      onClick={() => handleEdit(offer.id)} 
+                      className={`hover:text-blue-600 ${!isVerified ? "opacity-50 cursor-not-allowed" : ""}`}
+                      disabled={!isVerified}
+                    >
                       <Pencil />
                     </button>
                   </div>
@@ -220,7 +243,6 @@ export default function SchoolOffers() {
           </div>
         </div>
       </div>
-      
     </div>
   );
 }
