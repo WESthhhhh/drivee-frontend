@@ -49,7 +49,7 @@ const PurchasedOffers = ({ offer = defaultOffer }) => {
         </div>
         <div className="flex justify-center gap-[40px] mb-6 text-primary">
                   <div className="flex flex-col justify-center rounded-small-md items-center gap-2 py-2 text-b200 bg-cayan50 w-[90px]">
-                    <IoLocationOutline className="" />
+                     <IoLocationOutline className="" />
                     <span className="text-sm ">Agadir</span>
                   </div>
                   <div className="flex flex-col justify-center items-center rounded-small-md gap-2 py-2 text-b200 bg-cayan50 w-[90px]">

@@ -78,12 +78,9 @@ const PaymentForm = ({
     }
 
     // Validate card number
-    if (!cardNumber.trim()) {
-      newErrors.cardNumber = "Card number is required"
-      isValid = false
-    } else if (!/^\d{13,19}$/.test(cardNumber.replace(/\s/g, ""))) {
-      newErrors.cardNumber = "Enter a valid card number"
-      isValid = false
+    if (!cardNumber.trim() || !/^\d{13,19}$/.test(cardNumber.replace(/\s/g, ""))) {
+      newErrors.cardNumber = "Enter a valid card number";
+      isValid = false;
     }
 
     // Validate security code
@@ -130,48 +127,61 @@ const PaymentForm = ({
     e.preventDefault();
     setPaymentError("");
     
-    if (!validateForm()) return;
+    if (selectedPaymentMethod !== 'paypal' && !validateForm()) return;
     
     setLoading(true);
   
     try {
-      // 1. Create Payment Intent with payment method
+      // 1. Create Payment Intent
+      if (!reservation?.price || isNaN(reservation.price)) {
+        throw new Error('Reservation price is invalid');
+      }
+
       const intentResponse = await createPaymentIntent(
         reservation.id,
         'mad',
         selectedPaymentMethod
       );
+
+      if (!intentResponse.clientSecret) {
+        throw new Error('Failed to create payment intent');
+      }
+  
       const { clientSecret } = intentResponse.data;
   
-      // 2. Confirm payment with Stripe
+      
       const stripe = await getStripe();
-      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: {
-            number: cardNumber.replace(/\s/g, ''),
-            exp_month: expiryMonth,
-            exp_year: expiryYear,
-            cvc: securityCode,
-          },
-          billing_details: {
-            name: fullName,
-          },
-        },
-        metadata: {
-          payment_method: selectedPaymentMethod
-        }
-      });
-  
-      if (error) throw error;
+      
+      if (selectedPaymentMethod === 'paypal') {
+        // Handle PayPal payment
+        const { error } = await stripe.confirmPayPalPayment(clientSecret, {
+          return_url: `${window.location.origin}/payment/success?reservationId=${reservation.id}`,
+        });
+        if (error) throw error;
+      } else {
+        // Handle card payment
+        const { error } = await stripe.confirmCardPayment(clientSecret, {
+          payment_method: {
+            card: {
+              number: cardNumber.replace(/\s/g, ''),
+              exp_month: expiryMonth,
+              exp_year: expiryYear,
+              cvc: securityCode,
+            },
+            billing_details: {
+              name: fullName,
+            },
+          }
+        });
+        if (error) throw error;
+      }
   
       setShowSuccess(true);
-      
+        
     } catch (error) {
       console.error("Payment error:", {
         error: error.message,
         reservationId: reservation.id,
-        timestamp: new Date().toISOString(),
-        cardLast4: cardNumber.slice(-4),
         paymentMethod: selectedPaymentMethod
       });
       

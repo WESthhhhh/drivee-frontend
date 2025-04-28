@@ -35,15 +35,25 @@ function ReservationToPayement() {
   }, [id]);
 
   const handleDateSelected = (date) => {
+    if (!offer?.price || isNaN(offer.price)) {
+      setError("Offer price is invalid");
+      return;
+    }
+  
+    const price = Number(offer.price);
+    if (price <= 0) {
+      setError("Offer price must be greater than 0");
+      return;
+    }
+  
     setSelectedDate(date);
     setTemporaryReservation({
       offreId: offer.id,
       schoolId: offer.schoolId,
       startDate: date,
-      price: offer.price,
+      price: price,
       status: 'pending'
     });
-    // Removed the automatic step change here
   };
 
   const handleConfirmClick = () => {
@@ -58,16 +68,21 @@ function ReservationToPayement() {
       return;
     }
     
+    // Add price validation
+    if (typeof temporaryReservation.price !== 'number' || temporaryReservation.price <= 0) {
+      setError("Invalid price");
+      return;
+    }
+    
     try {
       const createdReservation = await createReservation(temporaryReservation);
       setReservation(createdReservation);
-      setCurrentStep(3); // Move to payment step
+      setCurrentStep(3);
     } catch (err) {
       setError(err.message);
-      setCurrentStep(1); // Go back to date selection if error
+      setCurrentStep(1);
     }
   };
-
   const handlePaymentComplete = () => {
     navigate("/my-reservations", { 
       state: { 
