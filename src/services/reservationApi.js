@@ -8,17 +8,18 @@ export const createReservation = async (reservationData) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(reservationData),
+      body: JSON.stringify({
+        ...reservationData,
+        price: parseFloat(reservationData.price) // Convert string to number
+      })
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to create reservation');
+      throw new Error(errorData.error || 'Failed to create reservation');
     }
 
-    const data = await response.json();
-    console.log("Reservation created:", data); // Debug log
-    return data;
+    return await response.json();
   } catch (error) {
     console.error('Error creating reservation:', error);
     throw error;

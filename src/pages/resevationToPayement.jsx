@@ -16,55 +16,109 @@ function ReservationToPayement() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [reservation, setReservation] = useState(null);
-  const [temporaryReservation, setTemporaryReservation] = useState(null);
+  const [isCreatingReservation, setIsCreatingReservation] = useState(false);
+  const [temporaryReservation, setTemporaryReservation] = useState({
+    offreId: id,
+    schoolId: '',
+    startDate: '',
+    price: 0,
+    status: 'pending',
+    paymentStatus: 'unpaid'
+  });
 
   useEffect(() => {
-    if (id) {
-      const loadOffer = async () => {
-        try {
-          const offerData = await fetchOfferById(id);
-          setOffer(offerData);
-        } catch (err) {
-          setError(err.message);
-        } finally {
-          setLoading(false);
-        }
-      };
-      loadOffer();
-    }
+    const loadOffer = async () => {
+      try {
+        const offerData = await fetchOfferById(id);
+        setOffer(offerData);
+        // Initialize temporary reservation with offer data
+        setTemporaryReservation(prev => ({
+          ...prev,
+          schoolId: offerData.schoolId,
+          price: offerData.price
+        }));
+      } catch (err) {
+        setError(err.response?.data?.message || err.message || "Failed to load offer");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    if (id) loadOffer();
   }, [id]);
 
   const handleDateSelected = (date) => {
+    if (!date) {
+      setError("Please select a date");
+      return;
+    }
+  
+    const selectedDateObj = new Date(date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+  
+    // Check if date is in the past
+    if (selectedDateObj < today) {
+      setError("Please select a future date");
+      return;
+    }
+  
+    // Check if date is within offer availability
+    if (offer?.startDate && offer?.endDate) {
+      const offerStart = new Date(offer.startDate);
+      const offerEnd = new Date(offer.endDate);
+      
+      if (selectedDateObj < offerStart || selectedDateObj > offerEnd) {
+        setError(`Please select a date between ${offerStart.toLocaleDateString()} and ${offerEnd.toLocaleDateString()}`);
+        return;
+      }
+    }
+  
+    setError(null);
     setSelectedDate(date);
-    setTemporaryReservation({
-      offreId: offer.id,
-      schoolId: offer.schoolId,
-      startDate: date,
-      price: offer.price,
-      status: 'pending'
-    });
-    // Removed the automatic step change here
+    setTemporaryReservation(prev => ({
+      ...prev,
+      startDate: date
+    }));
   };
 
   const handleConfirmClick = () => {
-    if (selectedDate) {
-      setCurrentStep(2); // Only move to confirmation step when confirm is clicked
+    if (!selectedDate) {
+      setError("Please select a date before confirming");
+      return;
     }
+    setCurrentStep(2);
   };
 
   const handleConfirmReservation = async () => {
-    if (!temporaryReservation) {
-      setError("Reservation data is missing");
+    if (!temporaryReservation.startDate) {
+      setError("Please select a date before confirming");
       return;
     }
-    
+  
+    setIsCreatingReservation(true);
+    setError(null);
+  
     try {
-      const createdReservation = await createReservation(temporaryReservation);
+      // Ensure all required fields are included
+      const reservationData = {
+        offreId: temporaryReservation.offreId,
+        schoolId: temporaryReservation.schoolId,
+        startDate: temporaryReservation.startDate,
+        price: temporaryReservation.price,
+        status: 'pending',
+        paymentStatus: 'unpaid'
+      };
+  
+      console.log("Creating reservation with:", reservationData);
+      
+      const createdReservation = await createReservation(reservationData);
       setReservation(createdReservation);
-      setCurrentStep(3); // Move to payment step
+      setCurrentStep(3);
     } catch (err) {
-      setError(err.message);
-      setCurrentStep(1); // Go back to date selection if error
+      setError(err.message || "Failed to create reservation");
+    } finally {
+      setIsCreatingReservation(false);
     }
   };
 
@@ -72,6 +126,7 @@ function ReservationToPayement() {
     navigate("/my-reservations", { 
       state: { 
         success: true,
+        message: "Reservation and payment completed successfully!",
         reservation: reservation 
       } 
     });
@@ -82,6 +137,11 @@ function ReservationToPayement() {
 
   return (
     <div className="pt-12 flex flex-col min-h-screen">
+      {error && (
+        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
+          <p>{error}</p>
+        </div>
+      )}
       <main className="flex-grow container mx-auto px-4">
         <ProgressBar 
           currentStep={currentStep} 
@@ -102,11 +162,12 @@ function ReservationToPayement() {
         
         {currentStep === 2 && (
           <ReservationConfirmation 
-            temporaryReservation={temporaryReservation}
-            offer={offer}
-            onConfirm={handleConfirmReservation}
-            onBack={() => setCurrentStep(1)}
-          />
+          temporaryReservation={temporaryReservation}
+          offer={offer}
+          onConfirm={handleConfirmReservation}
+          onBack={() => setCurrentStep(1)}
+          isLoading={isCreatingReservation}
+        />
         )}
         
         {currentStep === 3 && reservation && (
