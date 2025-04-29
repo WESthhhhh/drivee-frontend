@@ -9,12 +9,12 @@ export default function RootLayout() {
     <div className="min-h-screen flex flex-col font-poppins">
     <ScrollToTop />
     <div className="w-full">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-8xl mx-auto">
         <Navbar/>
       </div>
     </div>
     
-    <div className="flex-1 max-w-7xl w-full mx-auto ">
+    <div className="flex-1 max-w-8xl w-full mx-auto ">
       <main>
         <Outlet />
       </main>

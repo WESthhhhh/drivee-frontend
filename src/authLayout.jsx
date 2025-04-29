@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import ScrollToTop from './components/scrollToTop';
 const AuthLayout = () => {
   return (
-    <div className="max-w-7xl mx-auto md:px-4   font-poppins mb-6">
+    <div className="max-w-8xl mx-auto md:px-4   font-poppins mb-6">
       <ScrollToTop />
       <img 
         src="/images/home-ellipse.png" 
