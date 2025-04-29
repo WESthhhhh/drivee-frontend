@@ -145,7 +145,7 @@ const Navbar = () => {
       
       <header 
         ref={navRef}
-        className={`w-full max-w-7xl fixed left-1/2 transform -translate-x-1/2 bg-light px-5 py-3 shadow-primary-4 rounded-b-large-md z-[9999999] flex justify-between items-center transition-all duration-300 ${
+        className={`w-full max-w-8xl fixed left-1/2 transform -translate-x-1/2 bg-light px-5 py-3 shadow-primary-4 rounded-b-large-md z-[9999999] flex justify-between items-center transition-all duration-300 ${
           scrolled ? 'top-0' : 'top-[20px]'
         }`}
       >

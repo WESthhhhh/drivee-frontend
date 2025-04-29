@@ -10,11 +10,25 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
   const navigate = useNavigate();
   const handleBookNow = () => {
     navigate(`/reservation/${offer.id}`, { 
-      state: { 
-        offer,
-        from: window.location.pathname // To navigate back after reservation
-      } 
+      state: { offer } 
     });
+    closeModal();
+  };
+  const handleViewProfile = () => {
+    // More defensive checks
+    if (!offer?.school) {
+      console.error('School information is missing from offer');
+      alert('School information is not available');
+      return;
+    }
+  
+    if (!offer.school.id) {
+      console.error('School ID is missing', offer.school);
+      alert('Cannot view profile - school ID is missing');
+      return;
+    }
+  
+    navigate(`/schools/${offer.school.id}`);
     closeModal();
   };
 
@@ -87,7 +101,15 @@ const OfferDetail = ({ isOpen, closeModal, offer }) => {
                 </span>
               </div>
             </div>
-            <Button type='ghost' className="text-xs px-2 py-1">View Profile</Button>
+            <Button 
+              type='ghost' 
+              className="text-xs px-2 py-1"
+              onClick={handleViewProfile}
+              // disabled={!hasSchoolProfile}
+              // title={!hasSchoolProfile ? "School profile not available" : ""}
+            >
+              View Profile
+            </Button>
           </div>
           
           {/* Course Title and Description */}

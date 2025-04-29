@@ -1,17 +1,31 @@
 'use client'
 import { useState, useEffect } from "react";
+import api from "../../utils/axios";
 
 export default function Reservations() {
     const [reservations, setReservations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [verificationStatus, setVerificationStatus] = useState(null);
     
+    // Check verification status
+    const isVerified = verificationStatus?.verified;
+    const verificationPending = verificationStatus?.status === 'PENDING';
+
     useEffect(() => {
-        const fetchReservations = async () => {
+        const fetchData = async () => {
             try {
-          const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/reservations/school`, {
-    credentials: 'include'
-});
+                setLoading(true);
+                
+                // Fetch verification status
+                const verificationRes = await api.get('/verifications/status');
+                setVerificationStatus(verificationRes.data);
+                
+                // Fetch reservations
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/reservations/school`, {
+                    credentials: 'include'
+                });
+                
                 console.log('Response status:', response.status);
                 
                 if (!response.ok) {
@@ -31,8 +45,8 @@ export default function Reservations() {
             }
         };
         
-        fetchReservations();
-    }, []);
+        fetchData();
+    }, []);
 
     const getStatusStyle = (status) => {
         switch(status.toLowerCase()) {
@@ -113,11 +127,20 @@ export default function Reservations() {
     return (
         <div className="space-y-12 px-5 mt-9 font-poppins">
             <div className="space-y-10">
-                <div className="text-[#0F34AE] text-[25px] font-bold">School Reservations</div>
+                <div className="flex justify-between items-center">
+                    <div className="text-[#0F34AE] text-[25px] font-bold">School Reservations</div>
+                    {!isVerified && (
+                        <div className="text-[9px] text-primary font-semibold bg-stroke p-2 rounded-small-md">
+                            {verificationPending 
+                                ? "Your verification is pending approval" 
+                                : "Please complete verification to manage reservations"}
+                        </div>
+                    )}
+                </div>
                 <div className="">
                     <div className="mt-4">
-                        <div className="bg-[#F5FBFB] flex gap-4 px-2 py-4 font-semibold text-[#0B247A] text-sm">
-                            <div className="basis-2/12">Student</div>
+                        <div className="bg-[#F5FBFB] flex gap-4 px-2 py-4 font-semibold text-[#0B247A] text-sm rounded-t-large-md">
+                            <div className="basis-2/12">Learner</div>
                             <div className="basis-2/12">Offer</div>
                             <div className="basis-2/12">Reservation date</div>
                             <div className="basis-2/12">Start Date</div>
@@ -127,14 +150,16 @@ export default function Reservations() {
                         
                         {reservations.length === 0 ? (
                             <div className="py-8 text-center text-gray-500">
-                                No reservations found for your school yet
+                                {isVerified 
+                                    ? "No reservations found for your school yet" 
+                                    : "Complete verification to view reservations"}
                             </div>
                         ) : (
                             reservations.map((reservation) => (
                                 <div key={reservation.id} className="flex gap-4 px-2 py-4 border-b border-b50 text-sm">
                                     <div className="basis-2/12">
-                                        <div>{reservation.student?.name || 'N/A'}</div>
-                                        <div className="text-sm text-gray-500">{reservation.student?.email || ''}</div>
+                                        <div>{reservation.student?.firstName || 'N/A'}</div>
+                                        <div className="text-sm text-gray-500 truncate w-[130px]">{reservation.student?.email || ''}</div>
                                     </div>
                                     <div className="basis-2/12">
                                         <div>{reservation.offre?.title || 'N/A'}</div>

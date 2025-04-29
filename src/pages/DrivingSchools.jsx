@@ -125,7 +125,7 @@ const DrivingSchools = () => {
   }, []);
 
   return (
-    <div className="max-w-7xl w-full mx-auto pt-12 overflow-x-hidden px-4 relative">
+    <div className="max-w-8xl w-full mx-auto pt-12 overflow-x-hidden px-4 relative">
       <div className='max-w-6xl mx-auto'>
       
       <img 

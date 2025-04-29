@@ -76,8 +76,9 @@ import ManageSchools from './pages/profiles/manageSchools.jsx';
 import ManageUsers from './pages/profiles/manageUsers.jsx';
 import Admininfo from './pages/profiles/adminInfo.jsx';
 import AdminOffers from './pages/profiles/manageOffersAdmin.jsx';
-import ProfileSchool from './pages/profileSchool.jsx';
+import ProfileSchool from './components/layouts/profilesLayouts/schoolProfile';
 import AdminReservations from './pages/profiles/adminReservations.jsx';
+import OfferDetail from './components/modals/offerDetail.jsx';
 
 
 export const router = createBrowserRouter([
@@ -94,7 +95,8 @@ export const router = createBrowserRouter([
       { path: 'howitworks', element: <HowItWorks/> },
       { path: 'reservation/:id', element: <ReservationToPayement/> },
       { path: 'reservation', element: <ReservationToPayement/> },
-      { path: 'profile', element: <ProfileSchool/> },
+      { path: 'schools/:id', element: <ProfileSchool/> },
+
       // { 
       //   path: 'my-reservations', 
       //   element: <UserReservationsPage/>,
