@@ -53,7 +53,7 @@ export default function SideBar({ userData }) {
           </NavLink>
           
           {/* Offers */}
-          <NavLink
+          {/* <NavLink
             to="/user-offers"
             className={({ isActive }) => 
               `flex items-center gap-2 p-2 group transition-all duration-300 rounded-small-md ${
@@ -69,10 +69,10 @@ export default function SideBar({ userData }) {
             <div className="text-base">
               My Offers
             </div>
-          </NavLink>
+          </NavLink> */}
 
           {/* Reviews */}
-          <NavLink
+          {/* <NavLink
             to="/user-reviews"
             className={({ isActive }) => 
               `flex items-center gap-2 p-2 group transition-all duration-300 rounded-small-md ${
@@ -88,7 +88,7 @@ export default function SideBar({ userData }) {
             <div className="text-base">
               My Reviews
             </div>
-          </NavLink>
+          </NavLink> */}
         </div>
         
         

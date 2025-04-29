@@ -8,6 +8,9 @@ import Button from "../UI/button"
 import paypalLogo from '../../assets/paypal-svgrepo-com.svg'
 import mastercardLogo from '../../assets/mastercard-svgrepo-com.svg'
 import visaLogo from '../../assets/visa-svgrepo-com.svg'
+import html2pdf from 'html2pdf.js'
+import { useNavigate } from 'react-router-dom';
+
 
 // Card brand detection function
 const detectCardBrand = (cardNumber) => {
@@ -24,6 +27,7 @@ const PaymentForm = ({
   onPaymentComplete,
 }) => {
   const [showSuccess, setShowSuccess] = useState(false)
+  const navigate = useNavigate();
   const [expiryMonth, setExpiryMonth] = useState("")
   const [expiryYear, setExpiryYear] = useState("")
   const [loading, setLoading] = useState(false)
@@ -135,17 +139,19 @@ const PaymentForm = ({
     setLoading(true);
   
     try {
-      // 1. Create Payment Intent with payment method
-      const intentResponse = await createPaymentIntent(
-        reservation.id,
-        'mad',
-        selectedPaymentMethod
-      );
-      const { clientSecret } = intentResponse.data;
+      // 1. Créer un Payment Intent
+      const intentResponse = await createPaymentIntent(reservation.id);
+      const { clientSecret, mockPayment } = intentResponse.data;
   
-      // 2. Confirm payment with Stripe
+      if (mockPayment) {
+        // Si c'est un paiement simulé, afficher directement le succès
+        setShowSuccess(true);
+        return;
+      }
+  
+      // 2. Pour les vrais paiements Stripe
       const stripe = await getStripe();
-      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+      const { error } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: {
             number: cardNumber.replace(/\s/g, ''),
@@ -156,9 +162,6 @@ const PaymentForm = ({
           billing_details: {
             name: fullName,
           },
-        },
-        metadata: {
-          payment_method: selectedPaymentMethod
         }
       });
   
@@ -167,24 +170,111 @@ const PaymentForm = ({
       setShowSuccess(true);
       
     } catch (error) {
-      console.error("Payment error:", {
-        error: error.message,
-        reservationId: reservation.id,
-        timestamp: new Date().toISOString(),
-        cardLast4: cardNumber.slice(-4),
-        paymentMethod: selectedPaymentMethod
-      });
-      
-      setPaymentError(error.message || "Payment failed. Please try again.");
+      console.error("Payment error:", error);
+      setPaymentError("Payment failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
+  const generateTicket = () => {
+    const element = document.createElement('div');
+    element.innerHTML = `
+      <div style="font-family: 'Arial', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #0A1172; border-radius: 8px;">
+        <!-- En-tête avec logo et nom du site -->
+        <div style="background-color: #0A1172; padding: 15px; border-radius: 6px 6px 0 0; margin-bottom: 20px; text-align: center;">
+          <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 600;">DRIVEE</h1>
+          <p style="color: rgba(255,255,255,0.8); margin: 5px 0 0; font-size: 14px;">Confirmation de réservation</p>
+        </div>
+        
+        <!-- Section d'informations -->
+        <div style="padding: 0 15px;">
+          <!-- Bloc école de conduite -->
+          <div style="background-color: #f8f9fa; padding: 15px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid #0A1172;">
+            <h2 style="color: #0A1172; margin-top: 0; font-size: 18px; font-weight: 600;">École de conduite</h2>
+            <p style="margin: 8px 0; color: #333; font-size: 16px;">${offer?.school?.firstName} ${offer?.school?.lastName}</p>
+            <p style="margin: 8px 0; color: #555; font-size: 14px;">
+              <span style="color: #0A1172; font-weight: 500;">Lieu:</span> ${offer?.location?.address || "Non spécifié"}
+            </p>
+          </div>
+          
+          <!-- Détails de l'offre -->
+          <div style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 20px;">
+            <div style="width: 48%; margin-bottom: 15px;">
+              <h3 style="color: #0A1172; margin: 0 0 8px 0; font-size: 16px; font-weight: 600;">Offre</h3>
+              <p style="margin: 0; color: #333;">${offer?.title}</p>
+            </div>
+            <div style="width: 48%; margin-bottom: 15px;">
+              <h3 style="color: #0A1172; margin: 0 0 8px 0; font-size: 16px; font-weight: 600;">Durée</h3>
+              <p style="margin: 0; color: #333;">${offer?.durationHours} heures/semaine</p>
+            </div>
+            <div style="width: 48%; margin-bottom: 15px;">
+              <h3 style="color: #0A1172; margin: 0 0 8px 0; font-size: 16px; font-weight: 600;">Date de début</h3>
+              <p style="margin: 0; color: #333;">${formatDate(reservation?.startDate)}</p>
+            </div>
+            <div style="width: 48%; margin-bottom: 15px;">
+              <h3 style="color: #0A1172; margin: 0 0 8px 0; font-size: 16px; font-weight: 600;">Prix</h3>
+              <p style="margin: 0; color: #333;">${offer?.price} Dh</p>
+            </div>
+          </div>
+          
+          <!-- Informations client -->
+          <div style="background-color: #f0f4f8; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+            <h2 style="color: #0A1172; margin-top: 0; font-size: 18px; font-weight: 600;">Informations client</h2>
+            <p style="margin: 8px 0; color: #333;">
+              <span style="color: #0A1172; font-weight: 500;">Nom:</span> ${fullName}
+            </p>
+            <p style="margin: 8px 0; color: #333;">
+              <span style="color: #0A1172; font-weight: 500;">Date de paiement:</span> ${new Date().toLocaleDateString("fr-FR")}
+            </p>
+            <p style="margin: 8px 0; color: #333;">
+              <span style="color: #0A1172; font-weight: 500;">Référence:</span> ${reservation?.id || 'N/A'}
+            </p>
+          </div>
+        </div>
+        
+        <!-- Pied de page -->
+        <div style="background-color: #0A1172; padding: 12px; border-radius: 0 0 6px 6px; text-align: center; margin-top: 20px;">
+          <p style="color: white; margin: 0; font-size: 12px;">
+            Merci pour votre confiance. Pour toute question, contactez-nous à contact@drivee.com
+          </p>
+          <p style="color: rgba(255,255,255,0.7); margin: 5px 0 0; font-size: 11px;">
+            © ${new Date().getFullYear()} Drivee - Tous droits réservés
+          </p>
+        </div>
+      </div>
+    `;
+  
+    const opt = {
+      margin: 10,
+      filename: `drivee-ticket-${offer?.title}-${new Date().toISOString().slice(0, 10)}.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { 
+        scale: 2,
+        logging: false,
+        useCORS: true
+      },
+      jsPDF: { 
+        unit: 'mm', 
+        format: 'a4', 
+        orientation: 'portrait',
+        hotfixes: ["px_scaling"] 
+      }
+    };
+  
+    html2pdf().from(element).set(opt).save();
+  };
+  
   const handleCloseSuccess = () => {
-    setShowSuccess(false)
-    onPaymentComplete?.()
-  }
+    setShowSuccess(false);
+    generateTicket();
+    onPaymentComplete?.();
+    
+    // Redirect to home after a small delay to ensure PDF is generated
+    setTimeout(() => {
+      navigate('/'); // Redirect to home page
+    }, 500);
+  };
 
   const formatCardNumber = (value) => {
     const v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "")
@@ -385,7 +475,7 @@ const PaymentForm = ({
           highlightedText={offer?.school?.firstName + " " + offer?.school?.lastName}
           secondaryMessage="We've sent a confirmation email with all the details about your driving lessons."
           onClose={handleCloseSuccess}
-          buttonText="Ok, Got it"
+          buttonText="Download Ticket & Close"
         />
       )}
     </>

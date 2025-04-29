@@ -23,7 +23,7 @@ const OfferCard = ({ offer }) => {
 
   return (
     <>
-      <div className="bg-light rounded-large-md border border-b50 shadow-primary-4 p-6 w-[350px] max-w-md md:w-[470px] flex flex-col justify-center h-[402px]">
+      <div className="bg-light rounded-large-md border border-b50 shadow-primary-4 p-6 w-[350px] max-w-md md:w-[470px] flex flex-col justify-center h-[470px] ">
         <div className="flex items-center gap-4 mb-6">
           <img 
             src="/images/avatar.jpg" 

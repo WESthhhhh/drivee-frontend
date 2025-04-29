@@ -1,7 +1,7 @@
 import api from '../utils/axios';
 
 export const createPaymentIntent = async (reservationId, currency = 'mad') => {
-  return api.post('/payments/create-intent', {
+  return api.post('/payments/create-payment-intent', {
     reservationId,
     currency
   });

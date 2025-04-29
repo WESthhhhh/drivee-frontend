@@ -162,8 +162,10 @@ export default function Reservations() {
                                         <div className="text-sm text-gray-500 truncate w-[130px]">{reservation.student?.email || ''}</div>
                                     </div>
                                     <div className="basis-2/12">
-                                        <div>{reservation.offre?.title || 'N/A'}</div>
-                                        <div className="text-sm text-gray-500">${reservation.offre?.price || '0'}</div>
+                                    <div>{reservation.offre?.title || 'No offer associated'}</div>
+                                        <div className="text-sm text-gray-500">
+                                            {reservation.offre ? `$${reservation.offre.price}` : 'N/A'}
+                                        </div>
                                     </div>
                                     <div className="basis-2/12">{new Date(reservation.reservationDate).toLocaleDateString()}</div>
                                     <div className="basis-2/12">{new Date(reservation.startDate).toLocaleDateString()}</div>
