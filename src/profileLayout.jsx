@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 
 export default function ProfileLayout() {
   return (
-    <div className="min-h-screen flex flex-col max-w-8xl mx-auto font-poppins">
+    <div className="min-h-screen flex flex-col max-w-7xl mx-auto font-poppins">
       <div className="flex flex-1">
         <main className="flex-1 p-6">
           <Outlet />

@@ -24,51 +24,16 @@ export const fetchAllOffers = async () => {
 };
 
 // Fetch offer by ID
-
 export const fetchOfferById = async (id) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/offres/${id}`, {
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to fetch offer');
+  const response = await fetch(`${API_BASE_URL}/offres/${id}`, {
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
     }
-    
-    const data = await response.json();
-    
-    // Transform data to match your frontend needs
-    return {
-      id: data.id,
-      title: data.title,
-      description: data.description,
-      location: data.location?.address || 'Location not specified',
-      city: data.location?.city || 'City not specified',
-      price: data.price.toString(),
-      durationHours: data.durationHours.toString(),
-      startDate: data.startDate,
-      endDate: data.endDate,
-      school: {
-        id:data.school?.id,
-        firstName: data.school?.firstName || 'Unknown',
-        lastName: data.school?.lastName || 'School',
-        profileImage: '/images/of-2.png', // Default image
-        email: data.contact?.email,
-        phone: data.contact?.phone
-      },
-      rating: 0, // You might want to add ratings to your model
-      reviews: 0, // Same for reviews
-      graph: '/images/default-map.jpg'
-    };
-  } catch (error) {
-    console.error('Error fetching offer:', error);
-    throw error;
-  }
+  });
+  return handleResponse(response);
 };
+
 
 // Create new offer
 export const createOffer = async (offerData) => {

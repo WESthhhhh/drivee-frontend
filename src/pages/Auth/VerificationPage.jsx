@@ -3,7 +3,7 @@ import VerificationForm from "../../components/layouts/auth/verification";
 const Verification = () => {
     return (
       <>
-      <div className="max-w-8xl mx-auto">
+      <div className="max-w-7xl mx-auto">
            <VerificationForm ></VerificationForm >
 
        </div>
